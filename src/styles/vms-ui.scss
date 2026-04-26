@@ -1,0 +1,185 @@
+/* ========== vms-ui 全局外壳样式 ========== */
+.vms-ui-app-shell {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #0b1120;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: #e0f2ff;
+}
+
+/* ========== 侧边栏样式 ========== */
+.vms-ui-sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: linear-gradient(180deg, #020617 0%, #020617 100%);
+  border-right: 1px solid rgba(148, 163, 184, 0.1);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: width 0.25s cubic-bezier(0.2, 0, 0, 1);
+  border-radius: 0 20px 20px 0;
+  box-shadow: 8px 0 32px rgba(0, 0, 0, 0.3);
+  overflow-y: auto;
+  overflow-x: visible;
+  z-index: 100;
+}
+
+.vms-ui-sidebar.collapsed {
+  width: 72px;
+  min-width: 72px;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  padding-right: 8px;
+  min-height: 50px;
+}
+
+.vms-ui-logo {
+  /* Logo 从 Layout.vue 引入，可以在这里做样式微调 */
+}
+
+.sidebar-nav {
+  flex: 1;
+  overflow-y: hidden;
+}
+
+/* ========== 左侧菜单 Element Plus 覆写 ========== */
+.vms-ui-menu {
+  border-right: none !important;
+  background: transparent !important;
+}
+
+.vms-ui-menu .el-menu-item,
+.vms-ui-menu .el-sub-menu__title {
+  color: #94a3b8 !important;
+  border-radius: 10px;
+  margin: 4px 8px;
+  height: 44px;
+  line-height: 44px;
+}
+
+.vms-ui-menu .el-menu-item:hover,
+.vms-ui-menu .el-sub-menu__title:hover {
+  background: rgba(30, 41, 59, 0.7) !important;
+  color: #e2e8f0 !important;
+}
+
+.vms-ui-menu .el-menu-item.is-active {
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.12), rgba(14, 165, 233, 0.08)) !important;
+  color: #38bdf8 !important;
+  border-right: 2px solid #38bdf8;
+}
+
+/* ========== 主内容区 ========== */
+.vms-ui-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 2px 4px 4px 4px;
+  gap: 4px;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* ========== 顶部栏 ========== */
+.vms-ui-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  min-height: 44px;
+  background: rgba(15, 23, 42, 0.3);
+  backdrop-filter: blur(8px);
+  border-radius: 20px;
+  border: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.tabs-wrapper {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.vms-ui-toolheader {
+  /* 微调 ToolHeader 以融入 */
+  background: transparent !important;
+  border-bottom: none !important;
+}
+
+.vms-ui-view-shell {
+  flex: 1;
+  overflow: hidden;
+  background: transparent;
+  border-radius: 8px;
+  position: relative;
+}
+
+/* ========== 全局背景与覆写 ========== */
+body.dark {
+  background: radial-gradient(circle at 50% 50%, #0a1a3a 0%, #010816 100%) !important;
+}
+
+#app {
+  background: transparent !important;
+}
+
+/* ========== TagsView 和 ToolHeader 覆写 ========== */
+.vms-ui-app-shell .v-tags-view {
+  background: transparent !important;
+  border: none !important;
+}
+
+.vms-ui-app-shell .v-tags-view__item {
+  border: none !important;
+  border-radius: 8px !important;
+  background: rgba(30, 41, 59, 0.4) !important;
+  color: #94a3b8 !important;
+  margin-right: 6px;
+  height: 32px !important;
+  line-height: 32px !important;
+  top: 6px !important;
+  padding: 0 10px !important;
+}
+
+.vms-ui-app-shell .v-tags-view__item:hover {
+  background: rgba(56, 189, 248, 0.12) !important;
+  color: #e2e8f0 !important;
+}
+
+.vms-ui-app-shell .v-tags-view__item.is-active {
+  background: rgba(56, 189, 248, 0.2) !important;
+  color: #38bdf8 !important;
+  border: none !important;
+}
+
+.vms-ui-app-shell .v-tags-view__tool {
+  background: transparent !important;
+  border: none !important;
+}
+
+.vms-ui-app-shell .v-tags-view__tool::before,
+.vms-ui-app-shell .v-tags-view__tool--first::before {
+  display: none !important;
+}
+
+/* 隐藏无关边框 */
+.layout-border__bottom {
+  border-bottom: none !important;
+}
+.layout-border__right {
+  border-right: none !important;
+}
