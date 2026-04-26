@@ -16,7 +16,7 @@
         <div class="logo-wrapper">
           <img src="@/assets/imgs/logo.png" class="hero-logo" />
         </div>
-        <h1 class="hero-title">VMS-ESCT</h1>
+        <h1 class="hero-title">VMS</h1>
         <p class="hero-desc">GLOBAL INTELLIGENCE SURVEILLANCE PLATFORM</p>
       </div>
 
