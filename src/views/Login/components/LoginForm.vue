@@ -104,7 +104,7 @@ const LoginRules = {
 }
 const loginData = reactive({
   isShowPassword: false,
-  captchaEnable: 'false', // import.meta.env.VITE_APP_CAPTCHA_ENABLE,
+  captchaEnable: import.meta.env.VITE_APP_CAPTCHA_ENABLE,
   tenantEnable: import.meta.env.VITE_APP_TENANT_ENABLE,
   loginForm: {
     tenantName: import.meta.env.VITE_APP_DEFAULT_LOGIN_TENANT || '',
@@ -168,23 +168,14 @@ const loading = ref() // ElLoading.service 返回的实例
 const handleLogin = async (params: any) => {
   loginLoading.value = true
   try {
-    // await getTenantId()
+    await getTenantId()
     const data = await validForm()
     if (!data) {
       return
     }
     const loginDataLoginForm = { ...loginData.loginForm }
     loginDataLoginForm.captchaVerification = params.captchaVerification
-    // const res = await LoginApi.login(loginDataLoginForm)
-    const res = {
-      accessToken: 'test-access-token',
-      refreshToken: 'test-refresh-token',
-      id: 1,
-      userId: 1,
-      userType: 1,
-      clientId: 'test-client',
-      expiresTime: Date.now() + 3600000
-    }
+    const res = await LoginApi.login(loginDataLoginForm)
     console.log("login:",res)
     if (!res) {
       return

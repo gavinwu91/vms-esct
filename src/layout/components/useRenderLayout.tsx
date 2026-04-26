@@ -279,22 +279,60 @@ export const useRenderLayout = () => {
   }
 
   const renderVmsUi = () => {
+    const collapsed = collapse.value
+    const toggleCollapse = () => {
+      appStore.setCollapse(!collapsed)
+    }
+
+    // 自包含的 Logo 图片 URL 生成（避免依赖 Logo 组件的 show/hide 逻辑）
+    const logoName = appStore.getDefLogo
+    const logoMap: Record<string, string> = {
+      ROP: new URL('@/assets/logo/ROP.png', import.meta.url).href,
+      RO: new URL('@/assets/logo/RO.png', import.meta.url).href,
+      ISS: new URL('@/assets/logo/ISS.png', import.meta.url).href
+    }
+    const logoSrc = logoMap[logoName] || logoMap['ROP']
+    const title = appStore.getTitle
+
     return (
       <div class="vms-ui-app-shell">
-        <aside class={['vms-ui-sidebar', { collapsed: collapse.value }]}>
-          <div class="sidebar-header">
-            <Logo class="vms-ui-logo" />
+        {/* 侧边栏 */}
+        <aside class={['vms-ui-sidebar', { collapsed }]}>
+          {/* Logo 区 — 自渲染，不依赖 Logo 组件 */}
+          <div class="vms-ui-header">
+            <router-link to="/" class="vms-ui-logo-link">
+              <img class="vms-ui-logo-img" src={logoSrc} alt="Logo" />
+              {!collapsed && <span class="vms-ui-logo-title">{title}</span>}
+            </router-link>
           </div>
+
+          {/* 折叠按钮 — 移动到 aside 直接下级，定位到侧边栏最右侧 */}
+          <button
+            class="vms-ui-collapse-btn"
+            onClick={toggleCollapse}
+            title={collapsed ? '展开菜单' : '收起菜单'}
+          >
+            <svg viewBox="0 0 24 24" fill="none">
+              {collapsed
+                ? <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                : <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              }
+            </svg>
+          </button>
+
+          {/* 菜单区 */}
           <nav class="sidebar-nav">
             <ElScrollbar>
-              <Menu class="vms-ui-menu" />
+              <Menu />
             </ElScrollbar>
           </nav>
         </aside>
+
+        {/* 主内容区 */}
         <main class="vms-ui-main">
           <header class="vms-ui-topbar">
             <div class="tabs-wrapper">
-              {tagsView.value ? <TagsView class="vms-ui-tabs" /> : undefined}
+              {tagsView.value ? <TagsView /> : undefined}
             </div>
             <div class="topbar-right">
               <ToolHeader class="vms-ui-toolheader" />

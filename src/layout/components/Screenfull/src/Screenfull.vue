@@ -14,10 +14,34 @@ defineProps({
   color: propTypes.string.def('')
 })
 
-const { toggle, isFullscreen } = useFullscreen()
+const isFullscreen = ref(!!document.fullscreenElement)
 
-const toggleFullscreen = () => {
-  toggle()
+onMounted(() => {
+  document.addEventListener('fullscreenchange', () => {
+    isFullscreen.value = !!document.fullscreenElement
+  })
+})
+
+onUnmounted(() => {
+  document.removeEventListener('fullscreenchange', () => {
+    isFullscreen.value = !!document.fullscreenElement
+  })
+})
+
+const toggleFullscreen = (e: MouseEvent) => {
+  e.preventDefault()
+  e.stopPropagation()
+  console.log('Toggle fullscreen clicked, current state:', !!document.fullscreenElement)
+  
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(err => {
+      console.error(`Error attempting to enable full-screen mode: ${err.message}`)
+    })
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen()
+    }
+  }
 }
 </script>
 

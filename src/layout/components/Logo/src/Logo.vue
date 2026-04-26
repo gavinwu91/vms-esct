@@ -31,6 +31,7 @@ watch(
       show.value = true
       return
     }
+    // vmsUi 布局：折叠时只隐藏标题文字，Logo 图片始终显示
     if (!collapse) {
       setTimeout(() => {
         show.value = !collapse
@@ -75,13 +76,13 @@ const getImage = (name)=>{
       to="/"
     >
       <img
-        style="width: 36px;height: 36px;margin-right: 5px;"
+        class="logo-img"
         :src="getImage(logo)"
       />
       <div
         v-if="show"
         :class="[
-          'text-16px font-700 custom-hover',
+          'text-13px font-600 custom-hover vms-logo-title',
           {
             'text-[var(--logo-title-text-color)]': layout === 'classic',
             'text-[var(--top-header-text-color)]':
@@ -97,13 +98,30 @@ const getImage = (name)=>{
 <style scoped lang="scss">
   .left-title {
     font-weight: bold;
-    font-size: 15px;
+    font-size: 13px;
     white-space: nowrap;
-    width: 295px;
     display: flex;
     align-items: center;
     color: #fff;
     text-decoration: none;
+    overflow: hidden;
+    min-width: 0;
+    flex: 1;
+    gap: 8px;
+  }
 
+  .logo-img {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(34, 211, 238, 0.25);
+  }
+
+  .vms-logo-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.2;
   }
 </style>

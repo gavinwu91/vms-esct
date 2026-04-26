@@ -42,499 +42,9 @@ export default defineComponent({
     })
 
     const routers = computed(() => {
-      const tenantid = authUtil.getTenantId()
-      if (tenantid === 1) {
-        return [
-          {
-            path: '/redirect',
-            name: 'Redirect',
-            children: [{ path: '/redirect/:path(.*)', name: 'Redirect', meta: {} }],
-            meta: { hidden: true, noTagsView: true }
-          },
-          {
-            path: '/',
-            redirect: '/index',
-            name: 'Home',
-            meta: {},
-            children: [
-              {
-                path: 'index',
-                name: 'Index',
-                meta: {
-                  title: 'router.home',
-                  icon: 'ep:home-filled',
-                  noCache: false,
-                  affix: true
-                }
-              }
-            ]
-          },
-          {
-            path: '/user',
-            name: 'UserInfo',
-            meta: { hidden: true },
-            children: [
-              {
-                path: 'profile',
-                name: 'Profile',
-                meta: {
-                  canTo: true,
-                  hidden: true,
-                  noTagsView: false,
-                  icon: 'ep:user',
-                  title: 'common.profile'
-                }
-              },
-              {
-                path: 'notify-message',
-                name: 'MyNotifyMessage',
-                meta: {
-                  canTo: true,
-                  hidden: true,
-                  noTagsView: false,
-                  icon: 'ep:message',
-                  title: 'My message'
-                }
-              }
-            ]
-          },
-          {
-            path: '/login',
-            name: 'Login',
-            meta: { hidden: true, title: 'router.login', noTagsView: true }
-          },
-          {
-            path: '/sso',
-            name: 'SSOLogin',
-            meta: { hidden: true, title: 'router.login', noTagsView: true }
-          },
-          {
-            path: '/social-login',
-            name: 'SocialLogin',
-            meta: {
-              hidden: true,
-              title: 'router.socialLogin',
-              noTagsView: true
-            }
-          },
-          {
-            path: '/403',
-            name: 'NoAccess',
-            meta: { hidden: true, title: '403', noTagsView: true }
-          },
-          {
-            path: '/404',
-            name: 'NoFound',
-            meta: { hidden: true, title: '404', noTagsView: true }
-          },
-          {
-            path: '/500',
-            name: 'Error',
-            meta: { hidden: true, title: '500', noTagsView: true }
-          },
-          {
-            path: '/:pathMatch(.*)*',
-            name: '',
-            meta: { title: '404', hidden: true, breadcrumb: false }
-          },
-          {
-            path: '/vmd/dashboard',
-            name: '',
-            meta: { title: '404', hidden: true, breadcrumb: false }
-          },
-          {
-            path: '/Library',
-            name: '/Library',
-            meta: {
-              title: 'Library ',
-              icon: 'ep:office-building',
-              hidden: false,
-              noCache: false,
-              alwaysShow: true
-            },
-            children: [
-              {
-                path: 'manage',
-                name: 'Manage',
-                meta: {
-                  title: 'Portrait library',
-                  icon: 'ep:coin',
-                  hidden: false,
-                  noCache: false,
-                  alwaysShow: null
-                }
-              },
-              {
-                path: 'manage/person',
-                name: 'PortraitPerson',
-                meta: {
-                  title: 'Portrait person',
-                  icon: 'ep:avatar',
-                  hidden: true,
-                  noCache: true,
-                  alwaysShow: null
-                }
-              }
-            ]
-          },
-          {
-            path: '/camera',
-            name: '/cameraParent',
-            redirect: '',
-            meta: { hidden: false },
-            children: [
-              {
-                path: '',
-                name: '/camera',
-                meta: {
-                  title: 'Device Management',
-                  icon: 'ep:view',
-                  hidden: false,
-                  noCache: false,
-                  alwaysShow: true
-                }
-              }
-            ]
-          },
-          {
-            path: '/area',
-            name: '/areaParent',
-            redirect: '',
-            meta: { hidden: false },
-            children: [
-              {
-                path: '',
-                name: '/area',
-                meta: {
-                  title: 'Area Management',
-                  icon: 'ep:basketball',
-                  hidden: false,
-                  noCache: false,
-                  alwaysShow: true
-                }
-              }
-            ]
-          },
-          {
-            path: '/cameralog',
-            name: '/cameralog',
-            meta: {
-              title: 'Device Status',
-              hidden: false,
-              noCache: false,
-              alwaysShow: null
-            }
-          },
-          {
-            path: '/messages',
-            name: 'Messages',
-            meta: {
-              title: 'Message Center',
-              icon: 'ep:chat-dot-round',
-              hidden: false,
-              noCache: false,
-              alwaysShow: true
-            },
-            children: [
-              {
-                path: 'notify-template',
-                name: 'SystemNotifyTemplate',
-                meta: {
-                  title: 'Template Management ',
-                  icon: 'fa:archive',
-                  hidden: false,
-                  noCache: false,
-                  alwaysShow: null
-                }
-              },
-              {
-                path: 'notify-message',
-                name: 'SystemNotifyMessage',
-                meta: {
-                  title: 'Message Record ',
-                  icon: 'fa:edit',
-                  hidden: false,
-                  noCache: false,
-                  alwaysShow: null
-                }
-              },
-              {
-                path: 'alarmrule',
-                name: 'alarmrule',
-                meta: {
-                  title: 'Alarm Rule',
-                  icon: 'fa:address-card',
-                  hidden: false,
-                  noCache: false,
-                  alwaysShow: null
-                }
-              }
-            ]
-            // children: [
-            //   {
-            //     path: 'notify',
-            //     name: 'Notify',
-            //     meta: {
-            //       title: 'On-site information management ',
-            //       icon: 'ep:message-box',
-            //       hidden: false,
-            //       noCache: false,
-            //       alwaysShow: true
-            //     },
-            //     children: [
-            //       {
-            //         path: 'notify-template',
-            //         name: 'SystemNotifyTemplate',
-            //         meta: {
-            //           title: 'Template management ',
-            //           icon: 'fa:archive',
-            //           hidden: false,
-            //           noCache: false,
-            //           alwaysShow: null
-            //         }
-            //       },
-            //       {
-            //         path: 'notify-message',
-            //         name: 'SystemNotifyMessage',
-            //         meta: {
-            //           title: 'Message record ',
-            //           icon: 'fa:edit',
-            //           hidden: false,
-            //           noCache: false,
-            //           alwaysShow: null
-            //         }
-            //       }
-            //     ]
-            //   }
-            // ]
-          },
-          {
-            path: '/user',
-            name: '/user',
-            meta: {
-              title: 'User Management',
-              icon: 'ep:tools',
-              hidden: false,
-              noCache: false,
-              alwaysShow: true
-            },
-            children: [
-              {
-                path: 'user',
-                name: 'SystemUser',
-                meta: {
-                  title: 'User Management',
-                  icon: 'ep:avatar',
-                  hidden: false,
-                  noCache: false,
-                  alwaysShow: null
-                }
-              },
-              {
-                path: 'role',
-                name: 'SystemRole',
-                meta: {
-                  title: 'Role Management',
-                  icon: 'ep:user',
-                  hidden: false,
-                  noCache: false,
-                  alwaysShow: null
-                }
-              },
-              {
-                path: 'dept',
-                name: 'SystemDept',
-                meta: {
-                  title: 'Departmental Management',
-                  icon: 'fa:address-card',
-                  hidden: false,
-                  noCache: false,
-                  alwaysShow: null
-                }
-              }
-            ]
-          },
-          {
-            path: '/tenant',
-            name: 'Tenant',
-            meta: {
-              title: 'Tenant Management',
-              icon: 'fa-solid:house-user',
-              hidden: false,
-              noCache: false,
-              alwaysShow: true
-            },
-            children: [
-              {
-                path: 'list',
-                name: 'SystemTenant',
-                meta: {
-                  title: 'Tenant List ',
-                  icon: 'ep:house',
-                  hidden: false,
-                  noCache: false,
-                  alwaysShow: null
-                }
-              },
-              {
-                path: 'package',
-                name: 'SystemTenantPackage',
-                meta: {
-                  title: 'Tenant Plan',
-                  icon: 'fa:bars',
-                  hidden: false,
-                  noCache: false,
-                  alwaysShow: null
-                }
-              }
-            ]
-          },
-          {
-            path: '/system',
-            name: '/system',
-            meta: {
-              title: 'System Management',
-              icon: 'ep:tools',
-              hidden: false,
-              noCache: false,
-              alwaysShow: true
-            },
-            children: [
-              // {
-              //   path: 'tenant',
-              //   name: 'Tenant',
-              //   meta: {
-              //     title: 'Tenant management ',
-              //     icon: 'fa-solid:house-user',
-              //     hidden: false,
-              //     noCache: false,
-              //     alwaysShow: true
-              //   },
-              //   children: [
-              //     {
-              //       path: 'list',
-              //       name: 'SystemTenant',
-              //       meta: {
-              //         title: 'Tenant list ',
-              //         icon: 'ep:house',
-              //         hidden: false,
-              //         noCache: false,
-              //         alwaysShow: null
-              //       }
-              //     },
-              //     {
-              //       path: 'package',
-              //       name: 'SystemTenantPackage',
-              //       meta: {
-              //         title: 'Tenant Plan ',
-              //         icon: 'fa:bars',
-              //         hidden: false,
-              //         noCache: false,
-              //         alwaysShow: null
-              //       }
-              //     }
-              //   ]
-              // },
-              // {
-              //   path: 'user',
-              //   name: 'SystemUser',
-              //   meta: {
-              //     title: 'User management ',
-              //     icon: 'ep:avatar',
-              //     hidden: false,
-              //     noCache: false,
-              //     alwaysShow: null
-              //   }
-              // },
-              // {
-              //   path: 'role',
-              //   name: 'SystemRole',
-              //   meta: {
-              //     title: 'Role management ',
-              //     icon: 'ep:user',
-              //     hidden: false,
-              //     noCache: false,
-              //     alwaysShow: null
-              //   }
-              // },
-              {
-                path: 'menu',
-                name: 'SystemMenu',
-                meta: {
-                  title: 'Menu Management',
-                  icon: 'ep:menu',
-                  hidden: false,
-                  noCache: false,
-                  alwaysShow: null
-                }
-              }
-              // {
-              //   path: 'dept',
-              //   name: 'SystemDept',
-              //   meta: {
-              //     title: 'Departmental management ',
-              //     icon: 'fa:address-card',
-              //     hidden: false,
-              //     noCache: false,
-              //     alwaysShow: null
-              //   }
-              // }
-              // {
-              //   path: 'messages',
-              //   name: 'Messages',
-              //   meta: {
-              //     title: 'Message center ',
-              //     icon: 'ep:chat-dot-round',
-              //     hidden: false,
-              //     noCache: false,
-              //     alwaysShow: true
-              //   },
-              //   children: [
-              //     {
-              //       path: 'notify',
-              //       name: 'Notify',
-              //       meta: {
-              //         title: 'On-site information management ',
-              //         icon: 'ep:message-box',
-              //         hidden: false,
-              //         noCache: false,
-              //         alwaysShow: true
-              //       },
-              //       children: [
-              //         {
-              //           path: 'notify-template',
-              //           name: 'SystemNotifyTemplate',
-              //           meta: {
-              //             title: 'Template management ',
-              //             icon: 'fa:archive',
-              //             hidden: false,
-              //             noCache: false,
-              //             alwaysShow: null
-              //           }
-              //         },
-              //         {
-              //           path: 'notify-message',
-              //           name: 'SystemNotifyMessage',
-              //           meta: {
-              //             title: 'Message record ',
-              //             icon: 'fa:edit',
-              //             hidden: false,
-              //             noCache: false,
-              //             alwaysShow: null
-              //           }
-              //         }
-              //       ]
-              //     }
-              //   ]
-              // }
-            ]
-          }
-        ]
-      } else {
-        return unref(layout) === 'cutMenu'
-          ? permissionStore.getMenuTabRouters
-          : permissionStore.getRouters
-      }
+      return unref(layout) === 'cutMenu'
+        ? permissionStore.getMenuTabRouters
+        : permissionStore.getRouters
     })
 
     console.log('routers', JSON.stringify(routers.value))
@@ -584,9 +94,7 @@ export default defineComponent({
           popperClass={
             unref(menuMode) === 'vertical' ? `${prefixCls}-popper--vertical` : `custom-popup`
           }
-          backgroundColor={
-            unref(menuMode) === 'vertical' ? 'var(--left-menu-bg-color)' : 'transparent'
-          }
+          backgroundColor="transparent"
           textColor={unref(menuMode) === 'vertical' ? 'var(--left-menu-text-color)' : '#fff'}
           activeTextColor={
             unref(menuMode) === 'vertical' ? 'var(--left-menu-text-active-color)' : '#00ccff'
@@ -606,7 +114,15 @@ export default defineComponent({
     }
 
     return () => (
-      <div id={prefixCls} class="menu">
+      <div
+        id={prefixCls}
+        class={[
+          prefixCls,
+          'menu',
+          unref(layout) === 'vmsUi' ? `${prefixCls}__vmsUi` : '',
+          `${prefixCls}__${unref(menuMode)}`
+        ]}
+      >
         {renderMenuWrap()}
       </div>
     )
@@ -624,49 +140,119 @@ $prefix-cls: #{$namespace}-menu;
   :deep(.#{$elNamespace}-menu) {
     width: 100% !important;
     border-right: none;
+    background: transparent !important;
 
-    // 设置选中时子标题的颜色
+    // 统一菜单项基础样式
+    .#{$elNamespace}-menu-item,
+    .#{$elNamespace}-sub-menu__title {
+      display: flex;
+      align-items: center;
+      transition: all 0.2s;
+      border: none;
+      box-sizing: border-box;
+    }
+
+    // 选中/高亮逻辑（由变量控制）
     .is-active {
       & > .#{$elNamespace}-sub-menu__title {
         color: var(--left-menu-text-active-color) !important;
       }
     }
 
-    // 设置子菜单悬停的高亮和背景色
-    .#{$elNamespace}-sub-menu__title,
-    .#{$elNamespace}-menu-item {
-      &:hover {
-        background: var(--default-btn-bg-active) !important;
-        color: var(--default-btn-bg-active-font-color) !important;
-      }
-    }
-
-    // 设置选中时的高亮背景和高亮颜色
     .#{$elNamespace}-menu-item.is-active {
       color: var(--left-menu-text-active-color) !important;
       background-color: var(--left-menu-bg-active-color) !important;
+    }
+  }
 
-      &:hover {
-        background-color: var(--left-menu-bg-active-color) !important;
+  // 针对 vmsUi 布局的内联优化
+  &__vmsUi {
+    :deep(.#{$elNamespace}-menu) {
+      padding: 0 !important;
+
+      .#{$elNamespace}-menu-item,
+      .#{$elNamespace}-sub-menu__title {
+        height: 32px !important; 
+        line-height: 32px !important;
+        padding: 0 12px !important;
+        margin: 1px 8px !important; /* 缩小上下间距从 4px 到 1px */
+        border-radius: 8px !important;
+        font-size: 13px !important;
+        gap: 12px !important;
+        box-sizing: border-box !important;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+
+        // 图标优化
+        .el-icon {
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          width: 20px !important;
+          height: 20px !important;
+          font-size: 16px !important;
+          margin: 0 !important;
+          flex-shrink: 0 !important;
+        }
       }
-    }
 
-    .#{$elNamespace}-menu-item.is-active {
-      position: relative;
-    }
+      .#{$elNamespace}-menu-item.is-active {
+        border-right: 2px solid #38bdf8 !important;
+        background: linear-gradient(135deg, rgba(34, 211, 238, 0.12), rgba(14, 165, 233, 0.08)) !important;
+      }
 
-    // 设置子菜单的背景颜色
-    .#{$elNamespace}-menu {
-      .#{$elNamespace}-sub-menu__title,
-      .#{$elNamespace}-menu-item:not(.is-active) {
-        background-color: var(--default-main-color) !important;
+      // 折叠状态下的优化 — 严格对标 vms-ui
+      &.#{$elNamespace}-menu--collapse {
+        width: 100% !important;
+
+        .#{$elNamespace}-menu-item,
+        .#{$elNamespace}-sub-menu__title {
+          height: 32px !important;
+          line-height: 32px !important;
+          margin: 1px 10px !important; /* 缩小上下间距从 4px 到 1px */
+          justify-content: center !important;
+          box-sizing: border-box !important;
+
+          // 强制锁定折叠态图标大小，防止跳变
+          .el-icon {
+            width: 20px !important;
+            height: 20px !important;
+            font-size: 16px !important;
+            display: inline-flex !important;
+          }
+
+          // 只隐藏文字标题和箭头，不隐藏图标 (Icon 内部可能包含 span)
+          .v-menu__title, 
+          .#{$elNamespace}-sub-menu__icon-arrow {
+            display: none !important;
+          }
+        }
+
+        .#{$elNamespace}-menu-item.is-active {
+          border-right: 2px solid #38bdf8 !important; /* 恢复发光边框 */
+          background: rgba(34, 211, 238, 0.15) !important;
+        }
+      }
+
+      // 子菜单内层缩进
+      .#{$elNamespace}-menu {
+        .#{$elNamespace}-menu-item,
+        .#{$elNamespace}-sub-menu__title {
+          padding-left: 20px !important;
+          font-size: 12px !important;
+          color: #7c8fa3 !important;
+        }
+
+        .#{$elNamespace}-menu-item.is-active {
+          border-right: 2px solid rgba(56, 189, 248, 0.5) !important;
+          background: rgba(34, 211, 238, 0.1) !important;
+        }
       }
     }
   }
 
   // 折叠时的最小宽度
   :deep(.#{$elNamespace}-menu--collapse) {
-    width: var(--left-menu-min-width);
+    width: 100% !important;
 
     & > .is-active,
     & > .is-active > .#{$elNamespace}-sub-menu__title {
@@ -675,9 +261,8 @@ $prefix-cls: #{$namespace}-menu;
     }
   }
 
-  // 折叠动画的时候，就需要把文字给隐藏掉
+  // 折叠动画
   :deep(.horizontal-collapse-transition) {
-    // transition: 0s width ease-in-out, 0s padding-left ease-in-out, 0s padding-right ease-in-out !important;
     .#{$prefix-cls}__title {
       display: none;
     }
@@ -700,26 +285,10 @@ $prefix-cls: #{$namespace}-menu;
     :deep(.#{$elNamespace}-menu--horizontal) {
       height: calc(var(--top-tool-height));
       border-bottom: none;
-      // 重新设置底部高亮颜色
       & > .#{$elNamespace}-sub-menu.is-active {
         .#{$elNamespace}-sub-menu__title {
           border-bottom-color: var(--default-main-color) !important;
         }
-      }
-
-      .#{$elNamespace}-menu-item.is-active {
-        position: relative;
-
-        &::after {
-          display: none !important;
-        }
-      }
-
-      .#{$prefix-cls}__title {
-        /* stylelint-disable-next-line */
-        max-height: calc(var(--top-tool-height) - 2px) !important;
-        /* stylelint-disable-next-line */
-        line-height: calc(var(--top-tool-height) - 2px);
       }
     }
   }
@@ -729,8 +298,8 @@ $prefix-cls: #{$namespace}-menu;
   display: flex;
   justify-content: flex-start;
   flex: 1;
-  max-width: 68%;
-  min-width: 60%;
+  width: 100%;
+  min-width: 0;
 }
 
 .custom-menu {
@@ -739,78 +308,8 @@ $prefix-cls: #{$namespace}-menu;
   min-width: 0;
 }
 
-.el-menu--horizontal > .el-menu-item.is-active {
-  border-bottom-color: transparent;
-}
-
-.custom-menu .v-icon {
-  display: none;
-}
-
-:deep(.custom-menu .el-sub-menu__icon-more):before {
-  //: 'More'!important;
-}
-
-.custom-menu .el-menu-item {
-  font-weight: 500;
-  padding: 0 15px;
-  margin: 0 5px;
-  font-size: 1rem;
-  color: #fff !important;
-  transition:
-    color 0.3s,
-    background-color 0.3s;
-}
-
-.custom-menu .el-menu-item:hover {
-  background: var(--default-btn-bg-active) !important;
-  color: var(--default-btn-bg-active-font-color) !important;
-}
-
-.custom-menu .el-sub-menu:hover {
-  background: var(--default-btn-bg-active) !important;
-  color: var(--default-btn-bg-active-font-color) !important;
-}
-
-.custom-menu .el-menu-item.is-active {
-  color: #ffffff !important;
-  border-bottom: 2px solid transparent;
-}
-
-:deep(.el-sub-menu__title:hover) {
-  background: var(--default-btn-bg-active) !important;
-  color: var(--default-btn-bg-active-font-color) !important;
-}
-
-.custom-menu .el-menu-item.is-active {
-  background: var(--default-btn-bg-active) !important;
-  color: var(--default-btn-bg-active-font-color) !important;
-}
-
-.custom-menu .el-menu--horizontal > .el-sub-menu.is-active .el-sub-menu__title {
-  color: var(--default-btn-bg-active-font-color) !important;
-}
-
-.custom-menu .el-menu--horizontal > .el-sub-menu.is-active .el-sub-menu__title {
-  background: var(--default-btn-bg-active) !important;
-  color: var(--default-btn-bg-active-font-color) !important;
-}
-
-:deep(.el-sub-menu.is-active .el-sub-menu__title) {
-  background: var(--default-btn-bg-active) !important;
-  color: var(--default-btn-bg-active-font-color) !important;
-}
-
 .el-menu-item {
   display: flex;
-
-  .el-icon {
-    display: none;
-  }
-}
-
-.el-sub-menu .el-icon {
-  display: none;
 }
 </style>
 

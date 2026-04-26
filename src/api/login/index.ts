@@ -38,26 +38,7 @@ export const loginOut = () => {
 
 // 获取用户权限信息
 export const getInfo = () => {
-  // return request.get({ url: '/system/auth/get-permission-info' })
-  return Promise.resolve({
-    permissions: ['*:*:*'],
-    roles: ['admin'],
-    user: {
-      id: 1,
-      avatar: 'https://img0.baidu.com/it/u=3005141120,3012222706&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500',
-      nickname: 'Mock User',
-      deptId: 1
-    },
-    menus: [
-      {
-        id: 1,
-        name: 'Dashboard',
-        path: '/dashboard',
-        component: 'Layout',
-        children: []
-      }
-    ]
-  })
+  return request.get({ url: '/system/auth/get-permission-info' })
 }
 
 //获取登录验证码

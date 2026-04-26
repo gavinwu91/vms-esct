@@ -273,11 +273,11 @@ watch(
   <div
     :id="prefixCls"
     :class="prefixCls"
-    class="relative w-full flex bg-[#fff] dark:bg-[var(--el-bg-color)]"
+    class="relative w-full flex items-center"
   >
     <span
       :class="tagsViewImmerse ? '' : `${prefixCls}__tool ${prefixCls}__tool--first`"
-      class="h-[var(--tags-view-height)] w-[var(--tags-view-height)] flex cursor-pointer items-center justify-center"
+      class="flex cursor-pointer items-center justify-center"
       @click="move(-200)"
     >
       <Icon
@@ -288,7 +288,7 @@ watch(
     </span>
     <div class="flex-1 overflow-hidden">
       <ElScrollbar ref="scrollbarRef" class="h-full" @scroll="scroll">
-        <div class="h-[var(--tags-view-height)] flex">
+        <div class="h-[var(--tags-view-height)] flex items-center">
           <ContextMenu
             v-for="item in visitedViews"
             :key="item.fullPath"
@@ -363,10 +363,10 @@ watch(
             :tag-item="item"
             @visible-change="visibleChange"
           >
-            <div>
+            <div class="h-full flex items-center">
               <router-link :ref="tagLinksRefs.set" v-slot="{ navigate }" :to="{ ...item }" custom>
                 <div
-                  :class="`h-full flex items-center justify-center whitespace-nowrap pl-15px ${prefixCls}__item--label`"
+                  :class="`h-full flex items-center justify-center whitespace-nowrap px-10px ${prefixCls}__item--label`"
                   @click="navigate"
                 >
                   <Icon
@@ -386,9 +386,10 @@ watch(
                     (item?.meta?.titleSuffix ? ` (${item?.meta?.titleSuffix})` : '')
                   }}
                   <Icon
+                    v-if="!item?.meta?.affix"
                     :class="`${prefixCls}__item--close`"
                     :size="12"
-                    color="#333"
+                    color="#38bdf8"
                     icon="ep:close"
                     @click.prevent.stop="closeSelectedTag(item)"
                   />
@@ -400,8 +401,9 @@ watch(
       </ElScrollbar>
     </div>
     <span
+      v-if="visitedViews.length > 5"
       :class="tagsViewImmerse ? '' : `${prefixCls}__tool`"
-      class="h-[var(--tags-view-height)] w-[var(--tags-view-height)] flex cursor-pointer items-center justify-center"
+      class="flex cursor-pointer items-center justify-center"
       @click="move(200)"
     >
       <Icon
@@ -412,7 +414,7 @@ watch(
     </span>
     <span
       :class="tagsViewImmerse ? '' : `${prefixCls}__tool`"
-      class="h-[var(--tags-view-height)] w-[var(--tags-view-height)] flex cursor-pointer items-center justify-center"
+      class="flex cursor-pointer items-center justify-center"
       @click="refreshSelectedTag(selectedTag)"
     >
       <Icon
@@ -490,67 +492,62 @@ watch(
 </template>
 
 <style lang="scss" scoped>
-:deep(.el-scrollbar .v-tags-view__item--label  .el-icon){
+$prefix-cls: #{$namespace}-tags-view;
+
+/* 隐藏 tab 内标签图标 */
+:deep(.el-scrollbar .v-tags-view__item--label .el-icon) {
   display: none;
 }
-:deep(.el-scrollbar .v-tags-view__item){
-  position: relative;
-  line-height: 24px;
-  height: calc(100% - 6px);
-  padding-right: 20px;
-  margin-left: 4px;
-  font-size: 12px;
-  cursor: pointer;
-  border-radius: unset;
-  border: 1px solid #d9d9d9;
-  box-sizing: border-box;
-}
-$prefix-cls: #{$namespace}-tags-view;
 
 .#{$prefix-cls} {
   :deep(.#{$elNamespace}-scrollbar__view) {
     height: 100%;
   }
 
+  /* 右侧工具按钮 */
   &__tool {
     position: relative;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 28px !important; /* 同步增加高度 */
+    width: 28px !important;
+    margin: 0 2px !important;
+    border-radius: 6px !important;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #94a3b8;
 
-    &::before {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border-left: 1px solid var(--el-border-color);
-      content: '';
+    &:hover {
+      background: rgba(56, 189, 248, 0.12);
+      color: #38bdf8;
     }
 
-    &--first {
-      &::before {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border-right: 1px solid var(--el-border-color);
-        border-left: none;
-        content: '';
-      }
+    &::before,
+    &--first::before {
+      display: none !important;
     }
   }
 
+  /* ========== Tab 标签项 ========== */
   &__item {
     position: relative;
-    top: 3px;
-    height: calc(100% - 6px);
+    top: 0;
+    height: 28px; /* 稍微增加高度，使 40px 的外层看起来更协调 */
+    line-height: 28px;
     padding-right: 15px;
-    margin-left: 4px;
+    margin-left: 6px;
+    margin-top: 0;
     font-size: 12px;
     cursor: pointer;
-    border: 1px solid #d9d9d9;
-    border-radius: 2px;
+    border: none;
+    border-radius: 6px;
     box-sizing: border-box;
+    background: rgba(30, 41, 59, 0.4);
+    color: #94a3b8;
+    transition: all 0.2s;
 
+    /* 关闭按钮 */
     &--close {
       position: absolute;
       top: 50%;
@@ -570,39 +567,42 @@ $prefix-cls: #{$namespace}-tags-view;
     padding-right: 20px;
   }
 
+  /* hover */
   &__item:not(.is-active) {
     &:hover {
-      color: var(--el-color-primary);
+      background: rgba(56, 189, 248, 0.12);
+      color: #e2e8f0;
     }
   }
 
+  /* active */
   &__item.is-active {
-    color: var(--el-color-white);
-    background-color: var(--el-color-primary);
-    border: 1px solid var(--el-color-primary);
+    background: rgba(56, 189, 248, 0.2);
+    color: #38bdf8;
+    border: none;
 
     .#{$prefix-cls}__item--close {
       :deep(span) {
-        color: var(--el-color-white) !important;
+        color: #38bdf8 !important;
       }
     }
   }
 
+  /* immerse 模式（保持兼容但用新样式） */
   &__item--immerse {
-    top: 2px;
-    height: calc(100% - 3px);
+    top: 0;
+    height: 28px;
     padding-right: 35px;
-    margin: 0 -10px;
+    margin: 0 2px;
     border: none !important;
-    -webkit-mask-box-image: url("data:image/svg+xml,%3Csvg width='68' height='34' viewBox='0 0 68 34' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='m27,0c-7.99582,0 -11.95105,0.00205 -12,12l0,6c0,8.284 -0.48549,16.49691 -8.76949,16.49691l54.37857,-0.11145c-8.284,0 -8.60908,-8.10146 -8.60908,-16.38546l0,-6c0.11145,-12.08445 -4.38441,-12 -12,-12l-13,0z' fill='%23409eff'/%3E%3C/svg%3E")
-      12 27 15;
+    -webkit-mask-box-image: none;
 
     .#{$prefix-cls}__item--label {
-      padding-left: 35px;
+      padding-left: 15px;
     }
 
     .#{$prefix-cls}__item--close {
-      right: 20px;
+      right: 10px;
     }
   }
 
@@ -612,53 +612,55 @@ $prefix-cls: #{$namespace}-tags-view;
 
   &__item--immerse:not(.is-active) {
     &:hover {
-      color: var(--el-color-white);
-      background-color: var(--el-color-primary);
+      background: rgba(56, 189, 248, 0.12);
+      color: #e2e8f0;
 
       .#{$prefix-cls}__item--close {
         :deep(span) {
-          color: var(--el-color-white) !important;
+          color: #e2e8f0 !important;
         }
       }
     }
   }
 }
 
+/* Dark 模式（vms-ui 本身就是暗色） */
 .dark {
   .#{$prefix-cls} {
     &__tool {
-      &--first {
-        &::after {
-          display: none;
-        }
+      &--first::after {
+        display: none;
       }
     }
 
     &__item {
-      border: 1px solid var(--el-border-color);
+      border: none;
+      background: rgba(30, 41, 59, 0.4);
+      color: #94a3b8;
     }
 
     &__item:not(.is-active) {
       &:hover {
-        color: var(--el-color-primary);
+        color: #e2e8f0;
+        background: rgba(56, 189, 248, 0.12);
       }
     }
 
     &__item.is-active {
-      color: var(--el-color-white);
-      background-color: var(--el-color-primary);
-      border: 1px solid var(--el-color-primary);
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.2);
+      border: none;
 
       .#{$prefix-cls}__item--close {
         :deep(span) {
-          color: var(--el-color-white) !important;
+          color: #38bdf8 !important;
         }
       }
     }
 
     &__item--immerse:not(.is-active) {
       &:hover {
-        color: var(--el-color-white);
+        color: #e2e8f0;
       }
     }
   }

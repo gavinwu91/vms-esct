@@ -1,81 +1,227 @@
-/* ========== vms-ui 全局外壳样式 ========== */
+/* ======================================================
+   vms-ui 暗黑科技风格主题皮肤
+   所有选择器使用 .vms-ui-app-shell 前缀确保优先级
+   Logo 区使用 .vms-ui-header 自包含样式，不依赖 Logo 组件
+   ====================================================== */
+
+/* ========== App 外壳 ========== */
 .vms-ui-app-shell {
   display: flex;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background: #0b1120;
+  background: radial-gradient(circle at 50% 50%, #0a1a3a 0%, #010816 100%);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   color: #e0f2ff;
 }
 
-/* ========== 侧边栏样式 ========== */
-.vms-ui-sidebar {
-  width: 260px;
-  min-width: 260px;
+/* ========== 侧边栏 ========== */
+.vms-ui-app-shell .vms-ui-sidebar {
+  width: 220px;
+  min-width: 220px;
+  flex-shrink: 0;
   background: linear-gradient(180deg, #020617 0%, #020617 100%);
   border-right: 1px solid rgba(148, 163, 184, 0.1);
-  padding: 16px 12px;
+  padding: 14px 10px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  transition: width 0.25s cubic-bezier(0.2, 0, 0, 1);
+  gap: 14px;
+  transition: width 0.25s cubic-bezier(0.2, 0, 0, 1), min-width 0.25s cubic-bezier(0.2, 0, 0, 1);
   border-radius: 0 20px 20px 0;
   box-shadow: 8px 0 32px rgba(0, 0, 0, 0.3);
   overflow-y: auto;
   overflow-x: visible;
   z-index: 100;
+  position: relative;
 }
 
-.vms-ui-sidebar.collapsed {
-  width: 72px;
-  min-width: 72px;
+.vms-ui-app-shell .vms-ui-sidebar::-webkit-scrollbar {
+  width: 0;
+  display: none;
 }
 
-.sidebar-header {
+.vms-ui-app-shell .vms-ui-sidebar.collapsed {
+  width: 64px;
+  min-width: 64px;
+  padding: 14px 6px;
+  align-items: center;
+}
+
+/* ========== Logo 区（自包含） ========== */
+/* ========== Logo 区（自包含） ========== */
+.vms-ui-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  min-height: 48px; /* 稍微增加高度 */
+  flex-shrink: 0;
+  padding: 0 20px 0 10px; /* 为右侧椭圆按钮留出空间 */
+  overflow: visible;
+}
+
+.vms-ui-logo-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  overflow: hidden;
+  flex: 1;
+  min-width: 0;
+}
+
+.vms-ui-logo-img {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(34, 211, 238, 0.25);
+  filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.3));
+}
+
+.vms-ui-logo-title {
+  color: #e2e8f0;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+/* 折叠时 Logo 居中 */
+.vms-ui-sidebar.collapsed .vms-ui-header {
+  justify-content: center;
+  padding: 0;
+}
+
+.vms-ui-sidebar.collapsed .vms-ui-logo-link {
+  flex: 0;
+  justify-content: center;
+  overflow: visible;
+}
+
+/* ========== 折叠按钮 — 偏竖椭圆，紧贴侧边栏最右侧 ========== */
+.vms-ui-collapse-btn {
+  position: absolute;
+  right: 0; /* 紧贴侧边栏最右侧 */
+  top: 24px; /* 固定在 Header 区域的垂直中心 (Header 高 48px) */
+  transform: translateY(-50%);
+  width: 8px;
+  height: 32px;
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-right: none;
+  border-radius: 4px 0 0 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  position: relative;
-  padding-right: 8px;
-  min-height: 50px;
+  cursor: pointer;
+  color: #94a3b8;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 100; /* 提高层级 */
+  padding: 0;
+  outline: none;
 }
 
-.vms-ui-logo {
-  /* Logo 从 Layout.vue 引入，可以在这里做样式微调 */
+.vms-ui-collapse-btn:hover {
+  background: rgba(56, 189, 248, 0.3);
+  border-color: rgba(56, 189, 248, 0.5);
+  color: #38bdf8;
+  width: 12px; /* 悬浮时加宽，方便点击 */
 }
 
-.sidebar-nav {
+.vms-ui-collapse-btn svg {
+  width: 10px;
+  height: 10px;
+  stroke: currentColor;
+}
+
+/* ========== sidebar-nav ========== */
+.vms-ui-app-shell .sidebar-nav {
   flex: 1;
-  overflow-y: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-/* ========== 左侧菜单 Element Plus 覆写 ========== */
-.vms-ui-menu {
+.vms-ui-app-shell .sidebar-nav::-webkit-scrollbar {
+  width: 2px;
+}
+
+.vms-ui-app-shell .sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.15);
+  border-radius: 2px;
+}
+
+/* ========== .menu 容器 ========== */
+.vms-ui-app-shell .vms-ui-sidebar .menu {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  flex: none !important;
+  gap: 0 !important;
+}
+
+/* ========== el-menu ========== */
+.vms-ui-app-shell .vms-ui-sidebar .el-menu {
   border-right: none !important;
   background: transparent !important;
+  width: 100% !important;
+  padding: 0 !important;
 }
 
-.vms-ui-menu .el-menu-item,
-.vms-ui-menu .el-sub-menu__title {
+/* ====================================================
+   菜单与图标 — 已移至 Menu.vue 直接定义
+   ==================================================== */
+
+.vms-ui-app-shell .vms-ui-sidebar.collapsed .el-icon * {
+  display: inline-block !important;
+}
+
+.vms-ui-app-shell .vms-ui-sidebar.collapsed .el-sub-menu__icon-arrow {
+  display: none !important;
+}
+
+.vms-ui-app-shell .vms-ui-sidebar .el-menu--collapse > .is-active,
+.vms-ui-app-shell .vms-ui-sidebar .el-menu--collapse > .is-active > .el-sub-menu__title {
+  background-color: rgba(34, 211, 238, 0.15) !important;
+}
+
+/* ========== popup 浮层 ========== */
+.v-menu-popper--vertical {
+  background: rgba(2, 6, 23, 0.95) !important;
+  border: 1px solid rgba(148, 163, 184, 0.15) !important;
+  border-radius: 12px !important;
+  backdrop-filter: blur(12px) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  padding: 8px !important;
+}
+
+.v-menu-popper--vertical .el-menu {
+  background: transparent !important;
+  border: none !important;
+}
+
+.v-menu-popper--vertical .el-menu-item,
+.v-menu-popper--vertical .el-sub-menu__title {
   color: #94a3b8 !important;
-  border-radius: 10px;
-  margin: 4px 8px;
-  height: 44px;
-  line-height: 44px;
+  border-radius: 8px !important;
+  padding: 6px 10px !important;
+  height: auto !important;
+  line-height: normal !important;
 }
 
-.vms-ui-menu .el-menu-item:hover,
-.vms-ui-menu .el-sub-menu__title:hover {
+.v-menu-popper--vertical .el-menu-item:hover,
+.v-menu-popper--vertical .el-sub-menu__title:hover {
   background: rgba(30, 41, 59, 0.7) !important;
   color: #e2e8f0 !important;
 }
 
-.vms-ui-menu .el-menu-item.is-active {
-  background: linear-gradient(135deg, rgba(34, 211, 238, 0.12), rgba(14, 165, 233, 0.08)) !important;
+.v-menu-popper--vertical .el-menu-item.is-active {
+  background: rgba(34, 211, 238, 0.15) !important;
   color: #38bdf8 !important;
-  border-right: 2px solid #38bdf8;
 }
 
 /* ========== 主内容区 ========== */
@@ -95,11 +241,14 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
-  min-height: 44px;
+  min-height: 40px; /* 稍微压缩整体高度 */
+  max-height: 40px;
   background: rgba(15, 23, 42, 0.3);
   backdrop-filter: blur(8px);
   border-radius: 20px;
   border: 1px solid rgba(148, 163, 184, 0.1);
+  flex-shrink: 0;
+  gap: 12px;
 }
 
 .tabs-wrapper {
@@ -107,79 +256,62 @@
   display: flex;
   align-items: center;
   flex: 1;
+  height: 100%;
+  min-width: 0;
 }
 
 .topbar-right {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
+  gap: 4px;
 }
 
+/* ToolHeader 样式 — 已移至 ToolHeader.vue 直接定义 */
+.vms-ui-app-shell .v-tool-header,
 .vms-ui-toolheader {
-  /* 微调 ToolHeader 以融入 */
   background: transparent !important;
-  border-bottom: none !important;
+  border: none !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
 }
 
+/* ========== TagsView — 已移至 TagsView.vue 直接定义 ========== */
+
+/* ========== 内容视图 ========== */
 .vms-ui-view-shell {
   flex: 1;
   overflow: hidden;
   background: transparent;
-  border-radius: 8px;
+  border-radius: 12px;
   position: relative;
 }
 
-/* ========== 全局背景与覆写 ========== */
-body.dark {
-  background: radial-gradient(circle at 50% 50%, #0a1a3a 0%, #010816 100%) !important;
+/* ========== 全局变量覆盖 ========== */
+.vms-ui-app-shell {
+  --top-tool-height: 40px;
+  --tags-view-height: 40px;
+  --el-font-size-base: 13px;
 }
 
 #app {
   background: transparent !important;
 }
 
-/* ========== TagsView 和 ToolHeader 覆写 ========== */
-.vms-ui-app-shell .v-tags-view {
-  background: transparent !important;
+.vms-ui-app-shell .v-icon {
+  display: inline-flex !important;
+}
+
+/* 去除多余边框 */
+.vms-ui-app-shell .layout-border__bottom,
+.vms-ui-app-shell .layout-border__right {
   border: none !important;
 }
 
-.vms-ui-app-shell .v-tags-view__item {
-  border: none !important;
-  border-radius: 8px !important;
-  background: rgba(30, 41, 59, 0.4) !important;
-  color: #94a3b8 !important;
-  margin-right: 6px;
-  height: 32px !important;
-  line-height: 32px !important;
-  top: 6px !important;
-  padding: 0 10px !important;
+/* 横向滚动条隐藏 */
+.vms-ui-app-shell ::-webkit-scrollbar:horizontal {
+  height: 0;
+  display: none;
 }
 
-.vms-ui-app-shell .v-tags-view__item:hover {
-  background: rgba(56, 189, 248, 0.12) !important;
-  color: #e2e8f0 !important;
-}
-
-.vms-ui-app-shell .v-tags-view__item.is-active {
-  background: rgba(56, 189, 248, 0.2) !important;
-  color: #38bdf8 !important;
-  border: none !important;
-}
-
-.vms-ui-app-shell .v-tags-view__tool {
-  background: transparent !important;
-  border: none !important;
-}
-
-.vms-ui-app-shell .v-tags-view__tool::before,
-.vms-ui-app-shell .v-tags-view__tool--first::before {
-  display: none !important;
-}
-
-/* 隐藏无关边框 */
-.layout-border__bottom {
-  border-bottom: none !important;
-}
-.layout-border__right {
-  border-right: none !important;
-}
