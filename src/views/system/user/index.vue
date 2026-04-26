@@ -428,12 +428,20 @@ onMounted(() => {
   }
 }
 
-:deep(.content-wrap) {
-  background: rgba(15, 23, 42, 0.4) !important;
+:deep(.v-content-wrap),
+:deep(.el-card) {
+  background: rgba(15, 23, 42, 0.5) !important;
   backdrop-filter: blur(12px) !important;
   border: 1px solid rgba(148, 163, 184, 0.1) !important;
   border-radius: 12px !important;
   margin-bottom: 16px !important;
+  color: #e2e8f0 !important;
+
+  .el-card__header {
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1) !important;
+    color: #38bdf8 !important;
+    font-weight: 600 !important;
+  }
 }
 
 :deep(.el-pagination) {

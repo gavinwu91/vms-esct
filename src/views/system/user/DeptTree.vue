@@ -62,6 +62,11 @@ onMounted(async () => {
 })
 </script>
 <style lang="scss" scoped>
+.head-container {
+  background: transparent !important;
+  margin-bottom: 15px;
+}
+
 :deep(.el-input) {
   .el-input__wrapper {
     background-color: rgba(15, 23, 42, 0.4) !important;

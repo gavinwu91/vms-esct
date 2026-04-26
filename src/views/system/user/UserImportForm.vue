@@ -179,4 +179,30 @@ const importTemplate = async () => {
     color: #7dd3fc !important;
   }
 }
+:deep(.el-dialog) {
+  background: rgba(15, 23, 42, 0.9) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6) !important;
+
+  .el-dialog__header {
+    margin-right: 0 !important;
+    padding: 20px 24px !important;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.15) !important;
+    
+    .el-dialog__title {
+      color: #38bdf8 !important;
+      font-weight: 600 !important;
+      font-size: 18px !important;
+    }
+  }
+
+  .el-dialog__footer {
+    border-top: 1px solid rgba(148, 163, 184, 0.15) !important;
+    padding: 16px 24px !important;
+    background: rgba(0, 0, 0, 0.1) !important;
+    border-radius: 0 0 16px 16px !important;
+  }
+}
 </style>
