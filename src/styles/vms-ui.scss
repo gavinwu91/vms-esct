@@ -311,7 +311,98 @@
 
 /* 横向滚动条隐藏 */
 .vms-ui-app-shell ::-webkit-scrollbar:horizontal {
-  height: 0;
   display: none;
+}
+
+/* ========== 全局 Element Plus 组件重定义 (MessageBox, Message, Notification) ========== */
+
+/* 1. MessageBox 确认框重塑 */
+.el-message-box {
+  background: rgba(15, 23, 42, 0.85) !important;
+  backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6) !important;
+  padding: 20px !important;
+
+  .el-message-box__title {
+    color: #f8fafc !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+    letter-spacing: 1px !important;
+  }
+
+  .el-message-box__content {
+    color: #94a3b8 !important;
+    font-size: 14px !important;
+    padding: 15px 0 !important;
+  }
+
+  .el-message-box__btns {
+    padding-top: 10px !important;
+
+    /* 取消按钮 */
+    .el-button {
+      background: rgba(255, 255, 255, 0.05) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      color: #94a3b8 !important;
+      border-radius: 4px !important;
+      transition: all 0.3s !important;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1) !important;
+        color: #fff !important;
+      }
+    }
+
+    /* 确定按钮 */
+    .el-button--primary {
+      background: #0ea5e9 !important;
+      border: none !important;
+      color: #fff !important;
+      font-weight: 600 !important;
+      box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3) !important;
+
+      &:hover {
+        background: #38bdf8 !important;
+        box-shadow: 0 0 15px rgba(56, 189, 248, 0.5) !important;
+        transform: translateY(-1px) !important;
+      }
+    }
+  }
+
+  /* 头部关闭按钮 */
+  .el-message-box__headerbtn .el-message-box__close {
+    color: #64748b !important;
+    &:hover { color: #38bdf8 !important; }
+  }
+}
+
+/* 2. Message 消息条重塑 */
+.el-message {
+  background: rgba(15, 23, 42, 0.9) !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(56, 189, 248, 0.2) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  border-radius: 6px !important;
+  min-width: 320px !important;
+
+  .el-message__content {
+    color: #f1f5f9 !important;
+    font-weight: 500 !important;
+  }
+
+  /* 不同类型的颜色微调 */
+  &.el-message--success { border-color: rgba(16, 185, 129, 0.4) !important; .el-message__icon { color: #10b981 !important; } }
+  &.el-message--warning { border-color: rgba(245, 158, 11, 0.4) !important; .el-message__icon { color: #f59e0b !important; } }
+  &.el-message--error { border-color: rgba(239, 68, 68, 0.4) !important; .el-message__icon { color: #ef4444 !important; } }
+  &.el-message--info { border-color: rgba(56, 189, 248, 0.4) !important; .el-message__icon { color: #38bdf8 !important; } }
+}
+
+/* 3. 针对 MessageBox 的遮罩层 */
+.v-modal {
+  background: rgba(2, 6, 23, 0.6) !important;
+  backdrop-filter: blur(4px) !important;
+  opacity: 1 !important;
 }
 
