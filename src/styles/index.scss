@@ -5,8 +5,9 @@
 @use './vms-ui.scss';
 @use 'element-plus/theme-chalk/dark/css-vars.css';
 
-:deep(.el-popper__arrow, .el-popper__arrow:before){
-  display: none!important;
+.el-popper__arrow,
+.el-popper__arrow::before {
+  display: none !important;
 }
 
 :deep(.el-pagination .is-background  .el-pager li .is-active) {
