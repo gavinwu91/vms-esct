@@ -1,5 +1,6 @@
 /node_modules/
 node_modules
 /.idea/
-public/profile.png
+.vscode/settings.json
 src/types/auto-components.d.ts
+src/types/auto-imports.d.ts
