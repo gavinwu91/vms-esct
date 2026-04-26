@@ -268,39 +268,73 @@
   }
 }
 
-/* ========== popup 浮层 ========== */
+/* ========== popup 浮层 (二级菜单) ========== */
 .v-menu-popper--vertical {
-  background: rgba(2, 6, 23, 0.95) !important;
-  border: 1px solid rgba(148, 163, 184, 0.15) !important;
+  background: rgba(8, 22, 45, 0.95) !important; /* 更深邃的深蓝色背景 */
+  border: 1px solid rgba(56, 189, 248, 0.25) !important; /* 科技感蓝边框 */
   border-radius: 12px !important;
-  backdrop-filter: blur(12px) !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
-  padding: 8px !important;
-}
+  backdrop-filter: blur(15px) !important;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6) !important;
+  padding: 6px 0 !important; /* 彻底去除左右内边距，消除双重盒子感 */
 
-.v-menu-popper--vertical .el-menu {
-  background: transparent !important;
-  border: none !important;
-}
+  /* 解决 box 里又有 box 的问题：强制清除内层 el-menu 的背景和边框 */
+  .el-menu, .el-menu--popup {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    min-width: 140px !important; /* 保证宽度合适 */
+  }
 
-.v-menu-popper--vertical .el-menu-item,
-.v-menu-popper--vertical .el-sub-menu__title {
-  color: #94a3b8 !important;
-  border-radius: 8px !important;
-  padding: 6px 10px !important;
-  height: auto !important;
-  line-height: normal !important;
-}
+  .el-menu-item, .el-sub-menu__title {
+    height: 40px !important;
+    line-height: 40px !important;
+    margin: 2px 8px !important; /* 左右留出间距，呈现悬浮圆角效果 */
+    padding: 0 14px !important;
+    border-radius: 8px !important;
+    color: #94a3b8 !important;
+    font-size: 13px !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    display: flex !important;
+    align-items: center !important;
 
-.v-menu-popper--vertical .el-menu-item:hover,
-.v-menu-popper--vertical .el-sub-menu__title:hover {
-  background: rgba(30, 41, 59, 0.7) !important;
-  color: #e2e8f0 !important;
-}
+    .el-icon {
+      font-size: 16px !important;
+      margin-right: 10px !important;
+      color: inherit !important;
+    }
+    
+    &:hover {
+      background: rgba(56, 189, 248, 0.12) !important;
+      color: #38bdf8 !important;
+      // padding-left: 16px !important; /* 稍微向右滑动，增加动感 */
+    }
 
-.v-menu-popper--vertical .el-menu-item.is-active {
-  background: rgba(34, 211, 238, 0.15) !important;
-  color: #38bdf8 !important;
+    &.is-active {
+      background: rgba(14, 165, 233, 0.25) !important;
+      color: #38bdf8 !important;
+      font-weight: 600;
+    }
+  }
+
+  /* 这里的 el-sub-menu__title 主要是为了二级菜单还有三级菜单的情况 */
+  .el-sub-menu .el-sub-menu__icon-arrow {
+    right: 10px !important;
+  }
+
+  /* 恢复并美化小箭头，对标 want.png */
+  &.el-popper .el-popper__arrow {
+    display: block !important;
+    visibility: visible !important;
+    &::before {
+      background: rgba(8, 22, 45, 0.95) !important;
+      border: 1px solid rgba(56, 189, 248, 0.25) !important;
+      display: block !important;
+      visibility: visible !important;
+    }
+  }
 }
 
 /* ========== 主内容区 ========== */

@@ -316,33 +316,9 @@ $prefix-cls: #{$namespace}-menu;
 <style lang="scss">
 $prefix-cls: #{$namespace}-menu-popper;
 
+// popper 样式已统一在 vms-ui.scss 中处理
 .#{$prefix-cls}--vertical,
 .#{$prefix-cls}--horizontal {
-  // 设置选中时子标题的颜色
-  .is-active {
-    & > .el-sub-menu__title {
-      color: var(--left-menu-text-active-color) !important;
-    }
-  }
-
-  // 设置子菜单悬停的高亮和背景色
-  .el-sub-menu__title,
-  .el-menu-item {
-    &:hover {
-      background: var(--default-btn-bg-active) !important;
-      color: var(--default-btn-bg-active-font-color) !important;
-    }
-  }
-
-  // 设置选中时的高亮背景
-  .el-menu-item.is-active {
-    position: relative;
-    background-color: var(--default-main-color) !important;
-
-    &:hover {
-      background-color: var(--left-menu-bg-active-color) !important;
-    }
-  }
 }
 
 .dark {
