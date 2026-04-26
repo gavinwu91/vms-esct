@@ -256,3 +256,51 @@ const resetForm = () => {
   formRef.value?.resetFields()
 }
 </script>
+<style lang="scss" scoped>
+:deep(.el-form) {
+  .el-form-item__label {
+    color: #94a3b8 !important;
+    font-weight: 500 !important;
+  }
+
+  .el-input__wrapper, .el-select__wrapper, .el-tree-select .el-input__wrapper {
+    background-color: rgba(15, 23, 42, 0.6) !important;
+    border: 1px solid rgba(56, 189, 248, 0.2) !important;
+    box-shadow: none !important;
+    border-radius: 8px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover, &.is-focus {
+      border-color: rgba(56, 189, 248, 0.6) !important;
+      background-color: rgba(15, 23, 42, 0.8) !important;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.1) !important;
+    }
+
+    .el-input__inner {
+      color: #e2e8f0 !important;
+    }
+  }
+
+  .el-textarea__inner {
+    background-color: rgba(15, 23, 42, 0.6) !important;
+    border: 1px solid rgba(56, 189, 248, 0.2) !important;
+    border-radius: 8px !important;
+    color: #e2e8f0 !important;
+    
+    &:focus {
+      border-color: rgba(56, 189, 248, 0.6) !important;
+      background-color: rgba(15, 23, 42, 0.8) !important;
+      box-shadow: none !important;
+    }
+  }
+}
+
+:deep(.el-tree-select) {
+  width: 100% !important;
+}
+
+:deep(.el-dialog__footer) {
+  border-top: 1px solid rgba(148, 163, 184, 0.1) !important;
+  padding-top: 20px !important;
+}
+</style>

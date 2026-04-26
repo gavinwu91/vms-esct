@@ -94,3 +94,40 @@ const resetForm = () => {
   formRef.value?.resetFields()
 }
 </script>
+<style lang="scss" scoped>
+:deep(.el-form) {
+  .el-form-item__label {
+    color: #94a3b8 !important;
+    font-weight: 500 !important;
+  }
+
+  .el-input__wrapper, .el-select__wrapper {
+    background-color: rgba(15, 23, 42, 0.6) !important;
+    border: 1px solid rgba(56, 189, 248, 0.2) !important;
+    box-shadow: none !important;
+    border-radius: 8px !important;
+    
+    &.is-disabled {
+      background-color: rgba(15, 23, 42, 0.3) !important;
+      border-color: rgba(148, 163, 184, 0.1) !important;
+      .el-input__inner {
+        color: #64748b !important;
+      }
+    }
+
+    &:not(.is-disabled):hover, &:not(.is-disabled).is-focus {
+      border-color: rgba(56, 189, 248, 0.6) !important;
+    }
+
+    .el-input__inner {
+      color: #e2e8f0 !important;
+    }
+  }
+
+  .el-select .el-select__tags .el-tag {
+    background: rgba(56, 189, 248, 0.15) !important;
+    border-color: rgba(56, 189, 248, 0.3) !important;
+    color: #38bdf8 !important;
+  }
+}
+</style>

@@ -136,3 +136,47 @@ const importTemplate = async () => {
   download.excel(res, 'User Template.xls')
 }
 </script>
+<style lang="scss" scoped>
+:deep(.el-upload) {
+  .el-upload-dragger {
+    background-color: rgba(15, 23, 42, 0.4) !important;
+    border: 1px dashed rgba(56, 189, 248, 0.3) !important;
+    border-radius: 12px !important;
+    transition: all 0.3s;
+
+    &:hover {
+      border-color: #38bdf8 !important;
+      background-color: rgba(56, 189, 248, 0.05) !important;
+    }
+
+    .el-icon--upload {
+      color: #38bdf8 !important;
+    }
+
+    .el-upload__text {
+      color: #94a3b8 !important;
+      em {
+        color: #38bdf8 !important;
+        font-style: normal;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+:deep(.el-upload__tip) {
+  color: #64748b !important;
+  line-height: 1.6 !important;
+}
+
+:deep(.el-checkbox) {
+  --el-checkbox-text-color: #94a3b8 !important;
+}
+
+:deep(.el-link--primary) {
+  color: #38bdf8 !important;
+  &:hover {
+    color: #7dd3fc !important;
+  }
+}
+</style>
