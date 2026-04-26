@@ -406,3 +406,94 @@
   opacity: 1 !important;
 }
 
+/* 4. 全局 下拉框与弹出层 (Dropdown & Popper) 重塑 */
+.el-popper.is-light {
+  background: rgba(6, 11, 25, 0.85) !important; /* 精准深 Navy 半透明色 */
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(56, 189, 248, 0.2) !important; /* 极细边框 */
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7), inset 0 0 10px rgba(56, 189, 248, 0.05) !important;
+  border-radius: 4px !important; /* 减少圆角，更硬朗 */
+
+  /* 弹出层小箭头 */
+  .el-popper__arrow::before {
+    background: rgba(6, 11, 25, 1) !important;
+    border: 1px solid rgba(56, 189, 248, 0.2) !important;
+  }
+}
+
+/* 下拉菜单项容器 */
+.el-dropdown__list, .el-dropdown-menu {
+  background: transparent !important;
+  padding: 4px 0 !important; /* 极窄上下边距 */
+  border: none !important;
+}
+
+/* 单个菜单项 */
+.el-dropdown-menu__item {
+  color: #a3b3cc !important;
+  font-size: 13px !important;
+  border-radius: 0 !important; /* 取消圆角，改为直感 */
+  margin: 0 !important; /* 去掉外边距，紧凑排列 */
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  padding: 6px 20px !important; /* 减小上下间距，增加左右间距 */
+  position: relative;
+  height: 32px !important; /* 固定高度，增加密度 */
+  display: flex !important;
+  align-items: center !important;
+
+  /* 鼠标滑过效果 */
+  &:hover, &:focus {
+    background: linear-gradient(90deg, rgba(56, 189, 248, 0.15) 0%, transparent 100%) !important;
+    color: #38bdf8 !important;
+    
+    /* 增加左侧发光指示条 */
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 2px;
+      height: 100%;
+      background: #38bdf8;
+      box-shadow: 0 0 8px #38bdf8;
+    }
+  }
+
+  /* 分割线 */
+  &.el-dropdown-menu__item--divided {
+    border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+    margin: 4px 0 !important;
+    &::before { display: none !important; }
+  }
+
+  /* 图标 */
+  .el-icon, .iconify {
+    color: rgba(56, 189, 248, 0.7) !important;
+    margin-right: 10px !important;
+    font-size: 16px !important;
+  }
+}
+
+/* Select 下拉框同步调整 */
+.el-select-dropdown {
+  background: rgba(6, 11, 25, 0.9) !important;
+  border: 1px solid rgba(56, 189, 248, 0.2) !important;
+  border-radius: 4px !important;
+  
+  .el-select-dropdown__item {
+    color: #a3b3cc !important;
+    height: 32px !important;
+    line-height: 32px !important;
+    
+    &.hover, &:hover { 
+      background: rgba(56, 189, 248, 0.1) !important; 
+      color: #38bdf8 !important;
+    }
+    
+    &.selected { 
+      color: #38bdf8 !important; 
+      background: rgba(56, 189, 248, 0.15) !important; 
+    }
+  }
+}
+

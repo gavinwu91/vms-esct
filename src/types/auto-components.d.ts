@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     2: typeof import('./../components/CameraList copy 2.vue')['default']
+    9dbbb9b9aefd6808a2479f96245f488c: typeof import('./../../public/9dbbb9b9aefd6808a2479f96245f488c.png')['default']
     AppLinkInput: typeof import('./../components/AppLinkInput/index.vue')['default']
     AppLinkSelectDialog: typeof import('./../components/AppLinkInput/AppLinkSelectDialog.vue')['default']
     Backtop: typeof import('./../components/Backtop/src/Backtop.vue')['default']
@@ -41,6 +42,7 @@ declare module 'vue' {
     Crontab: typeof import('./../components/Crontab/src/Crontab.vue')['default']
     Cropper: typeof import('./../components/Cropper/src/Cropper.vue')['default']
     CropperAvatar: typeof import('./../components/Cropper/src/CropperAvatar.vue')['default']
+    D9cb17881643e606e1cdf9be6904a884: typeof import('./../../public/d9cb17881643e606e1cdf9be6904a884.png')['default']
     DashCapture: typeof import('./../components/DashCapture/index.vue')['default']
     DashCaptureQuantity: typeof import('./../components/DashCaptureQuantity/index.vue')['default']
     DashCaptureRealtime: typeof import('./../components/DashCaptureRealtime/index.vue')['default']
@@ -189,6 +191,7 @@ declare module 'vue' {
     ProcessNodeTree: typeof import('./../components/SimpleProcessDesignerV2/src/ProcessNodeTree.vue')['default']
     ProcessPalette: typeof import('./../components/bpmnProcessDesigner/package/palette/ProcessPalette.vue')['default']
     ProcessViewer: typeof import('./../components/bpmnProcessDesigner/package/designer/ProcessViewer.vue')['default']
+    Profile: typeof import('./../../public/profile.png')['default']
     PropertiesPanel: typeof import('./../components/bpmnProcessDesigner/package/penal/PropertiesPanel.vue')['default']
     Qrcode: typeof import('./../components/Qrcode/src/Qrcode.vue')['default']
     ReceiveTask: typeof import('./../components/bpmnProcessDesigner/package/penal/task/task-components/ReceiveTask.vue')['default']
