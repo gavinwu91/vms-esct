@@ -1,0 +1,7 @@
+window.RUNTIME_CONFIG = {
+  VITE_BASE_URL: "http://127.0.0.1:48080", // https://192.168.88.192
+  PLAY_SERVER_URL: "https://192.168.200.165:9696",
+  VITE_CAPTURE_URL: "https://192.168.200.165:9996",
+  STUN_SERVER_URL: "stun:192.168.200.165:3478",
+  KS_PROXY_URL: "https://192.168.88.192/ks-pic/"
+};

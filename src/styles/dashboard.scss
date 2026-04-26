@@ -1,0 +1,74 @@
+//@font-face {
+//  font-family: number;
+//  /* src: url(./dafont网站下载/digital-7.ttf); */
+//  src: url(./DS-DIGIT.TTF);
+//}
+.countNumber{
+  font-family: 'number' !important;
+}
+.green{
+  color: #4cef49;
+}
+.blue{
+  color: #409eff;
+}
+.sky{
+ color: #00d9ff;
+}
+.red{
+  color: #f56c6c;
+}
+.yellow{
+  color: #ff0;
+}
+h3 {
+  font-size: 16px;
+  color: #fff;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  font-size: 14px;
+}
+
+.title {
+  display: flex;
+  justify-content: space-between;
+  width:100%;
+  align-items: center;
+  box-sizing: border-box;
+  height:30px;
+  padding: 5px 0 10px 5px;
+}
+
+.section_content {
+  flex: 1;
+  display: flex;
+  width:100%;
+  .left_card {
+    flex: 1;
+  }
+
+  .right_card {
+    flex: 1;
+  }
+}
+
+.more {
+  cursor: pointer;
+  font-size: 14px;
+  color:#ffff00;
+}
+.more:hover {
+  opacity: 0.8;
+}
+.dark{
+
+}

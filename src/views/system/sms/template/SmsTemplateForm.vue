@@ -1,0 +1,163 @@
+<template>
+  <Dialog v-model="dialogVisible" :title="dialogTitle">
+    <el-form
+      ref="formRef"
+      v-loading="formLoading"
+      :model="formData"
+      :rules="formRules"
+      label-width="140px"
+    >
+      <el-form-item label="Sms Channel Code" prop="channelId">
+        <el-select v-model="formData.channelId" placeholder="Please select Sms Channel Code">
+          <el-option
+            v-for="channel in channelList"
+            :key="channel.id"
+            :label="
+              channel.signature +
+              `【 ${getDictLabel(DICT_TYPE.SYSTEM_SMS_CHANNEL_CODE, channel.code)}】`
+            "
+            :value="channel.id"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="Sms Type" prop="type">
+        <el-select v-model="formData.type" placeholder="Please select Sms Type">
+          <el-option
+            v-for="dict in getIntDictOptions(DICT_TYPE.SYSTEM_SMS_TEMPLATE_TYPE)"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="Template code" prop="code">
+        <el-input v-model="formData.code" placeholder="Please input Template code" />
+      </el-form-item>
+      <el-form-item label="Template name" prop="name">
+        <el-input v-model="formData.name" placeholder="Please input Template name" />
+      </el-form-item>
+      <el-form-item label="Template  Content" prop="content">
+        <el-input v-model="formData.content" placeholder="Please input Template  Content" type="textarea" />
+      </el-form-item>
+      <el-form-item label="Enable Status" prop="status">
+        <el-radio-group v-model="formData.status">
+          <el-radio
+            v-for="dict in getIntDictOptions(DICT_TYPE.COMMON_STATUS)"
+            :key="dict.value"
+            :value="dict.value"
+          >
+            {{ dict.label }}
+          </el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="Sms API Template code" prop="apiTemplateId">
+        <el-input v-model="formData.apiTemplateId" placeholder="Please input Sms API 的Template code" />
+      </el-form-item>
+      <el-form-item label="Remark" prop="remark">
+        <el-input v-model="formData.remark" placeholder="Please input Remark" />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <el-button :disabled="formLoading" type="primary" @click="submitForm">Confirm</el-button>
+      <el-button @click="dialogVisible = false">Cancel</el-button>
+    </template>
+  </Dialog>
+</template>
+<script lang="ts" setup>
+import { DICT_TYPE, getDictLabel, getIntDictOptions } from '@/utils/dict'
+import * as SmsTemplateApi from '@/api/system/sms/smsTemplate'
+import * as SmsChannelApi from '@/api/system/sms/smsChannel'
+import { CommonStatusEnum } from '@/utils/constants'
+
+defineOptions({ name: 'SystemSmsTemplateForm' })
+
+const { t } = useI18n() // 国际化
+const message = useMessage() // 消息弹窗
+
+const dialogVisible = ref(false) // 弹窗的是否展示
+const dialogTitle = ref('') // 弹窗的标题
+const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
+const formType = ref('') // 表单的类型
+const formData = ref<SmsTemplateApi.SmsTemplateVO>({
+  id: undefined,
+  type: undefined,
+  status: CommonStatusEnum.ENABLE,
+  code: '',
+  name: '',
+  content: '',
+  remark: '',
+  apiTemplateId: '',
+  channelId: undefined
+})
+const formRules = reactive({
+  type: [{ required: true, message: 'Sms type can not empty', trigger: 'change' }],
+  status: [{ required: true, message: 'Enable Status can not empty', trigger: 'blur' }],
+  code: [{ required: true, message: 'Template code can not empty', trigger: 'blur' }],
+  name: [{ required: true, message: 'Template name can not empty', trigger: 'blur' }],
+  content: [{ required: true, message: 'Template Content can not empty', trigger: 'blur' }],
+  apiTemplateId: [{ required: true, message: 'Sms API 的Template code can not empty', trigger: 'blur' }],
+  channelId: [{ required: true, message: 'Sms Channel code can not empty', trigger: 'change' }]
+})
+const formRef = ref() // 表单 Ref
+const channelList = ref<SmsChannelApi.SmsChannelVO[]>([]) // Sms渠道列表
+
+const open = async (type: string, id?: number) => {
+  dialogVisible.value = true
+  dialogTitle.value = t('action.' + type)
+  formType.value = type
+  resetForm()
+  // 修改时，设置数据
+  if (id) {
+    formLoading.value = true
+    try {
+      formData.value = await SmsTemplateApi.getSmsTemplate(id)
+    } finally {
+      formLoading.value = false
+    }
+  }
+  // 加载渠道列表
+  channelList.value = await SmsChannelApi.getSimpleSmsChannelList()
+}
+defineExpose({ open }) // 提供 open 方法，用于打开弹窗
+
+/** 提交表单 */
+const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
+const submitForm = async () => {
+  // 校验表单
+  if (!formRef) return
+  const valid = await formRef.value.validate()
+  if (!valid) return
+  formLoading.value = true
+  try {
+    const data = formData.value as SmsTemplateApi.SmsTemplateVO
+    if (formType.value === 'create') {
+      await SmsTemplateApi.createSmsTemplate(data)
+      message.success(t('common.createSuccess'))
+    } else {
+      await SmsTemplateApi.updateSmsTemplate(data)
+      message.success(t('common.updateSuccess'))
+    }
+    dialogVisible.value = false
+    // 发送操作成功的事件
+    emit('success')
+  } finally {
+    formLoading.value = false
+  }
+}
+
+/** 重置表单 */
+const resetForm = () => {
+  formData.value = {
+    id: undefined,
+    type: undefined,
+    status: CommonStatusEnum.ENABLE,
+    code: '',
+    name: '',
+    content: '',
+    remark: '',
+    apiTemplateId: '',
+    channelId: undefined
+  }
+  formRef.value?.resetFields()
+}
+</script>

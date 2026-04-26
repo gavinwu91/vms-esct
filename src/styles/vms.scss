@@ -1,0 +1,65 @@
+
+.vms-main-button{
+  border-radius: 0;
+  background: var(--default-main-color);
+  border-color: var(--default-main-color);
+  color: white;
+}
+
+.vms-main-button:hover{
+  color: white;
+  background: var(--default-main-color-hight);
+  border-color: var(--default-main-color-hight);
+}
+
+.vms-reset-button{
+  background: transparent;
+  color: var(--default-main-color);
+  border: 0;
+}
+
+.vms-reset-button:hover{
+  background: transparent;
+  color: var(--default-main-color-hight);
+}
+
+.vms-colorless-button{
+  border-radius: 0;
+  color:  #6c6c6c;
+  border-color: #cccccc;
+}
+
+.vms-colorless-button:hover{
+  color: #818181;
+  border-color: #e0dddd;
+}
+
+
+.vms-track-button{
+  border-radius: 0;
+  background: var(--btn-tarck-color);
+  border-color: var(--btn-tarck-color);
+  color: white;
+}
+
+.vms-track-button:hover{
+  color: white;
+  background: var(--btn-tarck-color-height);
+  border-color: var(--btn-tarck-color-height);
+}
+
+
+.vms-cancel-button{
+  border-radius: 0;
+  color: #fff;
+  border-color: #6c6c6c;
+  background-color: #6c6c6c;
+}
+
+.vms-cancel-button:hover{
+  color: #fff;
+  border-color: #818181;
+  background-color: #818181;
+}
+
+

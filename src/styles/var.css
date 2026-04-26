@@ -1,0 +1,131 @@
+:root {
+    --login-bg-color: #293146;
+
+    --left-menu-max-width: 200px;
+
+    --left-menu-min-width: 64px;
+
+    --left-menu-bg-color: #001529;
+
+    --left-menu-bg-light-color: #0f2438;
+
+    --left-menu-bg-active-color: var(--el-color-primary);
+
+    --left-menu-text-color: #bfcbd9;
+
+    --left-menu-text-active-color: #fff;
+
+    --left-menu-collapse-bg-active-color: var(--el-color-primary);
+    /* left menu end */
+
+    /* logo start */
+    --logo-height: 50px;
+
+    --logo-title-text-color: #fff;
+    /* logo end */
+
+    /* header start */
+    --top-header-bg-color: '#fff';
+
+    --top-header-text-color: 'inherit';
+
+    --top-header-hover-color: #f6f6f6;
+
+    --top-tool-height: var(--logo-height);
+
+    --top-tool-p-x: 0;
+
+    --tags-view-height: 35px;
+    /* header start */
+
+    /* tab menu start */
+    --tab-menu-max-width: 80px;
+
+    --tab-menu-min-width: 30px;
+
+    --tab-menu-collapse-height: 36px;
+    /* tab menu end */
+
+    --app-content-padding: 0px;
+
+    /*--app-content-bg-color: #f5f7f9;*/
+    --app-footer-height: 50px;
+    --transition-time-02: 0.2s;
+    --app-content-bg-color: #ffffff !important;
+    --el-splitter-bar-bg-color: #c6cddef0;
+    /*自定义公共样式*/
+    --default-btn-bg-active: rgba(218, 235, 253, .3) !important;
+    --default-btn-bg-active-font-color: #fff;
+    /*linear-gradient(to right, #0f1f36, #0d1b2c 50%, #192634, #192634) history background*/
+    --top-bar-bg: linear-gradient(90deg, #1c1843 0, #1c1843 22%, #435080 57%, #435080 78%, #2ab1c7);
+    --top-bar-hight: 50px;
+    --top-bar-font-size: 0.9rem;
+    --defulat-vtags-bg: #f7f7f7;
+    --default-box-shadow: 2px 5px 5px #3c7fb182;
+    --default-card-box-shadow: 5px 5px 5px 5px rgb(229 229 234 / 43%);
+    --default-main-color: #21539b !important;
+    --default-main-color-hight: #177cce !important;
+    --defaulat-cuz-color: #8699e9;
+    --default-event-main-color:linear-gradient(90deg, #1c1843 0, #1c1843 22%) !important;
+    --default-main-bg2:rgb(235 238 244 / 60%);
+    --btn-tarck-color: #b08557;
+    --btn-tarck-color-height: #dea772;
+
+    /*element ui 覆盖自定义部分*/
+    --el-color-primary: var(--default-main-color) !important;
+    --el-button-hover-bg-color: #177cce !important;
+    --el-menu-active-color: var(--default-btn-bg-active) !important;
+    --el-menu-hover-bg-color: var(--el-color-primary) !important;
+
+    --color-main-bg: #F4F7FB; 
+    --color-panel-bg-light: #FFFFFF;
+    --color-video-bg-dark: #101620; 
+    --color-primary: #4a90e2; 
+    --color-accent: #4afc9c; 
+    --color-danger: #e24b4b;
+    --color-text-dark: #333333;
+    --color-text-light: #e0f0ff;
+    --color-text-dim: #777777;
+}
+
+.dark {
+    --app-content-bg-color: var(--el-bg-color);
+    --el-bg-color: rgba(0, 0, 0, 0.95) !important;
+    --el-splitter-bar-bg-color: #ffffff;
+    /*自定义公共样式*/
+    --top-bar-bg: linear-gradient(90deg, #1c1843 0, #1c1843 22%, #435080 57%, #435080 78%, #2ab1c7) !important;
+    --top-bar-hight: 50px;
+    --top-bar-font-size: 0.9rem;
+    --defulat-vtags-bg: #f7f7f7;
+    --default-box-shadow: 2px 5px 5px #3c7fb182;
+    --default-card-box-shadow: 5px 5px 5px 5px rgb(229 229 234 / 43%);
+    --default-main-color: #21539b !important;
+    --default-main-color-hight: #177cce !important;
+    --defaulat-cuz-color: #8699e9;
+    --default-event-main-color:linear-gradient(90deg, #1c1843 0, #1c1843 22%) !important;
+    --default-main-bg2:transparent;
+    --btn-tarck-color: #b08557;
+    --btn-tarck-color-height: #dea772;
+
+    /*element ui 覆盖自定义部分*/
+    --el-color-primary: var(--default-main-color) !important;
+    --el-button-hover-bg-color: #177cce !important;
+    --el-menu-active-color: var(--default-btn-bg-active) !important;
+    --el-menu-hover-bg-color: var(--el-color-primary) !important;
+}
+
+html,
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: Helvetica Neue, Helvetica, Arial, PingFang SC, Microsoft YaHei, Hiragino Sans GB, Heiti SC, sans-serif;
+
+}
+
+*,
+:after,
+:before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
