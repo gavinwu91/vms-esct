@@ -190,9 +190,82 @@
   display: none !important;
 }
 
-.vms-ui-app-shell .vms-ui-sidebar .el-menu--collapse>.is-active,
-.vms-ui-app-shell .vms-ui-sidebar .el-menu--collapse>.is-active>.el-sub-menu__title {
-  background-color: rgba(34, 211, 238, 0.15) !important;
+/* ========== 侧边栏二级菜单 (Sub-menu) 深度定制 ========== */
+.vms-ui-sidebar {
+  /* 一级菜单项基础高度与间距 */
+  .el-menu-item, .el-sub-menu__title {
+    height: 44px !important;
+    line-height: 44px !important;
+    margin: 4px 0 !important;
+    border-radius: 8px !important;
+    color: #94a3b8 !important;
+    
+    &:hover {
+      background: rgba(56, 189, 248, 0.08) !important;
+      color: #38bdf8 !important;
+    }
+  }
+
+  /* 展开后的二级菜单容器 */
+  .el-menu--inline {
+    background: rgba(0, 0, 0, 0.15) !important; /* 内部容器稍微加深，增加深度感 */
+    padding: 4px 0 !important;
+    margin: 0 8px !important;
+    border-radius: 8px;
+  }
+
+  /* 二级菜单项特有样式 */
+  .el-sub-menu .el-menu-item {
+    height: 38px !important; /* 稍微比一级菜单矮一点点，增加精致感 */
+    line-height: 38px !important;
+    padding-left: 45px !important; /* 增加左侧缩进 */
+    font-size: 13px !important;
+    margin: 2px 0 !important;
+    position: relative;
+
+    /* 添加二级菜单专属的战术小圆点 */
+    &::before {
+      content: '';
+      position: absolute;
+      left: 28px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 4px;
+      background: rgba(148, 163, 184, 0.3);
+      border-radius: 50%;
+      transition: all 0.3s;
+    }
+
+    &:hover {
+      background: transparent !important;
+      padding-left: 48px !important; /* Hover 时轻微向右滑动 */
+      
+      &::before {
+        background: #38bdf8;
+        box-shadow: 0 0 8px #38bdf8;
+        transform: translateY(-50%) scale(1.2);
+      }
+    }
+
+    &.is-active {
+      background: rgba(56, 189, 248, 0.1) !important;
+      color: #38bdf8 !important;
+      font-weight: 600;
+      
+      &::before {
+        background: #38bdf8;
+        box-shadow: 0 0 8px #38bdf8;
+      }
+    }
+  }
+
+  /* 修正一级菜单图标尺寸 */
+  .el-icon {
+    font-size: 16px !important;
+    margin-right: 12px !important;
+    color: inherit !important;
+  }
 }
 
 /* ========== popup 浮层 ========== */
