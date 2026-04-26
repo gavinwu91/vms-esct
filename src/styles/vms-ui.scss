@@ -318,182 +318,129 @@
 
 /* 1. MessageBox 确认框重塑 */
 .el-message-box {
-  background: rgba(15, 23, 42, 0.85) !important;
+  background: rgba(6, 11, 25, 0.85) !important;
   backdrop-filter: blur(16px) !important;
   border: 1px solid rgba(56, 189, 248, 0.3) !important;
-  border-radius: 8px !important;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6) !important;
+  border-radius: 4px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(56, 189, 248, 0.05) !important;
   padding: 20px !important;
+  --el-border-color-lighter: transparent !important; /* 覆盖变量 */
+
+  .el-message-box__header, .el-message-box__content, .el-message-box__btns {
+    border: none !important;
+    &::after, &::before { display: none !important; }
+  }
 
   .el-message-box__title {
-    color: #f8fafc !important;
+    color: #f1f5f9 !important;
     font-weight: 700 !important;
     font-size: 16px !important;
     letter-spacing: 1px !important;
   }
 
   .el-message-box__content {
-    color: #94a3b8 !important;
+    color: #a3b3cc !important;
     font-size: 14px !important;
-    padding: 15px 0 !important;
+    padding: 20px 0 !important;
   }
 
   .el-message-box__btns {
     padding-top: 10px !important;
-
-    /* 取消按钮 */
     .el-button {
       background: rgba(255, 255, 255, 0.05) !important;
       border: 1px solid rgba(255, 255, 255, 0.1) !important;
-      color: #94a3b8 !important;
-      border-radius: 4px !important;
-      transition: all 0.3s !important;
-
-      &:hover {
-        background: rgba(255, 255, 255, 0.1) !important;
-        color: #fff !important;
-      }
+      color: #a3b3cc !important;
+      &:hover { background: rgba(255, 255, 255, 0.1) !important; color: #fff !important; }
     }
-
-    /* 确定按钮 */
     .el-button--primary {
       background: #0ea5e9 !important;
       border: none !important;
       color: #fff !important;
-      font-weight: 600 !important;
       box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3) !important;
-
-      &:hover {
-        background: #38bdf8 !important;
-        box-shadow: 0 0 15px rgba(56, 189, 248, 0.5) !important;
-        transform: translateY(-1px) !important;
-      }
+      &:hover { background: #38bdf8 !important; box-shadow: 0 0 15px rgba(56, 189, 248, 0.5) !important; }
     }
-  }
-
-  /* 头部关闭按钮 */
-  .el-message-box__headerbtn .el-message-box__close {
-    color: #64748b !important;
-    &:hover { color: #38bdf8 !important; }
   }
 }
 
 /* 2. Message 消息条重塑 */
 .el-message {
-  background: rgba(15, 23, 42, 0.9) !important;
+  background: rgba(6, 11, 25, 0.9) !important;
   backdrop-filter: blur(8px) !important;
-  border: 1px solid rgba(56, 189, 248, 0.2) !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
-  border-radius: 6px !important;
-  min-width: 320px !important;
-
-  .el-message__content {
-    color: #f1f5f9 !important;
-    font-weight: 500 !important;
-  }
-
-  /* 不同类型的颜色微调 */
-  &.el-message--success { border-color: rgba(16, 185, 129, 0.4) !important; .el-message__icon { color: #10b981 !important; } }
-  &.el-message--warning { border-color: rgba(245, 158, 11, 0.4) !important; .el-message__icon { color: #f59e0b !important; } }
-  &.el-message--error { border-color: rgba(239, 68, 68, 0.4) !important; .el-message__icon { color: #ef4444 !important; } }
-  &.el-message--info { border-color: rgba(56, 189, 248, 0.4) !important; .el-message__icon { color: #38bdf8 !important; } }
+  border: 1px solid rgba(56, 189, 248, 0.25) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+  border-radius: 4px !important;
+  .el-message__content { color: #f1f5f9 !important; }
 }
 
-/* 3. 针对 MessageBox 的遮罩层 */
-.v-modal {
-  background: rgba(2, 6, 23, 0.6) !important;
-  backdrop-filter: blur(4px) !important;
-  opacity: 1 !important;
-}
-
-/* 4. 全局 下拉框与弹出层 (Dropdown & Popper) 重塑 */
+/* 4. 全局 下拉框与弹出层 (Dropdown & Popper) 重构 */
 .el-popper.is-light {
-  background: rgba(6, 11, 25, 0.85) !important; /* 精准深 Navy 半透明色 */
+  background: rgba(6, 11, 25, 0.85) !important;
   backdrop-filter: blur(12px) !important;
-  border: 1px solid rgba(56, 189, 248, 0.2) !important; /* 极细边框 */
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7), inset 0 0 10px rgba(56, 189, 248, 0.05) !important;
-  border-radius: 4px !important; /* 减少圆角，更硬朗 */
-
-  /* 弹出层小箭头 */
-  .el-popper__arrow::before {
-    background: rgba(6, 11, 25, 1) !important;
-    border: 1px solid rgba(56, 189, 248, 0.2) !important;
-  }
+  border: 1px solid rgba(56, 189, 248, 0.2) !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7) !important;
+  border-radius: 4px !important;
+  --el-border-color-lighter: transparent !important;
 }
 
-/* 下拉菜单项容器 */
-.el-dropdown__list, .el-dropdown-menu {
+.el-dropdown-menu {
   background: transparent !important;
-  padding: 4px 0 !important; /* 极窄上下边距 */
+  padding: 4px 0 !important;
   border: none !important;
 }
 
-/* 单个菜单项 */
 .el-dropdown-menu__item {
+  position: relative !important;
   color: #a3b3cc !important;
   font-size: 13px !important;
-  border-radius: 0 !important; /* 取消圆角，改为直感 */
-  margin: 0 !important; /* 去掉外边距，紧凑排列 */
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  padding: 6px 20px !important; /* 减小上下间距，增加左右间距 */
-  position: relative;
-  height: 32px !important; /* 固定高度，增加密度 */
+  border-radius: 0 !important;
+  margin: 0 !important;
+  padding: 6px 20px !important;
+  height: 32px !important;
   display: flex !important;
   align-items: center !important;
+  border: none !important;
+  background: transparent !important; /* 默认透明 */
+  outline: none !important; /* 去掉聚焦框 */
+  
+  &::after, &::before { display: none !important; }
 
-  /* 鼠标滑过效果 */
-  &:hover, &:focus {
+  /* 彻底封杀所有状态下的白色背景 */
+  &:hover, &:focus, &:focus-visible, &:active, &.is-active {
     background: linear-gradient(90deg, rgba(56, 189, 248, 0.15) 0%, transparent 100%) !important;
     color: #38bdf8 !important;
+    outline: none !important;
     
-    /* 增加左侧发光指示条 */
     &::before {
+      display: block !important;
       content: '';
       position: absolute;
       left: 0;
       top: 0;
       width: 2px;
       height: 100%;
-      background: #38bdf8;
-      box-shadow: 0 0 8px #38bdf8;
+      background: #38bdf8 !important;
+      box-shadow: 0 0 8px #38bdf8 !important;
+      z-index: 10;
     }
   }
 
-  /* 分割线 */
-  &.el-dropdown-menu__item--divided {
-    border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
-    margin: 4px 0 !important;
-    &::before { display: none !important; }
+  /* 针对最后一个元素的特殊处理 */
+  &:last-child {
+    border-bottom: none !important;
+    background-color: transparent !important;
   }
 
-  /* 图标 */
-  .el-icon, .iconify {
-    color: rgba(56, 189, 248, 0.7) !important;
-    margin-right: 10px !important;
-    font-size: 16px !important;
+  &.el-dropdown-menu__item--divided {
+    border: none !important;
+    margin: 0 !important;
+    &::before { display: none !important; }
+    &:hover::before { display: block !important; } /* 确保 divided 项在 hover 时也能正常显示指示条 */
   }
 }
 
-/* Select 下拉框同步调整 */
-.el-select-dropdown {
-  background: rgba(6, 11, 25, 0.9) !important;
-  border: 1px solid rgba(56, 189, 248, 0.2) !important;
-  border-radius: 4px !important;
-  
-  .el-select-dropdown__item {
-    color: #a3b3cc !important;
-    height: 32px !important;
-    line-height: 32px !important;
-    
-    &.hover, &:hover { 
-      background: rgba(56, 189, 248, 0.1) !important; 
-      color: #38bdf8 !important;
-    }
-    
-    &.selected { 
-      color: #38bdf8 !important; 
-      background: rgba(56, 189, 248, 0.15) !important; 
-    }
-  }
+/* 同步 Select 下拉列表 */
+.el-select-dropdown__item {
+  border: none !important;
+  &::after, &::before { display: none !important; }
 }
 
