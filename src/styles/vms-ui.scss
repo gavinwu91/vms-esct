@@ -632,3 +632,57 @@
     display: none !important;
   }
 }
+/* ====================================================
+   ??????????? - ????????
+   ==================================================== */
+el-card {
+  background: rgba(15, 23, 42, 0.4) !important;
+  border: 1px solid rgba(148, 163, 184, 0.1) !important;
+  backdrop-filter: blur(10px);
+  color: #f1f5f9 !important;
+  
+  .el-card__header {
+    border-bottom: 1px solid rgba(56, 189, 248, 0.1) !important;
+    color: #38bdf8 !important;
+    font-weight: 600 !important;
+  }
+}
+
+.el-tabs {
+  background: transparent !important;
+  
+  .el-tabs__header {
+    background: transparent !important;
+    margin-bottom: 20px !important;
+  }
+  
+  .el-tabs__nav-wrap::after {
+    background-color: rgba(148, 163, 184, 0.1) !important;
+  }
+  
+  .el-tabs__content {
+    background: transparent !important;
+    color: #cbd5e1 !important;
+  }
+  
+  .el-tabs__item {
+    color: #94a3b8 !important;
+    &.is-active {
+      color: #38bdf8 !important;
+    }
+  }
+}
+
+.v-layout, 
+.v-content-wrap,
+.v-layout__content,
+.v-layout__vmsUi {
+  background: transparent !important;
+}
+
+.el-dialog, 
+.el-drawer {
+  background: rgba(8, 22, 45, 0.98) !important;
+  border: 1px solid rgba(56, 189, 248, 0.2) !important;
+  backdrop-filter: blur(20px) !important;
+}
