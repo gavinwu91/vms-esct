@@ -1,55 +1,79 @@
 <template>
-  <div>
-    <div class="text-center">
+  <div class="profile-user-inner">
+    <div class="avatar-section">
       <UserAvatar :img="userInfo?.avatar" />
+      <div class="user-id-badge" v-if="userInfo?.username">
+        {{ userInfo.username }}
+      </div>
     </div>
-    <ul class="list-group list-group-striped">
-      <li class="list-group-item">
-        <Icon class="mr-5px" icon="ep:user" />
-        {{ t('profile.user.username') }}
-        <div class="pull-right">{{ userInfo?.username }}</div>
-      </li>
-      <li class="list-group-item">
-        <Icon class="mr-5px" icon="ep:phone" />
-        {{ t('profile.user.mobile') }}
-        <div class="pull-right">{{ userInfo?.mobile }}</div>
-      </li>
-      <li class="list-group-item">
-        <Icon class="mr-5px" icon="fontisto:email" />
-        {{ t('profile.user.email') }}
-        <div class="pull-right">{{ userInfo?.email }}</div>
-      </li>
-      <li class="list-group-item">
-        <Icon class="mr-5px" icon="carbon:tree-view-alt" />
-        {{ t('profile.user.dept') }}
-        <div v-if="userInfo?.dept" class="pull-right">{{ userInfo?.dept.name }}</div>
-      </li>
-      <li class="list-group-item">
-        <Icon class="mr-5px" icon="ep:suitcase" />
-        {{ t('profile.user.posts') }}
-        <div v-if="userInfo?.posts" class="pull-right">
-          {{ userInfo?.posts.map((post) => post.name).join(',') }}
+    
+    <div class="info-list">
+      <div class="info-item">
+        <div class="label">
+          <Icon icon="ep:user" />
+          <span>{{ t('profile.user.username') }}</span>
         </div>
-      </li>
-      <li class="list-group-item">
-        <Icon class="mr-5px" icon="icon-park-outline:peoples" />
-        {{ t('profile.user.roles') }}
-        <div v-if="userInfo?.roles" class="pull-right">
-          {{ userInfo?.roles.map((role) => role.name).join(',') }}
+        <div class="value">{{ userInfo?.username }}</div>
+      </div>
+
+      <div class="info-item">
+        <div class="label">
+          <Icon icon="ep:phone" />
+          <span>{{ t('profile.user.mobile') }}</span>
         </div>
-      </li>
-      <li class="list-group-item">
-        <Icon class="mr-5px" icon="ep:calendar" />
-        {{ t('profile.user.createTime') }}
-        <div class="pull-right">{{ formatDate(userInfo.createTime) }}</div>
-      </li>
-    </ul>
+        <div class="value">{{ userInfo?.mobile }}</div>
+      </div>
+
+      <div class="info-item">
+        <div class="label">
+          <Icon icon="fontisto:email" />
+          <span>{{ t('profile.user.email') }}</span>
+        </div>
+        <div class="value">{{ userInfo?.email }}</div>
+      </div>
+
+      <div class="info-item">
+        <div class="label">
+          <Icon icon="carbon:tree-view-alt" />
+          <span>{{ t('profile.user.dept') }}</span>
+        </div>
+        <div class="value" v-if="userInfo?.dept">{{ userInfo.dept.name }}</div>
+      </div>
+
+      <div class="info-item">
+        <div class="label">
+          <Icon icon="ep:suitcase" />
+          <span>{{ t('profile.user.posts') }}</span>
+        </div>
+        <div class="value" v-if="userInfo?.posts">
+          {{ userInfo.posts.map((post) => post.name).join(', ') }}
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="label">
+          <Icon icon="icon-park-outline:peoples" />
+          <span>{{ t('profile.user.roles') }}</span>
+        </div>
+        <div class="value" v-if="userInfo?.roles">
+          {{ userInfo.roles.map((role) => role.name).join(', ') }}
+        </div>
+      </div>
+
+      <div class="info-item border-none">
+        <div class="label">
+          <Icon icon="ep:calendar" />
+          <span>{{ t('profile.user.createTime') }}</span>
+        </div>
+        <div class="value">{{ formatDate(userInfo.createTime) }}</div>
+      </div>
+    </div>
   </div>
 </template>
+
 <script lang="ts" setup>
 import { formatDate } from '@/utils/formatTime'
 import UserAvatar from './UserAvatar.vue'
-
 import { getUserProfile, ProfileVO } from '@/api/system/user/profile'
 
 defineOptions({ name: 'ProfileUser' })
@@ -61,7 +85,6 @@ const getUserInfo = async () => {
   userInfo.value = users
 }
 
-// 暴露刷新方法
 defineExpose({
   refresh: getUserInfo
 })
@@ -71,35 +94,75 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
-.text-center {
-  position: relative;
-  height: 120px;
-  text-align: center;
+<style lang="scss" scoped>
+.profile-user-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
 }
 
-.list-group-striped > .list-group-item {
-  padding-right: 0;
-  padding-left: 0;
-  border-right: 0;
-  border-left: 0;
-  border-radius: 0;
+.avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 32px;
+  
+  .user-id-badge {
+    margin-top: 16px;
+    padding: 4px 12px;
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 20px;
+    color: #38bdf8;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    font-family: 'Courier New', monospace;
+  }
 }
 
-.list-group {
-  padding-left: 0;
-  list-style: none;
+.info-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-.list-group-item {
-  padding: 11px 0;
-  margin-bottom: -1px;
-  font-size: 13px;
-  border-top: 1px solid #e7eaec;
-  border-bottom: 1px solid #e7eaec;
-}
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  
+  &.border-none {
+    border-bottom: none;
+  }
 
-.pull-right {
-  float: right !important;
+  .label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #94a3b8;
+    font-size: 13px;
+    
+    .el-icon, span {
+      display: inline-block;
+      vertical-align: middle;
+    }
+    
+    span {
+      opacity: 0.8;
+    }
+  }
+
+  .value {
+    color: #f1f5f9;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: right;
+    max-width: 60%;
+    word-break: break-all;
+  }
 }
 </style>
