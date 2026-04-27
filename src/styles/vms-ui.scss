@@ -199,11 +199,25 @@
     margin: 4px 0 !important;
     border-radius: 8px !important;
     color: #94a3b8 !important;
+    display: flex !important;
+    align-items: center !important;
+    position: relative !important;
     
     &:hover {
       background: rgba(56, 189, 248, 0.08) !important;
       color: #38bdf8 !important;
     }
+  }
+
+  /* 修复子菜单箭头对齐问题 */
+  .el-sub-menu__icon-arrow {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    margin-top: 0 !important;
+    right: 12px !important;
+    font-size: 14px !important;
+    transition: transform 0.3s !important;
   }
 
   /* 展开后的二级菜单容器 */
@@ -320,9 +334,6 @@
   }
 
   /* 这里的 el-sub-menu__title 主要是为了二级菜单还有三级菜单的情况 */
-  .el-sub-menu .el-sub-menu__icon-arrow {
-    right: 10px !important;
-  }
 
   /* 恢复并美化小箭头，对标 want.png */
   &.el-popper .el-popper__arrow {
