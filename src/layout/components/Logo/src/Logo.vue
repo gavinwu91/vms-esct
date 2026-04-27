@@ -125,3 +125,58 @@ const getImage = (name)=>{
     line-height: 1.2;
   }
 </style>
+
+<style lang="scss">
+/* ========== VMS 侧边栏 Logo 布局 (全局生效以支持布局引用) ========== */
+.vms-ui-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  min-height: 48px;
+  flex-shrink: 0;
+  padding: 0 20px 0 10px;
+  overflow: visible;
+}
+
+.vms-ui-logo-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  overflow: hidden;
+  flex: 1;
+  min-width: 0;
+}
+
+.vms-ui-logo-img {
+  width: 26px !important;
+  height: 26px !important;
+  flex-shrink: 0;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(34, 211, 238, 0.25);
+  filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.3));
+}
+
+.vms-ui-logo-title {
+  color: #e2e8f0;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+/* 折叠时 Logo 居中 */
+.vms-ui-sidebar.collapsed .vms-ui-header {
+  justify-content: center;
+  padding: 0;
+}
+
+.vms-ui-sidebar.collapsed .vms-ui-logo-link {
+  flex: 0;
+  justify-content: center;
+  overflow: visible;
+}
+</style>

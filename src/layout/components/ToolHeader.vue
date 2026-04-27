@@ -97,16 +97,21 @@ export default defineComponent({
 <style lang="scss" scoped>
 $prefix-cls: #{$namespace}-tool-header;
 
-.#{$prefix-cls} {
+.#{$prefix-cls},
+.vms-ui-toolheader {
   transition: all 0.2s;
-  background: transparent;
+  background: transparent !important;
+  border: none !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
 
   /* 通用按钮容器 */
   :deep(.custom-hover) {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    height: 28px !important; /* 调整高度以匹配 Tab */
+    height: 28px !important;
     padding: 0 8px !important;
     margin: 0 2px !important;
     border-radius: 6px !important;

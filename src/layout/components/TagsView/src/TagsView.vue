@@ -491,178 +491,169 @@ watch(
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 $prefix-cls: #{$namespace}-tags-view;
 
-/* 隐藏 tab 内标签图标 */
-:deep(.el-scrollbar .v-tags-view__item--label .el-icon) {
-  display: none;
-}
-
+/* 隐藏 tab 内标签图标（保持简洁） */
 .#{$prefix-cls} {
-  :deep(.#{$elNamespace}-scrollbar__view) {
+  .#{$elNamespace}-scrollbar .v-tags-view__item--label .el-icon {
+    display: none;
+  }
+
+  .#{$elNamespace}-scrollbar__view {
     height: 100%;
   }
 
-  /* 右侧工具按钮 */
+  /* 右侧工具按钮 (刷新、更多等) */
   &__tool {
     position: relative;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    height: 28px !important; /* 同步增加高度 */
-    width: 28px !important;
-    margin: 0 2px !important;
-    border-radius: 6px !important;
+    height: 32px !important;
+    width: 32px !important;
+    margin: 0 4px !important;
+    border-radius: 50% !important; /* 改为圆型按钮更精致 */
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     color: #94a3b8;
+    background: rgba(255, 255, 255, 0.03);
 
     &:hover {
-      background: rgba(56, 189, 248, 0.12);
+      background: rgba(56, 189, 248, 0.15);
       color: #38bdf8;
-    }
-
-    &::before,
-    &--first::before {
-      display: none !important;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
     }
   }
 
   /* ========== Tab 标签项 ========== */
   &__item {
     position: relative;
-    top: 0;
-    height: 28px; /* 稍微增加高度，使 40px 的外层看起来更协调 */
-    line-height: 28px;
-    padding-right: 15px;
-    margin-left: 6px;
-    margin-top: 0;
-    font-size: 12px;
+    height: 30px;
+    line-height: 30px;
+    padding-right: 25px; /* 预留给关闭按钮 */
+    margin-left: 8px;
+    font-size: 13px;
     cursor: pointer;
-    border: none;
-    border-radius: 6px;
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    border-radius: 15px; /* 全圆角胶囊风格 */
     box-sizing: border-box;
-    background: rgba(30, 41, 59, 0.4);
+    background: rgba(30, 41, 59, 0.3);
     color: #94a3b8;
-    transition: all 0.2s;
+    transition: all 0.3s;
 
-    /* 关闭按钮 */
     &--close {
       position: absolute;
       top: 50%;
-      right: 5px;
+      right: 8px;
       display: none;
-      transform: translate(0, -50%);
+      transform: translateY(-50%);
+      color: #64748b;
+      &:hover { color: #ef4444 !important; }
     }
 
-    &:not(.#{$prefix-cls}__item--affix):hover {
+    &:hover {
+      background: rgba(56, 189, 248, 0.08);
+      color: #e2e8f0;
+      border-color: rgba(56, 189, 248, 0.2);
+      
+      .#{$prefix-cls}__item--close { display: block; }
+    }
+
+    &.is-active {
+      background: rgba(14, 165, 233, 0.2);
+      color: #38bdf8;
+      border-color: rgba(56, 189, 248, 0.4);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.15);
+      font-weight: 600;
+
       .#{$prefix-cls}__item--close {
         display: block;
+        color: #38bdf8;
       }
     }
   }
 
-  &__item--icon {
-    padding-right: 20px;
-  }
-
-  /* hover */
-  &__item:not(.is-active) {
-    &:hover {
-      background: rgba(56, 189, 248, 0.12);
-      color: #e2e8f0;
-    }
-  }
-
-  /* active */
-  &__item.is-active {
-    background: rgba(56, 189, 248, 0.2);
-    color: #38bdf8;
-    border: none;
-
-    .#{$prefix-cls}__item--close {
-      :deep(span) {
-        color: #38bdf8 !important;
-      }
-    }
-  }
-
-  /* immerse 模式（保持兼容但用新样式） */
-  &__item--immerse {
-    top: 0;
-    height: 28px;
-    padding-right: 35px;
-    margin: 0 2px;
-    border: none !important;
-    -webkit-mask-box-image: none;
-
-    .#{$prefix-cls}__item--label {
-      padding-left: 15px;
-    }
-
-    .#{$prefix-cls}__item--close {
-      right: 10px;
-    }
-  }
-
-  &__item--immerse--icon {
-    padding-right: 35px;
-  }
-
-  &__item--immerse:not(.is-active) {
-    &:hover {
-      background: rgba(56, 189, 248, 0.12);
-      color: #e2e8f0;
-
-      .#{$prefix-cls}__item--close {
-        :deep(span) {
-          color: #e2e8f0 !important;
-        }
-      }
-    }
+  &__item--affix {
+    padding-right: 15px !important;
   }
 }
 
-/* Dark 模式（vms-ui 本身就是暗色） */
-.dark {
-  .#{$prefix-cls} {
-    &__tool {
-      &--first::after {
-        display: none;
-      }
-    }
+/* ========== VMS 标签页右键菜单 (全局覆盖但仅用于 TagsView) ========== */
+.el-popper.is-light {
+  background: rgba(8, 22, 45, 0.98) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(56, 189, 248, 0.25) !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7) !important;
+}
 
-    &__item {
-      border: none;
-      background: rgba(30, 41, 59, 0.4);
-      color: #94a3b8;
-    }
+.el-dropdown-menu {
+  background: transparent !important;
+  padding: 4px 0 !important;
+  border: none !important;
+}
 
-    &__item:not(.is-active) {
-      &:hover {
-        color: #e2e8f0;
-        background: rgba(56, 189, 248, 0.12);
-      }
-    }
+.el-dropdown-menu__item {
+  position: relative !important;
+  color: #a3b3cc !important;
+  font-size: 13px !important;
+  padding: 8px 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  background: transparent !important;
+  outline: none !important;
 
-    &__item.is-active {
-      color: #38bdf8;
-      background: rgba(56, 189, 248, 0.2);
-      border: none;
-
-      .#{$prefix-cls}__item--close {
-        :deep(span) {
-          color: #38bdf8 !important;
-        }
-      }
-    }
-
-    &__item--immerse:not(.is-active) {
-      &:hover {
-        color: #e2e8f0;
-      }
-    }
+  &::before {
+    display: none !important;
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: #38bdf8 !important;
+    box-shadow: 0 0 8px #38bdf8 !important;
   }
+
+  /* 仅鼠标真正悬停时触发强高亮，防止上下滑动时 focus 冲突 */
+  &:hover {
+    background: linear-gradient(90deg, rgba(56, 189, 248, 0.15) 0%, transparent 100%) !important;
+    color: #38bdf8 !important;
+    &::before { display: block !important; }
+  }
+
+  &:focus, &:focus-visible {
+    background: rgba(56, 189, 248, 0.04) !important;
+  }
+
+  &.el-dropdown-menu__item--divided {
+    border-top: 1px solid rgba(148, 163, 184, 0.1) !important;
+    margin: 4px 0 !important;
+    &::before { display: none !important; }
+  }
+}
+
+/* ========== 顶部栏骨架 (由 vms-ui.scss 迁移至此) ========== */
+.vms-ui-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  min-height: 44px;
+  max-height: 44px;
+  background: rgba(15, 23, 42, 0.3);
+  backdrop-filter: blur(10px);
+  border-radius: 22px;
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  margin-bottom: 8px;
+}
+
+.tabs-wrapper {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  height: 100%;
+  min-width: 0;
 }
 </style>

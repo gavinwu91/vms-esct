@@ -130,14 +130,24 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 $prefix-cls: #{$namespace}-menu;
 
+/* ========== VMS 科技风侧边栏菜单定制 (全局生效以确保穿透) ========== */
 .#{$prefix-cls} {
   position: relative;
   transition: width var(--transition-time-02);
+  width: 100% !important;
 
-  :deep(.#{$elNamespace}-menu) {
+  // 重点修复：确保滚动条容器占满宽度
+  .#{$elNamespace}-scrollbar {
+    width: 100% !important;
+    .#{$elNamespace}-scrollbar__view {
+      width: 100% !important;
+    }
+  }
+
+  .#{$elNamespace}-menu {
     width: 100% !important;
     border-right: none;
     background: transparent !important;
@@ -152,7 +162,7 @@ $prefix-cls: #{$namespace}-menu;
       box-sizing: border-box;
     }
 
-    // 选中/高亮逻辑（由变量控制）
+    // 选中/高亮逻辑
     .is-active {
       & > .#{$elNamespace}-sub-menu__title {
         color: var(--left-menu-text-active-color) !important;
@@ -165,124 +175,124 @@ $prefix-cls: #{$namespace}-menu;
     }
   }
 
-  // 针对 vmsUi 布局的内联优化
-  &__vmsUi {
-    :deep(.#{$elNamespace}-menu) {
+  // 针对 vmsUi 布局的深度优化
+  &.#{$prefix-cls}__vmsUi {
+    width: 100% !important;
+    flex: none !important;
+
+    .#{$elNamespace}-menu {
       padding: 0 !important;
+      width: 100% !important;
 
       .#{$elNamespace}-menu-item,
       .#{$elNamespace}-sub-menu__title {
-        height: 32px !important; 
-        line-height: 32px !important;
-        padding: 0 12px !important;
-        margin: 1px 8px !important; /* 缩小上下间距从 4px 到 1px */
-        border-radius: 8px !important;
-        font-size: 13px !important;
-        gap: 12px !important;
-        box-sizing: border-box !important;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        height: 44px !important;
+        line-height: 44px !important;
+        margin: 4px 8px !important; 
+        border-radius: 10px !important;
+        color: #94a3b8 !important;
+        display: flex !important;
+        align-items: center !important;
+        position: relative !important;
+        width: auto !important;
 
-        // 图标优化
         .el-icon {
-          display: inline-flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          width: 20px !important;
-          height: 20px !important;
           font-size: 16px !important;
-          margin: 0 !important;
-          flex-shrink: 0 !important;
+          margin-right: 12px !important;
+          color: inherit !important;
+        }
+
+        &:hover {
+          background: rgba(56, 189, 248, 0.08) !important;
+          color: #38bdf8 !important;
+        }
+
+        &.is-active {
+          background: linear-gradient(90deg, rgba(56, 189, 248, 0.15) 0%, rgba(56, 189, 248, 0.05) 100%) !important;
+          color: #38bdf8 !important;
+          font-weight: 600;
+          
+          /* 像素级还原 image.png：完整圆角边框，右侧发光 */
+          &::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 10px;
+            /* 四边都有边框但右边最亮 */
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            border-right: 2px solid #7dd3fc;
+            /* 右侧外发光 */
+            box-shadow: 2px 0 8px rgba(56, 189, 248, 0.6), 0 0 12px rgba(56, 189, 248, 0.1);
+            z-index: 1;
+            pointer-events: none;
+          }
         }
       }
 
-      .#{$elNamespace}-menu-item.is-active {
-        border-right: 2px solid #38bdf8 !important;
-        background: linear-gradient(135deg, rgba(34, 211, 238, 0.12), rgba(14, 165, 233, 0.08)) !important;
+      /* 修复子菜单箭头对齐问题 */
+      .#{$elNamespace}-sub-menu__icon-arrow {
+        position: absolute !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        margin-top: 0 !important;
+        right: 12px !important;
+        font-size: 14px !important;
+        transition: transform 0.3s !important;
       }
 
-      // 折叠状态下的优化 — 严格对标 vms-ui
-      &.#{$elNamespace}-menu--collapse {
+      /* 展开后的二级菜单容器 */
+      .#{$elNamespace}-menu--inline {
+        background: rgba(0, 0, 0, 0.15) !important;
+        padding: 4px 0 !important;
+        margin: 0 8px !important;
+        border-radius: 8px;
+        width: auto !important;
+      }
+
+      /* 二级菜单项特有样式 - 同样使用胶囊圆弧 */
+      .#{$elNamespace}-sub-menu .#{$elNamespace}-menu-item {
+        height: 38px !important;
+        line-height: 38px !important;
+        padding-left: 45px !important;
+        font-size: 13px !important;
+        margin: 2px 0 !important;
+        position: relative;
         width: 100% !important;
+        border-radius: 6px !important; /* 恢复 6px 圆角 */
 
-        .#{$elNamespace}-menu-item,
-        .#{$elNamespace}-sub-menu__title {
-          height: 32px !important;
-          line-height: 32px !important;
-          margin: 1px 10px !important; /* 缩小上下间距从 4px 到 1px */
-          justify-content: center !important;
-          box-sizing: border-box !important;
+        &::before {
+          display: none !important;
+        }
 
-          // 强制锁定折叠态图标大小，防止跳变
-          .el-icon {
-            width: 20px !important;
-            height: 20px !important;
-            font-size: 16px !important;
-            display: inline-flex !important;
+        &:hover {
+          background: rgba(56, 189, 248, 0.05) !important;
+          padding-left: 48px !important;
+        }
+
+        &.is-active {
+          background: rgba(56, 189, 248, 0.1) !important;
+          color: #38bdf8 !important;
+          font-weight: 600;
+
+          &::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 8px;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-right: 2px solid #7dd3fc;
+            box-shadow: 2px 0 8px rgba(56, 189, 248, 0.6), 0 0 10px rgba(56, 189, 248, 0.1);
           }
-
-          // 只隐藏文字标题和箭头，不隐藏图标 (Icon 内部可能包含 span)
-          .v-menu__title, 
-          .#{$elNamespace}-sub-menu__icon-arrow {
-            display: none !important;
-          }
-        }
-
-        .#{$elNamespace}-menu-item.is-active {
-          border-right: 2px solid #38bdf8 !important; /* 恢复发光边框 */
-          background: rgba(34, 211, 238, 0.15) !important;
-        }
-      }
-
-      // 子菜单内层缩进
-      .#{$elNamespace}-menu {
-        .#{$elNamespace}-menu-item,
-        .#{$elNamespace}-sub-menu__title {
-          padding-left: 20px !important;
-          font-size: 12px !important;
-          color: #7c8fa3 !important;
-        }
-
-        .#{$elNamespace}-menu-item.is-active {
-          border-right: 2px solid rgba(56, 189, 248, 0.5) !important;
-          background: rgba(34, 211, 238, 0.1) !important;
         }
       }
     }
   }
 
-  // 折叠时的最小宽度
-  :deep(.#{$elNamespace}-menu--collapse) {
-    width: 100% !important;
-
-    & > .is-active,
-    & > .is-active > .#{$elNamespace}-sub-menu__title {
-      position: relative;
-      background-color: var(--left-menu-collapse-bg-active-color) !important;
-    }
-  }
-
-  // 折叠动画
-  :deep(.horizontal-collapse-transition) {
-    .#{$prefix-cls}__title {
-      display: none;
-    }
-  }
-
-  // 垂直菜单
-  &__vertical {
-    :deep(.#{$elNamespace}-menu--vertical) {
-      &:not(.#{$elNamespace}-menu--collapse) .#{$elNamespace}-sub-menu__title,
-      .#{$elNamespace}-menu-item {
-        padding-right: 0;
-      }
-    }
-  }
-
-  // 水平菜单
-  &__horizontal {
+  // 水平菜单模式
+  &.#{$prefix-cls}__horizontal {
     height: calc(var(--top-tool-height)) !important;
 
-    :deep(.#{$elNamespace}-menu--horizontal) {
+    .#{$elNamespace}-menu--horizontal {
       height: calc(var(--top-tool-height));
       border-bottom: none;
       & > .#{$elNamespace}-sub-menu.is-active {
@@ -291,6 +301,16 @@ $prefix-cls: #{$namespace}-menu;
         }
       }
     }
+  }
+}
+
+/* 兼容折叠态下的图标显示 */
+.vms-ui-sidebar.collapsed {
+  .#{$elNamespace}-icon * {
+    display: inline-block !important;
+  }
+  .#{$elNamespace}-sub-menu__icon-arrow {
+    display: none !important;
   }
 }
 
@@ -308,17 +328,71 @@ $prefix-cls: #{$namespace}-menu;
   min-width: 0;
 }
 
-.el-menu-item {
-  display: flex;
-}
-</style>
+/* ========== VMS 科技风二级菜单弹出层 (Popper) ========== */
+$popper-prefix-cls: #{$namespace}-menu-popper;
 
-<style lang="scss">
-$prefix-cls: #{$namespace}-menu-popper;
+.#{$popper-prefix-cls}--vertical {
+  background: rgba(8, 22, 45, 0.95) !important;
+  border: 1px solid rgba(56, 189, 248, 0.25) !important;
+  border-radius: 12px !important;
+  backdrop-filter: blur(15px) !important;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6) !important;
+  padding: 6px 0 !important;
 
-// popper 样式已统一在 vms-ui.scss 中处理
-.#{$prefix-cls}--vertical,
-.#{$prefix-cls}--horizontal {
+  .el-menu,
+  .el-menu--popup {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    min-width: 140px !important;
+  }
+
+  .el-menu-item,
+  .el-sub-menu__title {
+    height: 40px !important;
+    line-height: 40px !important;
+    margin: 2px 8px !important;
+    padding: 0 14px !important;
+    border-radius: 8px !important;
+    color: #94a3b8 !important;
+    font-size: 13px !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    display: flex !important;
+    align-items: center !important;
+
+    .el-icon {
+      font-size: 16px !important;
+      margin-right: 10px !important;
+      color: inherit !important;
+    }
+
+    &:hover {
+      background: rgba(56, 189, 248, 0.12) !important;
+      color: #38bdf8 !important;
+    }
+
+    &.is-active {
+      background: rgba(14, 165, 233, 0.25) !important;
+      color: #38bdf8 !important;
+      font-weight: 600;
+    }
+  }
+
+  /* 恢复并美化小箭头 */
+  &.el-popper .el-popper__arrow {
+    display: block !important;
+    visibility: visible !important;
+
+    &::before {
+      background: rgba(8, 22, 45, 0.95) !important;
+      border: 1px solid rgba(56, 189, 248, 0.25) !important;
+      display: block !important;
+      visibility: visible !important;
+    }
+  }
 }
 
 .dark {
