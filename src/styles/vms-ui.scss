@@ -577,28 +577,38 @@
     display: none !important;
   }
 
-  /* 彻底封杀所有状态下的白色背景 */
-  &:hover,
-  &:focus,
-  &:focus-visible,
-  &:active,
-  &.is-active {
+  /* 优化选中逻辑：剥离 hover 与 focus，确保视觉反馈唯一 */
+  background: transparent !important;
+  outline: none !important;
+
+  &::before {
+    display: none !important;
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: #38bdf8 !important;
+    box-shadow: 0 0 8px #38bdf8 !important;
+    z-index: 10;
+  }
+
+  /* 仅鼠标真正悬停时触发强高亮和指示条 */
+  &:hover {
     background: linear-gradient(90deg, rgba(56, 189, 248, 0.15) 0%, transparent 100%) !important;
     color: #38bdf8 !important;
-    outline: none !important;
-
+    
     &::before {
       display: block !important;
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 2px;
-      height: 100%;
-      background: #38bdf8 !important;
-      box-shadow: 0 0 8px #38bdf8 !important;
-      z-index: 10;
     }
+  }
+
+  /* 取消 focus 状态的强反馈，仅保留极微弱的背景色，防止与悬停冲突 */
+  &:focus,
+  &:focus-visible {
+    background: rgba(56, 189, 248, 0.04) !important;
+    outline: none !important;
   }
 
   /* 针对最后一个元素的特殊处理 */
@@ -633,7 +643,7 @@
   }
 }
 /* ====================================================
-   ??????????? - ????????
+   全局强制暗黑科技风覆盖 - 彻底消灭白色底色
    ==================================================== */
 el-card {
   background: rgba(15, 23, 42, 0.4) !important;
@@ -688,10 +698,10 @@ el-card {
 }
 
 /* ====================================================
-   ???????? - ??????????
+   基础组件深度调优 - 表格、输入框、下拉框
    ==================================================== */
 
-/* 1. ?? (el-table) ????? */
+/* 1. 表格 (el-table) 科技感重塑 */
 .el-table {
   background-color: transparent !important;
   color: #cbd5e1 !important;
@@ -720,7 +730,7 @@ el-card {
   }
 }
 
-/* 2. ?????? (Input, Select, Cascader) */
+/* 2. 表单输入组件 (Input, Select, Cascader) */
 .el-input, .el-select, .el-cascader, .el-input-number {
   :deep(.el-input__wrapper),
   .el-input__wrapper {
@@ -749,7 +759,7 @@ el-card {
   }
 }
 
-/* 3. ???????? (?? Select ????????) */
+/* 3. 下拉列表浮层增强 (解决 Select 展开后的背景问题) */
 .el-select__popper, .el-cascader__dropdown {
   background: rgba(8, 22, 45, 0.98) !important;
   border: 1px solid rgba(56, 189, 248, 0.2) !important;
@@ -768,7 +778,7 @@ el-card {
   }
 }
 
-/* 4. ???? (el-pagination) */
+/* 4. 分页组件 (el-pagination) */
 .el-pagination {
   --el-pagination-bg-color: transparent !important;
   --el-pagination-button-bg-color: rgba(255, 255, 255, 0.05) !important;
