@@ -22,7 +22,6 @@
   flex-shrink: 0;
   background: linear-gradient(180deg, #020617 0%, #020617 100%);
   border-right: 1px solid rgba(148, 163, 184, 0.1);
-  padding: 14px 10px;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -192,8 +191,10 @@
 
 /* ========== 侧边栏二级菜单 (Sub-menu) 深度定制 ========== */
 .vms-ui-sidebar {
+
   /* 一级菜单项基础高度与间距 */
-  .el-menu-item, .el-sub-menu__title {
+  .el-menu-item,
+  .el-sub-menu__title {
     height: 44px !important;
     line-height: 44px !important;
     margin: 4px 0 !important;
@@ -202,7 +203,7 @@
     display: flex !important;
     align-items: center !important;
     position: relative !important;
-    
+
     &:hover {
       background: rgba(56, 189, 248, 0.08) !important;
       color: #38bdf8 !important;
@@ -222,7 +223,8 @@
 
   /* 展开后的二级菜单容器 */
   .el-menu--inline {
-    background: rgba(0, 0, 0, 0.15) !important; /* 内部容器稍微加深，增加深度感 */
+    background: rgba(0, 0, 0, 0.15) !important;
+    /* 内部容器稍微加深，增加深度感 */
     padding: 4px 0 !important;
     margin: 0 8px !important;
     border-radius: 8px;
@@ -230,9 +232,11 @@
 
   /* 二级菜单项特有样式 */
   .el-sub-menu .el-menu-item {
-    height: 38px !important; /* 稍微比一级菜单矮一点点，增加精致感 */
+    height: 38px !important;
+    /* 稍微比一级菜单矮一点点，增加精致感 */
     line-height: 38px !important;
-    padding-left: 45px !important; /* 增加左侧缩进 */
+    padding-left: 45px !important;
+    /* 增加左侧缩进 */
     font-size: 13px !important;
     margin: 2px 0 !important;
     position: relative;
@@ -253,8 +257,9 @@
 
     &:hover {
       background: transparent !important;
-      padding-left: 48px !important; /* Hover 时轻微向右滑动 */
-      
+      padding-left: 48px !important;
+      /* Hover 时轻微向右滑动 */
+
       &::before {
         background: #38bdf8;
         box-shadow: 0 0 8px #38bdf8;
@@ -266,7 +271,7 @@
       background: rgba(56, 189, 248, 0.1) !important;
       color: #38bdf8 !important;
       font-weight: 600;
-      
+
       &::before {
         background: #38bdf8;
         box-shadow: 0 0 8px #38bdf8;
@@ -284,28 +289,35 @@
 
 /* ========== popup 浮层 (二级菜单) ========== */
 .v-menu-popper--vertical {
-  background: rgba(8, 22, 45, 0.95) !important; /* 更深邃的深蓝色背景 */
-  border: 1px solid rgba(56, 189, 248, 0.25) !important; /* 科技感蓝边框 */
+  background: rgba(8, 22, 45, 0.95) !important;
+  /* 更深邃的深蓝色背景 */
+  border: 1px solid rgba(56, 189, 248, 0.25) !important;
+  /* 科技感蓝边框 */
   border-radius: 12px !important;
   backdrop-filter: blur(15px) !important;
   box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6) !important;
-  padding: 6px 0 !important; /* 彻底去除左右内边距，消除双重盒子感 */
+  padding: 6px 0 !important;
+  /* 彻底去除左右内边距，消除双重盒子感 */
 
   /* 解决 box 里又有 box 的问题：强制清除内层 el-menu 的背景和边框 */
-  .el-menu, .el-menu--popup {
+  .el-menu,
+  .el-menu--popup {
     background: transparent !important;
     border: none !important;
     padding: 0 !important;
     margin: 0 !important;
     box-shadow: none !important;
     border-radius: 0 !important;
-    min-width: 140px !important; /* 保证宽度合适 */
+    min-width: 140px !important;
+    /* 保证宽度合适 */
   }
 
-  .el-menu-item, .el-sub-menu__title {
+  .el-menu-item,
+  .el-sub-menu__title {
     height: 40px !important;
     line-height: 40px !important;
-    margin: 2px 8px !important; /* 左右留出间距，呈现悬浮圆角效果 */
+    margin: 2px 8px !important;
+    /* 左右留出间距，呈现悬浮圆角效果 */
     padding: 0 14px !important;
     border-radius: 8px !important;
     color: #94a3b8 !important;
@@ -319,7 +331,7 @@
       margin-right: 10px !important;
       color: inherit !important;
     }
-    
+
     &:hover {
       background: rgba(56, 189, 248, 0.12) !important;
       color: #38bdf8 !important;
@@ -339,6 +351,7 @@
   &.el-popper .el-popper__arrow {
     display: block !important;
     visibility: visible !important;
+
     &::before {
       background: rgba(8, 22, 45, 0.95) !important;
       border: 1px solid rgba(56, 189, 248, 0.25) !important;
