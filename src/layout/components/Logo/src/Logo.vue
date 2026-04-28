@@ -84,7 +84,7 @@ const getImage = (name)=>{
         :class="[
           'text-13px font-600 custom-hover vms-logo-title',
           {
-            'text-[var(--logo-title-text-color)]': layout === 'classic',
+            'text-[var(--vms-text-main)]': layout === 'classic',
             'text-[var(--top-header-text-color)]':
               layout === 'topLeft' || layout === 'top' || layout === 'cutMenu'
           }

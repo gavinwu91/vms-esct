@@ -15,6 +15,7 @@ const isDark = computed(() => appStore.getIsDark)
 // 切换主题
 const themeChange = () => {
   const target = !isDark.value
+  console.log('--- Theme Switch Triggered ---', { current: isDark.value, target })
   appStore.setIsDark(target)
 }
 </script>

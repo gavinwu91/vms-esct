@@ -190,7 +190,7 @@ $prefix-cls: #{$namespace}-menu;
         line-height: 32px !important;
         margin: 2px 8px !important; 
         border-radius: 4px !important;
-        color: #94a3b8 !important;
+        color: var(--vms-text-muted) !important;
         display: flex !important;
         align-items: center !important;
         position: relative !important;
@@ -204,18 +204,17 @@ $prefix-cls: #{$namespace}-menu;
         }
 
         &:hover {
-          background: rgba(var(--vms-primary-rgb), 0.08) !important;
+          background: var(--vms-hover) !important;
           color: var(--vms-primary) !important;
         }
 
         &.is-active {
-          background: linear-gradient(90deg, rgba(var(--vms-primary-rgb), 0.15) 0%, rgba(var(--vms-primary-rgb), 0.05) 100%) !important;
+          background: linear-gradient(90deg, rgba(var(--vms-primary-rgb), 0.1) 0%, transparent 100%) !important;
           color: var(--vms-primary) !important;
           font-weight: 600;
 
           .el-icon {
             filter: drop-shadow(0 0 5px var(--vms-primary));
-            animation: vms-icon-pulse 2s infinite ease-in-out;
           }
           
           /* 像素级还原 image.png：完整圆角边框，右侧发光 */
@@ -223,12 +222,12 @@ $prefix-cls: #{$namespace}-menu;
             content: '';
             position: absolute;
             inset: 0;
-            border-radius: 10px;
+            border-radius: 4px;
             /* 四边都有边框但右边最亮 */
-            border: 1px solid rgba(var(--vms-primary-rgb), 0.25);
+            border: 1px solid var(--vms-border);
             border-right: 2px solid var(--vms-primary-light);
             /* 右侧外发光 */
-            box-shadow: 2px 0 8px rgba(var(--vms-primary-rgb), 0.6), 0 0 12px rgba(var(--vms-primary-rgb), 0.1);
+            box-shadow: 2px 0 8px var(--vms-glow);
             z-index: 1;
             pointer-events: none;
             animation: vms-fade-in 0.4s ease-out;
@@ -249,7 +248,7 @@ $prefix-cls: #{$namespace}-menu;
 
       /* 展开后的二级菜单容器 */
       .#{$elNamespace}-menu--inline {
-        background: rgba(0, 0, 0, 0.15) !important;
+        background: var(--vms-bg-sub) !important;
         padding: 4px 0 !important;
         margin: 0 8px !important;
         border-radius: 8px;
@@ -265,12 +264,12 @@ $prefix-cls: #{$namespace}-menu;
           margin: 2px auto !important; /* 水平居中 */
           padding: 0 !important;
           justify-content: center !important;
-          width: 44px !important; /* 宽度拉长到 44px，高度保持 28px */
+          width: 44px !important; /* 宽度拉长到 44px，高度保持 32px */
           border-radius: 8px !important;
 
           .el-icon {
             margin: 0 !important;
-            font-size: 14px !important; /* 减小图标尺寸以适应 28px 高度 */
+            font-size: 14px !important; 
           }
 
           /* 修复折叠态下的发光条位置 - 确保与展开态完全一致 */
@@ -279,9 +278,9 @@ $prefix-cls: #{$namespace}-menu;
             position: absolute;
             inset: 0 !important;
             border-radius: 8px !important;
-            border: 1px solid rgba(var(--vms-primary-rgb), 0.25) !important;
+            border: 1px solid var(--vms-border) !important;
             border-right: 2px solid var(--vms-primary-light) !important;
-            box-shadow: 2px 0 8px rgba(var(--vms-primary-rgb), 0.6), 0 0 12px rgba(var(--vms-primary-rgb), 0.1) !important;
+            box-shadow: 2px 0 8px var(--vms-glow) !important;
             z-index: 1;
             pointer-events: none;
             animation: vms-fade-in 0.4s ease-out;

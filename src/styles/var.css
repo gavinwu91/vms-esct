@@ -3,23 +3,23 @@
 
     --left-menu-max-width: 220px;
     --left-menu-min-width: 64px;
-    --left-menu-bg-color: #020617;
-    --left-menu-bg-light-color: rgba(15, 23, 42, 0.5);
-    --left-menu-bg-active-color: rgba(14, 165, 233, 0.15);
-    --left-menu-text-color: #94a3b8;
-    --left-menu-text-active-color: #38bdf8;
-    --left-menu-collapse-bg-active-color: rgba(14, 165, 233, 0.15);
+    --left-menu-bg-color: var(--vms-bg-sidebar);
+    --left-menu-bg-light-color: var(--vms-bg-sub);
+    --left-menu-bg-active-color: rgba(var(--vms-primary-rgb), 0.15);
+    --left-menu-text-color: var(--vms-text-muted);
+    --left-menu-text-active-color: var(--vms-primary);
+    --left-menu-collapse-bg-active-color: rgba(var(--vms-primary-rgb), 0.15);
     /* left menu end */
 
     /* logo start */
     --logo-height: 48px;
-    --logo-title-text-color: #f8fafc;
+    --logo-title-text-color: var(--vms-text-main);
     /* logo end */
 
     /* header start */
-    --top-header-bg-color: transparent;
-    --top-header-text-color: #e2e8f0;
-    --top-header-hover-color: rgba(148, 163, 184, 0.1);
+    --top-header-bg-color: var(--vms-bg-card);
+    --top-header-text-color: var(--vms-text-main);
+    --top-header-hover-color: var(--vms-hover);
     --top-tool-height: var(--logo-height);
     --top-tool-p-x: 16px;
     --tags-view-height: 40px;
@@ -38,50 +38,23 @@
     --el-splitter-bar-bg-color: rgba(148, 163, 184, 0.2);
 
     /* VMS UI 核心色值优化 */
-    --default-main-color: #0ea5e9 !important;
-    --default-main-color-hight: #38bdf8 !important;
-    --default-btn-bg-active: rgba(14, 165, 233, 0.15);
-    --default-btn-bg-active-font-color: #38bdf8;
+    --default-main-color: var(--vms-primary) !important;
+    --default-main-color-hight: var(--vms-primary-light) !important;
+    --default-btn-bg-active: rgba(var(--vms-primary-rgb), 0.15);
+    --default-btn-bg-active-font-color: var(--vms-primary);
 
     /* 顶部栏渐变优化 - 采用更深邃的深蓝渐变 */
-    --top-bar-bg: linear-gradient(90deg, #020617 0%, #0f172a 50%, #020617 100%);
+    --top-bar-bg: var(--vms-bg-card);
     --top-bar-hight: 48px;
     --top-bar-font-size: 13px;
     
-    --defulat-vtags-bg: rgba(15, 23, 42, 0.3);
-    --default-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-    --default-card-box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --defulat-vtags-bg: var(--vms-bg-sub);
+    --default-box-shadow: var(--vms-glow);
+    --default-card-box-shadow: var(--vms-glow);
     
-    --defaulat-cuz-color: #38bdf8;
-    --default-event-main-color: linear-gradient(90deg, #0ea5e9 0%, #38bdf8 100%) !important;
-    --default-main-bg2: rgba(15, 23, 42, 0.4);
-    
-    --btn-tarck-color: #b08557;
-    --btn-tarck-color-height: #dea772;
-
-    /* Element Plus 全局覆盖 */
-    --el-color-primary: var(--default-main-color) !important;
-    --el-color-primary-light-3: #7dd3fc !important;
-    --el-color-primary-light-5: #38bdf8 !important;
-    --el-color-primary-light-7: #0ea5e9 !important;
-    --el-color-primary-light-8: #0369a1 !important;
-    --el-color-primary-light-9: #0c4a6e !important;
-    --el-color-primary-dark-2: #0284c7 !important;
-
-    --el-button-hover-bg-color: #38bdf8 !important;
-    --el-menu-active-color: #38bdf8 !important;
-    --el-menu-hover-bg-color: rgba(56, 189, 248, 0.1) !important;
-
-    /* 业务特定颜色 */
-    --color-main-bg: #020617; 
-    --color-panel-bg-light: rgba(15, 23, 42, 0.8);
-    --color-video-bg-dark: #000000; 
-    --color-primary: #0ea5e9; 
-    --color-accent: #38bdf8; 
-    --color-danger: #ef4444;
-    --color-text-dark: #f8fafc;
-    --color-text-light: #e2e8f0;
-    --color-text-dim: #94a3b8;
+    --defaulat-cuz-color: var(--vms-primary);
+    --default-event-main-color: var(--vms-primary) !important;
+    --default-main-bg2: var(--vms-bg-sub);
 }
 
 .dark {
@@ -97,7 +70,6 @@
     
     /* 继承并增强全局主色 */
     --el-color-primary: var(--default-main-color) !important;
-    --top-bar-bg: linear-gradient(90deg, #020617 0%, #0f172a 50%, #020617 100%) !important;
 }
 
 html,
@@ -105,8 +77,9 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background: #020617;
-    color: #f8fafc;
+    background: var(--vms-bg-main);
+    color: var(--vms-text-main);
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
 *,

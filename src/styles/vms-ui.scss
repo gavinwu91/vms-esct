@@ -1,3 +1,48 @@
+/* ====================================================
+   VMS 全局主题令牌 (Theme Tokens) - 支持暗黑/日间切换
+   ==================================================== */
+:root {
+  /* 日间模式 (Default Light Mode) */
+  --vms-bg-main: #f0f2f5;           /* 背景色：浅蓝灰 */
+  --vms-bg-card: #ffffff;           /* 容器/卡片背景：纯白 */
+  --vms-bg-sidebar: #ffffff;        /* 侧边栏背景：纯白 */
+  --vms-bg-sub: rgba(0, 0, 0, 0.03);/* 次级背景 (子菜单等) */
+  
+  --vms-text-main: #1e293b;         /* 主文字：深蓝黑 */
+  --vms-text-muted: #64748b;        /* 辅助文字：中灰 */
+  
+  --vms-border: rgba(0, 0, 0, 0.06); /* 边框线 */
+  --vms-hover: rgba(0, 0, 0, 0.03);  /* 悬停色 */
+  
+  --vms-glow: rgba(0, 0, 0, 0.1);    /* 投影/发光 (日间改为浅投影) */
+  --vms-primary-light: #38bdf8;
+  --vms-primary: #00f7ff;
+  --vms-primary-rgb: 0, 247, 255;
+  --vms-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html.dark {
+  /* 暗黑模式 (Dark Mode Override) */
+  --vms-bg-main: #0f172a;           /* 背景色：深蓝黑 */
+  --vms-bg-card: rgba(30, 41, 59, 0.7); /* 容器/卡片背景：半透明深色 */
+  --vms-bg-sidebar: rgba(15, 23, 42, 0.95); /* 侧边栏背景 */
+  --vms-bg-sub: rgba(0, 0, 0, 0.2);  /* 次级背景 */
+  
+  --vms-text-main: #f1f5f9;         /* 主文字：浅白 */
+  --vms-text-muted: #94a3b8;        /* 辅助文字：淡蓝灰 */
+  
+  --vms-border: rgba(56, 189, 248, 0.1); /* 科技感边框 */
+  --vms-hover: rgba(255, 255, 255, 0.05); /* 悬停色 */
+  
+  --vms-glow: rgba(56, 189, 248, 0.5);   /* 霓虹发光 */
+  --vms-primary-light: #7dd3fc;
+}
+
+@keyframes vms-fade-in {
+  from { opacity: 0; transform: translateX(-5px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
 /* ======================================================
    vms-ui 暗黑科技风格主题皮肤
    所有选择器使用 .vms-ui-app-shell 前缀确保优先级
@@ -10,9 +55,10 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background: radial-gradient(circle at 50% 50%, #0a1a3a 0%, #010816 100%);
+  background: var(--vms-bg-main);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  color: #e0f2ff;
+  color: var(--vms-text-main);
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 /* ========== 侧边栏 ========== */
@@ -20,8 +66,8 @@
   width: 220px;
   min-width: 220px;
   flex-shrink: 0;
-  background: linear-gradient(180deg, #020617 0%, #020617 100%);
-  border-right: 1px solid rgba(148, 163, 184, 0.1);
+  background: var(--vms-bg-sidebar);
+  border-right: 1px solid var(--vms-border);
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -92,15 +138,6 @@
   --tags-view-height: 40px;
   --el-font-size-base: 13px;
 
-  /* VMS 核心战术色值 */
-  --vms-primary: #38bdf8;        /* 极客蓝 */
-  --vms-primary-light: #7dd3fc;  /* 亮空蓝 */
-  --vms-primary-rgb: 56, 189, 248;
-  
-  /* 发光与阴影 */
-  --vms-glow: 0 0 12px rgba(var(--vms-primary-rgb), 0.5);
-  --vms-glow-strong: 0 0 20px rgba(var(--vms-primary-rgb), 0.7);
-  
   /* 动态效果 */
   --vms-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --vms-bezier: cubic-bezier(0.4, 0, 0.2, 1);
@@ -129,11 +166,11 @@
 
 /* 1. MessageBox 确认框重塑 */
 .el-message-box {
-  background: rgba(15, 23, 42, 0.85) !important;
+  background: var(--vms-bg-card) !important;
   backdrop-filter: blur(16px) !important;
-  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+  border: 1px solid var(--vms-border) !important;
   border-radius: 8px !important;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6) !important;
+  box-shadow: 0 20px 50px var(--vms-glow) !important;
   padding: 20px !important;
   --el-border-color-lighter: transparent !important;
   /* 覆盖变量 */
@@ -150,7 +187,7 @@
   }
 
   .el-message-box__title {
-    color: #f8fafc !important;
+    color: var(--vms-text-main) !important;
     font-weight: 700 !important;
     font-size: 16px !important;
     letter-spacing: 1px !important;
@@ -202,10 +239,10 @@
 
 /* 2. Message 消息条重塑 */
 .el-message {
-  background: rgba(15, 23, 42, 0.9) !important;
+  background: var(--vms-bg-card) !important;
   backdrop-filter: blur(8px) !important;
-  border: 1px solid rgba(56, 189, 248, 0.25) !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid var(--vms-border) !important;
+  box-shadow: 0 8px 32px var(--vms-glow) !important;
   border-radius: 4px !important;
 
   .el-message__content {
@@ -215,10 +252,10 @@
 
 /* 4. 全局 下拉框与弹出层 (Dropdown & Popper) 重构 */
 .el-popper.is-light {
-  background: rgba(6, 11, 25, 0.85) !important;
+  background: var(--vms-bg-card) !important;
   backdrop-filter: blur(12px) !important;
-  border: 1px solid rgba(56, 189, 248, 0.2) !important;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7) !important;
+  border: 1px solid var(--vms-border) !important;
+  box-shadow: 0 12px 40px var(--vms-glow) !important;
   border-radius: 4px !important;
   --el-border-color-lighter: transparent !important;
 }
@@ -241,17 +278,18 @@
   }
 }
 /* ====================================================
-   全局强制暗黑科技风覆盖 - 彻底消灭白色底色
+   全局强制主题覆盖 - 支持暗黑/日间切换
    ==================================================== */
-el-card {
-  background: rgba(15, 23, 42, 0.4) !important;
-  border: 1px solid rgba(148, 163, 184, 0.1) !important;
+.el-card {
+  background: var(--vms-bg-card) !important;
+  border: 1px solid var(--vms-border) !important;
   backdrop-filter: blur(10px);
-  color: #f1f5f9 !important;
+  color: var(--vms-text-main) !important;
+  transition: all 0.3s ease;
   
   .el-card__header {
-    border-bottom: 1px solid rgba(56, 189, 248, 0.1) !important;
-    color: #38bdf8 !important;
+    border-bottom: 1px solid var(--vms-border) !important;
+    color: var(--vms-primary) !important;
     font-weight: 600 !important;
   }
 }
@@ -265,18 +303,18 @@ el-card {
   }
   
   .el-tabs__nav-wrap::after {
-    background-color: rgba(148, 163, 184, 0.1) !important;
+    background-color: var(--vms-border) !important;
   }
   
   .el-tabs__content {
     background: transparent !important;
-    color: #cbd5e1 !important;
+    color: var(--vms-text-muted) !important;
   }
   
   .el-tabs__item {
-    color: #94a3b8 !important;
+    color: var(--vms-text-muted) !important;
     &.is-active {
-      color: #38bdf8 !important;
+      color: var(--vms-primary) !important;
     }
   }
 }
@@ -285,13 +323,14 @@ el-card {
 .v-content-wrap,
 .v-layout__content,
 .v-layout__vmsUi {
-  background: transparent !important;
+  background: var(--vms-bg-main) !important;
+  transition: background 0.3s ease;
 }
 
 .el-dialog, 
 .el-drawer {
-  background: rgba(8, 22, 45, 0.98) !important;
-  border: 1px solid rgba(56, 189, 248, 0.2) !important;
+  background: var(--vms-bg-card) !important;
+  border: 1px solid var(--vms-border) !important;
   backdrop-filter: blur(20px) !important;
 }
 
@@ -302,18 +341,18 @@ el-card {
 /* 1. 表格 (el-table) 科技感重塑 */
 .el-table {
   background-color: transparent !important;
-  color: #cbd5e1 !important;
-  --el-table-border-color: rgba(148, 163, 184, 0.1) !important;
-  --el-table-header-bg-color: rgba(15, 23, 42, 0.6) !important;
-  --el-table-row-hover-bg-color: rgba(56, 189, 248, 0.08) !important;
+  color: var(--vms-text-main) !important;
+  --el-table-border-color: var(--vms-border) !important;
+  --el-table-header-bg-color: var(--vms-bg-sub) !important;
+  --el-table-row-hover-bg-color: var(--vms-hover) !important;
   
   tr, th, td {
     background-color: transparent !important;
-    border-bottom: 1px solid rgba(148, 163, 184, 0.1) !important;
+    border-bottom: 1px solid var(--vms-border) !important;
   }
   
   th.el-table__cell {
-    color: #38bdf8 !important;
+    color: var(--vms-primary) !important;
     font-weight: 600 !important;
     letter-spacing: 0.5px;
   }
@@ -321,56 +360,51 @@ el-card {
   &::before, &::after {
     display: none !important;
   }
-  
-  /* ??????????? */
-  .el-table__empty-block {
-    background: transparent !important;
-  }
 }
 
 /* 2. 表单输入组件 (Input, Select, Cascader) */
 .el-input, .el-select, .el-cascader, .el-input-number {
   :deep(.el-input__wrapper),
   .el-input__wrapper {
-    background-color: rgba(15, 23, 42, 0.6) !important;
-    box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.2) inset !important;
+    background-color: var(--vms-bg-card) !important;
+    box-shadow: 0 0 0 1px var(--vms-border) inset !important;
     border: none !important;
     transition: all 0.3s !important;
     
     &:hover {
-      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4) inset !important;
+      box-shadow: 0 0 0 1px var(--vms-primary) inset !important;
     }
     
     &.is-focus {
-      box-shadow: 0 0 0 1px #0ea5e9 inset !important;
-      background-color: rgba(15, 23, 42, 0.8) !important;
+      box-shadow: 0 0 0 1px var(--vms-primary) inset !important;
+      background-color: var(--vms-bg-card) !important;
     }
   }
   
   :deep(.el-input__inner),
   .el-input__inner {
-    color: #f1f5f9 !important;
+    color: var(--vms-text-main) !important;
     font-size: 13px !important;
     &::placeholder {
-      color: #64748b !important;
+      color: var(--vms-text-muted) !important;
     }
   }
 }
 
 /* 3. 下拉列表浮层增强 (解决 Select 展开后的背景问题) */
 .el-select__popper, .el-cascader__dropdown {
-  background: rgba(8, 22, 45, 0.98) !important;
-  border: 1px solid rgba(56, 189, 248, 0.2) !important;
+  background: var(--vms-bg-card) !important;
+  border: 1px solid var(--vms-border) !important;
   backdrop-filter: blur(20px) !important;
   
   .el-select-dropdown__item {
-    color: #94a3b8 !important;
+    color: var(--vms-text-muted) !important;
     &.hover, &:hover {
-      background: rgba(56, 189, 248, 0.1) !important;
-      color: #38bdf8 !important;
+      background: var(--vms-hover) !important;
+      color: var(--vms-primary) !important;
     }
     &.selected {
-      color: #38bdf8 !important;
+      color: var(--vms-primary) !important;
       font-weight: 700;
     }
   }
