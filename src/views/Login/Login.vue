@@ -5,10 +5,16 @@
     <div class="vms-bg-grid"></div>
     <div class="vms-bg-glow-1"></div>
     <div class="vms-bg-glow-2"></div>
+    <div class="vms-scanline"></div>
 
     <!-- 登录表单容器 -->
     <div class="login-panel">
-      <div class="panel-border-glow"></div>
+      <!-- 战术四角装饰 -->
+      <div class="corner t-l"></div>
+      <div class="corner t-r"></div>
+      <div class="corner b-l"></div>
+      <div class="corner b-r"></div>
+      
       <login-form/>
     </div>
 
@@ -84,29 +90,58 @@ import { LoginForm } from "@/views/Login/components";
   to { transform: translate(100px, 50px); }
 }
 
-/* 登录面板精修 */
+/* 动态激光扫描线 */
+.vms-scanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(56, 189, 248, 0.4) 50%, 
+    transparent 100%
+  );
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+  z-index: 4;
+  animation: scanning 4s linear infinite;
+}
+
+@keyframes scanning {
+  0% { top: -5%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 105%; opacity: 0; }
+}
+
+/* 战术面板边角装饰 */
+.corner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(56, 189, 248, 0.6);
+  z-index: 11;
+  pointer-events: none;
+  
+  &.t-l { top: -2px; left: -2px; border-right: none; border-bottom: none; }
+  &.t-r { top: -2px; right: -2px; border-left: none; border-bottom: none; }
+  &.b-l { bottom: -2px; left: -2px; border-right: none; border-top: none; }
+  &.b-r { bottom: -2px; right: -2px; border-left: none; border-top: none; }
+}
+
 .login-panel {
   width: 420px;
   padding: 40px;
   position: relative;
   z-index: 10;
-  background: rgba(15, 23, 42, 0.65);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(56, 189, 248, 0.15);
-  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.75); /* 稍微加深一点，更显质感 */
+  backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px; /* 减小一点圆角，更硬朗 */
   box-shadow: 
-    0 25px 50px -12px rgba(0, 0, 0, 0.5),
-    0 0 20px rgba(56, 189, 248, 0.05);
+    0 25px 50px -12px rgba(0, 0, 0, 0.7),
+    0 0 30px rgba(56, 189, 248, 0.05);
   box-sizing: border-box;
-
-  /* 面板上方的细微高光边框 */
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.4), transparent);
-  }
 }
 
 .vms-footer {
@@ -115,8 +150,9 @@ import { LoginForm } from "@/views/Login/components";
   width: 100%;
   text-align: center;
   color: rgba(148, 163, 184, 0.3);
+  font-family: 'Courier New', monospace; /* 底部使用等宽字体，更具战术感 */
   font-size: 10px;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   z-index: 10;
 }
 </style>
