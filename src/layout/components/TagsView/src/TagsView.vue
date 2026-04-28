@@ -283,7 +283,7 @@ watch(
       <Icon
         :hover-color="isDark ? '#fff' : 'var(--el-color-black)'"
         color="var(--el-text-color-placeholder)"
-        icon="ep:d-arrow-left"
+        icon="ep:arrow-left"
       />
     </span>
     <div class="flex-1 overflow-hidden">
@@ -322,7 +322,7 @@ watch(
               },
               {
                 divided: true,
-                icon: 'ep:d-arrow-left',
+                icon: 'ep:arrow-left',
                 label: t('common.closeTheLeftTab'),
                 disabled:
                   !!visitedViews?.length &&
@@ -333,7 +333,7 @@ watch(
                 }
               },
               {
-                icon: 'ep:d-arrow-right',
+                icon: 'ep:arrow-right',
                 label: t('common.closeTheRightTab'),
                 disabled:
                   !!visitedViews?.length &&
@@ -409,7 +409,7 @@ watch(
       <Icon
         :hover-color="isDark ? '#fff' : 'var(--el-color-black)'"
         color="var(--el-text-color-placeholder)"
-        icon="ep:d-arrow-right"
+        icon="ep:arrow-right"
       />
     </span>
     <span
@@ -442,7 +442,7 @@ watch(
         },
         {
           divided: true,
-          icon: 'ep:d-arrow-left',
+          icon: 'ep:arrow-left',
           label: t('common.closeTheLeftTab'),
           disabled: !!visitedViews?.length && selectedTag?.fullPath === visitedViews[0].fullPath,
           command: () => {
@@ -450,7 +450,7 @@ watch(
           }
         },
         {
-          icon: 'ep:d-arrow-right',
+          icon: 'ep:arrow-right',
           label: t('common.closeTheRightTab'),
           disabled:
             !!visitedViews?.length &&
@@ -502,6 +502,11 @@ $prefix-cls: #{$namespace}-tags-view;
 
   .#{$elNamespace}-scrollbar__view {
     height: 100%;
+  }
+
+  /* 隐藏横向滚动条 */
+  .#{$elNamespace}-scrollbar__bar.is-horizontal {
+    display: none !important;
   }
 
   /* 右侧工具按钮 (刷新、更多等) */
