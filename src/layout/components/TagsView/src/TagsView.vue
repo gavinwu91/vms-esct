@@ -658,8 +658,9 @@ $prefix-cls: #{$namespace}-tags-view;
   overflow: hidden;
   display: flex;
   align-items: center;
-  flex: 1;
+  flex: 0 1 75%; /* 限制最大占比，防止挤压右侧工具栏 */
   height: 100%;
   min-width: 0;
+  margin-right: 20px; /* 增加间距 */
 }
 </style>

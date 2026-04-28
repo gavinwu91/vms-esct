@@ -13,6 +13,7 @@ import { useAppStore } from '@/store/modules/app'
 import { useDesign } from '@/hooks/web/useDesign'
 import { checkPermi } from '@/utils/permission'
 import { ThemeSwitch } from '@/layout/components/ThemeSwitch'
+import { LocaleSwitch } from '@/layout/components/LocaleSwitch'
 
 const { getPrefixCls, variables } = useDesign()
 
@@ -74,10 +75,10 @@ export default defineComponent({
             <Screenfull class="custom-hover" color="#fff"></Screenfull>
           ) : undefined}
 
+          <ThemeSwitch class="custom-hover" color="#fff" />
+          <LocaleSwitch class="custom-hover" color="#fff" />
+
           {size.value ? <SizeDropdown class="custom-hover" color="#fff"></SizeDropdown> : undefined}
-          {locale.value ? (
-            <LocaleDropdown class="custom-hover" color="#fff"></LocaleDropdown>
-          ) : undefined}
           {message.value ? <Message class="custom-hover" color="#fff"></Message> : undefined}
 
           <UserInfo></UserInfo>

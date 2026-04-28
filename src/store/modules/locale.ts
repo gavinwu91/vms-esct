@@ -38,19 +38,14 @@ export const useLocaleStore = defineStore('locales', {
       },*/
       // 多语言
       localeMap: [
-        // {
-        //   lang: 'zh-CN',
-        //   name: '简体中文'
-        // },
         {
           lang: 'en',
           name: 'English'
         },
-        // {
-        //   lang: 'ar',
-        //   name: 'Arabia'
-        // },
-
+        {
+          lang: 'ar',
+          name: 'Arabia'
+        }
       ]
     }
   },
