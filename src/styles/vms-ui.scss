@@ -85,11 +85,25 @@
   position: relative;
 }
 
-/* ========== 全局变量覆盖 ========== */
+/* ========== 全局变量覆盖 & VMS 主题变量 ========== */
 .vms-ui-app-shell {
+  /* 基础尺寸 */
   --top-tool-height: 40px;
   --tags-view-height: 40px;
   --el-font-size-base: 13px;
+
+  /* VMS 核心战术色值 */
+  --vms-primary: #38bdf8;        /* 极客蓝 */
+  --vms-primary-light: #7dd3fc;  /* 亮空蓝 */
+  --vms-primary-rgb: 56, 189, 248;
+  
+  /* 发光与阴影 */
+  --vms-glow: 0 0 12px rgba(var(--vms-primary-rgb), 0.5);
+  --vms-glow-strong: 0 0 20px rgba(var(--vms-primary-rgb), 0.7);
+  
+  /* 动态效果 */
+  --vms-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --vms-bezier: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 #app {

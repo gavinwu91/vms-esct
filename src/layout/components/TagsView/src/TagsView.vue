@@ -553,23 +553,24 @@ $prefix-cls: #{$namespace}-tags-view;
     }
 
     &:hover {
-      background: rgba(56, 189, 248, 0.08);
+      background: rgba(var(--vms-primary-rgb), 0.08);
       color: #e2e8f0;
-      border-color: rgba(56, 189, 248, 0.2);
+      border-color: rgba(var(--vms-primary-rgb), 0.2);
+      transition: var(--vms-transition);
       
       .#{$prefix-cls}__item--close { display: block; }
     }
 
     &.is-active {
-      background: rgba(14, 165, 233, 0.2);
-      color: #38bdf8;
-      border-color: rgba(56, 189, 248, 0.4);
-      box-shadow: 0 0 12px rgba(56, 189, 248, 0.15);
+      background: rgba(var(--vms-primary-rgb), 0.15);
+      color: var(--vms-primary);
+      border-color: rgba(var(--vms-primary-rgb), 0.4);
+      box-shadow: var(--vms-glow);
       font-weight: 600;
 
       .#{$prefix-cls}__item--close {
         display: block;
-        color: #38bdf8;
+        color: var(--vms-primary);
       }
     }
   }
