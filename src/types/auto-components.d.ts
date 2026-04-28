@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     2: typeof import('./../components/CameraList copy 2.vue')['default']
+    6bc76f4b538743fbc77e8bc78b10b127: typeof import('./../../public/6bc76f4b538743fbc77e8bc78b10b127.png')['default']
     '样式说明': typeof import('./../../public/样式说明.md')['default']
     AppLinkInput: typeof import('./../components/AppLinkInput/index.vue')['default']
     AppLinkSelectDialog: typeof import('./../components/AppLinkInput/AppLinkSelectDialog.vue')['default']
@@ -24,6 +25,7 @@ declare module 'vue' {
     CardTitle: typeof import('./../components/Card/src/CardTitle.vue')['default']
     ChildProcessNode: typeof import('./../components/SimpleProcessDesignerV2/src/nodes/ChildProcessNode.vue')['default']
     ChildProcessNodeConfig: typeof import('./../components/SimpleProcessDesignerV2/src/nodes-config/ChildProcessNodeConfig.vue')['default']
+    Collapse: typeof import('./../../public/collapse.png')['default']
     ColorInput: typeof import('./../components/ColorInput/index.vue')['default']
     ComponentContainer: typeof import('./../components/DiyEditor/components/ComponentContainer.vue')['default']
     ComponentContainerProperty: typeof import('./../components/DiyEditor/components/ComponentContainerProperty.vue')['default']

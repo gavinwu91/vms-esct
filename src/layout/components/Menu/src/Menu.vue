@@ -186,10 +186,10 @@ $prefix-cls: #{$namespace}-menu;
 
       .#{$elNamespace}-menu-item,
       .#{$elNamespace}-sub-menu__title {
-        height: 44px !important;
-        line-height: 44px !important;
-        margin: 4px 8px !important; 
-        border-radius: 10px !important;
+        height: 32px !important;
+        line-height: 32px !important;
+        margin: 2px 8px !important; 
+        border-radius: 4px !important;
         color: #94a3b8 !important;
         display: flex !important;
         align-items: center !important;
@@ -254,6 +254,45 @@ $prefix-cls: #{$namespace}-menu;
         margin: 0 8px !important;
         border-radius: 8px;
         width: auto !important;
+      }
+
+      /* ====================================================
+         折叠态 (Collapse) 专项优化 - 修复框太长和发光条丢失
+         ==================================================== */
+      &.#{$elNamespace}-menu--collapse {
+        .#{$elNamespace}-menu-item,
+        .#{$elNamespace}-sub-menu__title {
+          margin: 2px auto !important; /* 水平居中 */
+          padding: 0 !important;
+          justify-content: center !important;
+          width: 44px !important; /* 宽度拉长到 44px，高度保持 28px */
+          border-radius: 8px !important;
+
+          .el-icon {
+            margin: 0 !important;
+            font-size: 14px !important; /* 减小图标尺寸以适应 28px 高度 */
+          }
+
+          /* 修复折叠态下的发光条位置 - 确保与展开态完全一致 */
+          &.is-active::after {
+            content: '';
+            position: absolute;
+            inset: 0 !important;
+            border-radius: 8px !important;
+            border: 1px solid rgba(var(--vms-primary-rgb), 0.25) !important;
+            border-right: 2px solid var(--vms-primary-light) !important;
+            box-shadow: 2px 0 8px rgba(var(--vms-primary-rgb), 0.6), 0 0 12px rgba(var(--vms-primary-rgb), 0.1) !important;
+            z-index: 1;
+            pointer-events: none;
+            animation: vms-fade-in 0.4s ease-out;
+          }
+          
+          /* 只隐藏文字部分，保留图标组件 */
+          .v-menu__title, 
+          .#{$elNamespace}-sub-menu__icon-arrow {
+            display: none !important;
+          }
+        }
       }
 
       /* 二级菜单项特有样式 - 同样使用胶囊圆弧 */
