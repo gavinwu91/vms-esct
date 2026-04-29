@@ -194,11 +194,22 @@
 .el-table th.el-table__cell {
   background-color: #ffffff !important;
 }
-.el-input__wrapper, .el-select__wrapper {
+:not(.login-form) .el-input__wrapper, 
+:not(.login-form) .el-select__wrapper {
   background-color: #ffffff !important;
 }
 .v-content-wrap, .el-card {
   background-color: #ffffff !important;
+}
+
+/* 专项加固：确保登录页面内的所有输入框永远保持暗色 */
+.vms-login-portal .el-input__wrapper,
+.vms-login-portal .el-select__wrapper {
+  background-color: rgba(0, 0, 0, 0.2) !important;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1) inset !important;
+}
+.vms-login-portal .el-input__inner {
+  color: #ffffff !important;
 }
 
 /* ====================================================
