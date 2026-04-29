@@ -419,7 +419,13 @@ const filterNode: FilterNodeMethodFunction = (value, data) => value ? data.name.
 <style scoped lang="scss">
 /* Wizard Container & Header */
 .task-add-dialog-custom {
-  :deep(.el-dialog) { background: transparent !important; box-shadow: none !important; border: none !important; .el-dialog__header, .el-dialog__body { padding: 0 !important; } }
+  :deep(.el-dialog) { 
+    background: transparent !important; 
+    box-shadow: none !important; 
+    border: none !important; 
+    .el-dialog__header { display: none !important; } /* 彻底隐藏原生 Header */
+    .el-dialog__body { padding: 0 !important; background: transparent !important; } 
+  }
 }
 
 .wizard-container {
