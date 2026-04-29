@@ -275,7 +275,7 @@ onMounted(() => {
   .loginInput{
     :deep(.el-input__wrapper){
       border: 1px solid rgba(255, 255, 255, 0.2);
-      background: none;
+      background: rgba(0, 0, 0, 0.1) !important; /* 强制暗色/透明 */
       border-radius: 32px;
       /* height: 44px; */
       position: relative;
