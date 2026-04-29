@@ -1,143 +1,122 @@
 <template>
-  <ContentWrap>
-    <!-- 搜索工作栏 -->
-    <el-form
-      class="-mb-15px"
-      :model="queryParams"
-      ref="queryFormRef"
-      size="default"
-      :inline="true"
-      label-width="100px"
-    >
-      <div class="flex justify-between">
-        <div>
-          <el-form-item label="Task Name" prop="strategyName">
-            <el-input
-              v-model="queryParams.strategyName"
-              placeholder="Task Name"
-              clearable
-              @keyup.enter="handleQuery"
-              class="!w-240px"
-            />
-          </el-form-item>
-          <el-form-item label="Time" prop="startTime">
-            <el-date-picker
-              v-model="queryParams.startTime"
-              value-format="YYYY-MM-DD HH:mm:ss"
-              type="daterange"
-              start-placeholder="Start Time"
-              end-placeholder="End Time"
-              :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"
-              class="!w-220px"
-            />
-          </el-form-item>
-          <el-form-item>
-            <el-button @click="handleQuery" class="vms-main-button"
-              ><Icon icon="ep:search" class="mr-5px" /> Search</el-button
-            >
-            <el-button @click="resetQuery" class="vms-reset-button"
-              ><Icon icon="ep:refresh" class="mr-5px" /> Reset</el-button
-            >
-          </el-form-item>
-        </div>
-        <div
-          ><el-form-item>
-            <el-button
-              type="primary"
-              plain
-              @click="openForm('create')"
-              class="vms-main-button"
-              v-hasPermi="['biz:alarm-task:create']"
-            >
-              <Icon icon="ep:plus" class="mr-5px" /> Add
-            </el-button>
-            <el-button
-              class="vms-track-button"
-              plain
-              @click="handleExport"
-              :loading="exportLoading"
-              v-hasPermi="['biz:alarm-task:export']"
-            >
-              <Icon icon="ep:download" class="mr-5px" /> Export
-            </el-button>
-          </el-form-item></div
-        >
+  <div class="task-list-layout">
+    <!-- 顶部状态概览 (Logic-less, purely visual stats) -->
+    <header class="page-header">
+      <div class="header-left">
+        <h1 class="title">Face Recognition Task</h1>
+        <p class="subtitle">Intelligent Surveillance Management · Real-time AI Security</p>
       </div>
-    </el-form>
-  </ContentWrap>
+      <div class="header-right">
+        <div class="stats-pill">
+          <el-icon class="stats-icon"><DataAnalysis /></el-icon>
+          <div class="stat-item"><span class="dot active-dot"></span><span>{{ total }} Total</span></div>
+        </div>
+        <el-button
+          type="primary"
+          @click="openForm('create')"
+          class="btn-create"
+          v-hasPermi="['biz:alarm-task:create']"
+        >
+          <el-icon><Plus /></el-icon> Create New Task
+        </el-button>
+      </div>
+    </header>
 
-  <!-- 列表 -->
-  <ContentWrap>
-    <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
-      <el-table-column label="ID" align="center" prop="id" />
-      <el-table-column label="Task Name" align="center" prop="strategyName">
-        <template #default="{ row }">
-          <el-link
-            type="primary"
-            :underline="true"
-            @click="handleMore('/alarm/face/alarm/facehistory', row.apiTaskId, row.strategyName)"
-          >
-            {{ row.strategyName }}
-          </el-link>
-        </template>
-      </el-table-column>
-      <el-table-column label="Status" align="center" prop="status">
-        <template #default="{ row }">
-          <el-switch
-            v-model="row.status"
-            :active-value="1"
-            :inactive-value="0"
-            style="--el-switch-on-color: #13ce66; --el-switch-off-color: red"
-          />
-        </template>
-      </el-table-column>
-      <el-table-column label="Term Type" align="center" prop="termType">
-        <template #default="{ row }">
-          <span v-if="row.termType == 0"> Temporary Surveillance </span>
-          <span v-else> Long-term Surveillance </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="No Of Alarms" align="center" prop="alarmsCount" />
-      <el-table-column label="Surveillance Camera" align="center" prop="cameraCount" />
-      <el-table-column
-        label="Create Time"
-        align="center"
-        prop="createTime"
-        :formatter="dateFormatter"
-        width="180px"
-      />
-      <el-table-column label="Operate" align="center" min-width="120px">
-        <template #default="scope">
-          <el-button
-            link
-            type="primary"
-            @click="openForm('update', scope.row.id)"
-            v-hasPermi="['biz:alarm-task:update']"
-          >
-            Modify
-          </el-button>
-          <el-button
-            link
-            type="danger"
-            @click="handleDelete(scope.row.id)"
-            v-hasPermi="['biz:alarm-task:delete']"
-          >
-            Delete
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    <!-- 搜索/过滤工作栏 -->
+    <div class="filter-bar">
+      <div class="filter-label"><el-icon><Filter /></el-icon> Filters:</div>
+      
+      <div class="search-input-wrap">
+        <el-icon class="search-icon"><Search /></el-icon>
+        <input 
+          type="text" 
+          class="search-input" 
+          v-model="queryParams.strategyName" 
+          placeholder="Search by task name..." 
+          @keyup.enter="handleQuery"
+        />
+      </div>
+
+      <div class="date-picker-wrap">
+        <el-date-picker
+          v-model="queryParams.startTime"
+          value-format="YYYY-MM-DD HH:mm:ss"
+          type="daterange"
+          start-placeholder="Start"
+          end-placeholder="End"
+          class="cyber-date-picker"
+        />
+      </div>
+
+      <div class="action-group">
+        <button class="vms-main-button sm" @click="handleQuery">Search</button>
+        <button class="vms-reset-button sm" @click="resetQuery">Reset</button>
+        <button class="vms-track-button sm" @click="handleExport" :loading="exportLoading">Export</button>
+      </div>
+    </div>
+
+    <!-- 任务卡片列表 (取代 el-table) -->
+    <div class="task-list-container" v-loading="loading">
+      <div v-if="list.length === 0" class="empty-placeholder">No tasks found.</div>
+      
+      <article class="task-card" v-for="row in list" :key="row.id">
+        <div class="task-info">
+          <div class="task-name-row">
+            <span class="status-indicator" :class="row.status === 1 ? 'active' : 'disabled'"></span>
+            <h3 class="task-name" @click="handleMore('/alarm/face/alarm/facehistory', row.apiTaskId, row.strategyName)">
+              {{ row.strategyName }}
+            </h3>
+          </div>
+          <div class="task-meta">
+            <span class="meta-item">ID: {{ row.id }}</span>
+            <span class="meta-divider">|</span>
+            <span class="meta-item camera-info">
+              <el-icon><VideoCamera /></el-icon> {{ row.cameraCount }} cams
+            </span>
+            <span class="meta-divider">|</span>
+            <span class="meta-item">
+              {{ row.termType == 0 ? 'Temporary' : 'Long-term' }}
+            </span>
+            <span class="meta-divider">|</span>
+            <span class="meta-item">Alarms: {{ row.alarmsCount }}</span>
+          </div>
+        </div>
+
+        <div class="task-right">
+          <div class="status-toggle">
+            <el-switch
+              v-model="row.status"
+              :active-value="1"
+              :inactive-value="0"
+              @change="handleStatusChange(row)"
+            />
+          </div>
+          
+          <div class="btn-group">
+            <button class="action-btn btn-edit" @click="openForm('update', row.id)" v-hasPermi="['biz:alarm-task:update']">
+              <el-icon><Edit /></el-icon> Modify
+            </button>
+            <button class="action-btn btn-delete" @click="handleDelete(row.id)" v-hasPermi="['biz:alarm-task:delete']">
+              <el-icon><Delete /></el-icon>
+            </button>
+          </div>
+        </div>
+      </article>
+    </div>
+
     <!-- 分页 -->
-    <Pagination
-      :total="total"
-      v-model:page="queryParams.page"
-      v-model:limit="queryParams.pageSize"
-      @pagination="getList"
-    />
-  </ContentWrap>
+    <div class="cyber-pagination-wrap">
+      <Pagination
+        :total="total"
+        v-model:page="queryParams.page"
+        v-model:limit="queryParams.pageSize"
+        @pagination="getList"
+      />
+    </div>
 
-  <!-- 表单弹窗：添加/修改 -->
-  <AlarmTaskForm ref="formRef" @success="getList" style="width: 80%" />
+    <!-- 表单弹窗：添加/修改 (保持原逻辑) -->
+    <AlarmTaskForm ref="formRef" @success="getList" />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -145,19 +124,21 @@ import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { AlarmTaskApi, AlarmTaskVO } from '@/api/alarmtask/face'
 import AlarmTaskForm from './AlarmTaskFormDevelop.vue'
+import { 
+  Search, Plus, Filter, DataAnalysis, VideoCamera, Edit, Delete 
+} from '@element-plus/icons-vue'
 
 /** face alarm 列表 */
 defineOptions({ name: 'AlarmTask' })
 
 const emits = defineEmits(['to-face-history'])
-
-const message = useMessage() // 消息弹窗
-const { t } = useI18n() // 国际化
+const message = useMessage() 
+const { t } = useI18n() 
 const router = useRouter()
 
-const loading = ref(true) // 列表的加载中
-const list = ref<AlarmTaskVO[]>([]) // 列表的数据
-const total = ref(0) // 列表的总页数
+const loading = ref(true) 
+const list = ref<AlarmTaskVO[]>([]) 
+const total = ref(0) 
 const queryParams = reactive({
   page: 1,
   pageSize: 10,
@@ -165,8 +146,8 @@ const queryParams = reactive({
   startTime: [],
   endTime: []
 })
-const queryFormRef = ref() // 搜索的表单
-const exportLoading = ref(false) // 导出的加载中
+const queryFormRef = ref() 
+const exportLoading = ref(false) 
 
 /** 查询列表 */
 const getList = async () => {
@@ -180,6 +161,12 @@ const getList = async () => {
   }
 }
 
+/** 状态切换逻辑 (新增) */
+const handleStatusChange = async (row: AlarmTaskVO) => {
+  // 这里可以添加状态更新接口调用
+  console.log('Status changed for:', row.id, row.status)
+}
+
 /** 搜索按钮操作 */
 const handleQuery = () => {
   queryParams.page = 1
@@ -188,26 +175,23 @@ const handleQuery = () => {
 
 /** 重置按钮操作 */
 const resetQuery = () => {
-  queryFormRef.value.resetFields()
+  queryParams.strategyName = undefined
+  queryParams.startTime = []
   handleQuery()
 }
 
 /** 添加/修改操作 */
 const formRef = ref()
 const openForm = (type: string, id?: number) => {
-  console.log(type, id)
   formRef.value.open(type, id)
 }
 
 /** 删除按钮操作 */
 const handleDelete = async (id: number) => {
   try {
-    // 删除的二次确认
     await message.delConfirm()
-    // 发起删除
     await AlarmTaskApi.deleteAlarmTask(id)
     message.success(t('common.delSuccess'))
-    // 刷新列表
     await getList()
   } catch {}
 }
@@ -215,9 +199,7 @@ const handleDelete = async (id: number) => {
 /** 导出按钮操作 */
 const handleExport = async () => {
   try {
-    // 导出的二次确认
     await message.exportConfirm()
-    // 发起导出
     exportLoading.value = true
     const data = await AlarmTaskApi.exportAlarmTask(queryParams)
     download.excel(data, 'face alarm.xls')
@@ -229,13 +211,151 @@ const handleExport = async () => {
 
 /** 转到history tab */
 function handleMore(path, apiTaskId, strategyName) {
-  // console.log('path,apiTaskId  ==== ', path, apiTaskId)
-  // router.push({ path: path, query: { apiTaskId: apiTaskId } })
   emits('to-face-history', apiTaskId)
 }
 
-/** 初始化 **/
 onMounted(() => {
   getList()
 })
 </script>
+
+<style scoped lang="scss">
+.task-list-layout {
+  padding: 12px 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+  color: var(--vms-content-text);
+}
+
+/* Page Header */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+
+  .title { font-size: 24px; font-weight: 700; color: var(--vms-content-text); margin: 0 0 4px 0; }
+  .subtitle { font-size: 13px; color: var(--vms-content-muted); margin: 0; }
+  .header-right { display: flex; gap: 20px; align-items: center; }
+}
+
+.stats-pill {
+  display: flex;
+  align-items: center;
+  background: var(--vms-card-bg);
+  border: 1px solid var(--vms-content-border);
+  border-radius: 12px;
+  padding: 8px 16px;
+  gap: 12px;
+  font-size: 13px;
+  .stats-icon { font-size: 16px; color: var(--vms-primary); }
+  .stat-item {
+    display: flex; align-items: center; gap: 8px;
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--vms-primary); box-shadow: 0 0 10px var(--vms-primary); }
+  }
+}
+
+.btn-create {
+  background: linear-gradient(135deg, #0ea5e9, #38bdf8) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 10px 20px !important;
+  font-weight: 700 !important;
+  &:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(14, 165, 233, 0.4); }
+}
+
+/* Filter Bar */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--vms-card-bg);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--vms-content-border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+
+  .filter-label { display: flex; align-items: center; gap: 6px; color: var(--vms-primary); font-weight: 600; font-size: 13px; }
+}
+
+.search-input-wrap {
+  flex: 1; position: relative;
+  .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #64748b; }
+  .search-input {
+    width: 100%; background: rgba(15, 23, 42, 0.1); border: 1px solid var(--vms-content-border);
+    border-radius: 8px; padding: 8px 12px 8px 36px; color: var(--vms-content-text); font-size: 13px; outline: none;
+    &:focus { border-color: var(--vms-primary); }
+  }
+}
+
+.cyber-date-picker {
+  :deep(.el-input__wrapper) {
+    background: rgba(15, 23, 42, 0.1) !important;
+    border: 1px solid var(--vms-content-border) !important;
+    box-shadow: none !important;
+    border-radius: 8px;
+  }
+}
+
+.action-group {
+  display: flex; gap: 8px;
+  button.sm { padding: 8px 16px; font-size: 12px; border-radius: 8px; cursor: pointer; }
+}
+
+/* Task Cards */
+.task-list-container { flex: 1; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+
+.task-card {
+  background: var(--vms-card-bg);
+  border: 1px solid var(--vms-content-border);
+  border-radius: 12px;
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+  &:hover {
+    border-color: var(--vms-primary);
+    transform: translateX(4px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.task-info {
+  .task-name-row {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 4px;
+    .status-indicator { width: 8px; height: 8px; border-radius: 50%; }
+    .status-indicator.active { background: #10b981; box-shadow: 0 0 8px #10b981; }
+    .status-indicator.disabled { background: #ef4444; }
+    .task-name { margin: 0; font-size: 15px; font-weight: 600; color: var(--vms-primary); cursor: pointer; }
+  }
+  .task-meta {
+    display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--vms-content-muted);
+    .camera-info { color: var(--vms-primary); display: flex; align-items: center; gap: 4px; }
+    .meta-divider { opacity: 0.2; }
+  }
+}
+
+.task-right {
+  display: flex; align-items: center; gap: 20px;
+  .btn-group { display: flex; gap: 8px; }
+}
+
+.action-btn {
+  display: flex; align-items: center; gap: 6px; background: rgba(15, 23, 42, 0.05);
+  border: 1px solid var(--vms-content-border); border-radius: 8px; padding: 6px 14px;
+  font-size: 12px; color: var(--vms-content-text); cursor: pointer;
+  &:hover { border-color: var(--vms-primary); color: var(--vms-primary); }
+  &.btn-delete:hover { background: #ef4444 !important; color: #fff !important; border-color: #ef4444 !important; }
+}
+
+.empty-placeholder { text-align: center; padding: 40px; color: var(--vms-content-muted); font-size: 14px; }
+
+.cyber-pagination-wrap {
+  margin-top: 16px; display: flex; justify-content: flex-end;
+}
+</style>
