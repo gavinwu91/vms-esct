@@ -1,548 +1,378 @@
 <template>
-  <Dialog :title="dialogTitle" v-model="dialogVisible" class="task-dialog">
-    <el-form
-      ref="formRef"
-      :model="formData"
-      :rules="formRules"
-      label-width="150px"
-      label-position="right"
-      class="task-form"
-    >
-      <el-row :gutter="24">
-        <!-- 左侧表单 -->
-        <el-col :span="12">
-          <div class="form-section-wrapper">
-            <div class="form-section">
-              <el-form-item label="Task Name" prop="strategyName">
-                <el-input v-model="formData.strategyName" clearable class="form-input" />
-              </el-form-item>
+  <Dialog 
+    v-model="dialogVisible" 
+    class="task-add-dialog-custom" 
+    v-loading="formLoading"
+    :show-close="false"
+    width="1200px"
+  >
+    <div class="wizard-container">
+      <!-- Header: 车辆布控向导页眉 -->
+      <header class="wizard-header">
+        <div class="header-main">
+          <div class="header-icon-box"><el-icon><Plus /></el-icon></div>
+          <div class="header-title">
+            <h3>{{ dialogTitle }}</h3>
+            <p>Configure license plate recognition and vehicle monitoring parameters</p>
+          </div>
+        </div>
+        <div class="header-ext">
+          <div class="step-count">STEP <span>{{ activeStep + 1 }}</span> OF 3</div>
+          <button class="close-wizard" @click="dialogVisible = false"><el-icon><Close /></el-icon></button>
+        </div>
+      </header>
 
-              <el-form-item label="Vehicle No." prop="carNumber">
-                <el-input v-model="formData.carNumber" clearable class="form-input" />
-              </el-form-item>
-              <el-form-item label="Select Device" prop="cameras">
-                <div style="overflow: auto; ">
-                  <el-tree
-                    ref="deviceTreeRef"
-                    class="!w-54vh !h-28vh"
-                    :props="defaultProps"
-                    :load="loadNodes"
-                    empty-text="Loaded, please later"
-                    node-key="key"
-                    lazy
-                    show-checkbox
-                    @check-change="oncheck"
-                    :filter-node-method="filterNode"
-                    :key="treeKey"
-                  >
-                    <template #default="{ node, data }">
-                      <span class="tree-node">
-                        <el-icon v-if="data.type === 'device'" class="tree-icon" color="purple">
-                          <VideoCamera />
-                        </el-icon>
-                        <el-icon v-else class="tree-icon" color="green">
-                          <OfficeBuilding />
-                        </el-icon>
-                        <span>{{ node.label }}</span>
-                        <span v-if="data.type === 'camera'" class="status-indicator"></span>
-                      </span>
-                    </template>
-                  </el-tree>
+      <div class="wizard-content">
+        <!-- Sidebar: 时间轴进度 -->
+        <aside class="timeline-sidebar">
+          <div class="timeline-item" :class="{ active: activeStep === 0, done: activeStep > 0 }">
+            <div class="dot"><el-icon v-if="activeStep > 0"><Check /></el-icon><span v-else>1</span></div>
+            <div class="text"><h4>Basic Info</h4><p>Target vehicle</p></div>
+            <div class="line"></div>
+          </div>
+          <div class="timeline-item" :class="{ active: activeStep === 1, done: activeStep > 1 }">
+            <div class="dot"><el-icon v-if="activeStep > 1"><Check /></el-icon><span v-else>2</span></div>
+            <div class="text"><h4>Schedule</h4><p>Validity period</p></div>
+            <div class="line"></div>
+          </div>
+          <div class="timeline-item" :class="{ active: activeStep === 2, done: activeStep > 2 }">
+            <div class="dot"><span>3</span></div>
+            <div class="text"><h4>Deployment</h4><p>Camera selection</p></div>
+          </div>
 
-                  <!-- <el-tree
-                    ref="deviceTreeRef"
-                    style="width: 20rem"
-                    :check-strictly="!checkStrictly"
-                    :data="deviceOptions"
-                    :props="defaultProps"
-                    default-expand-all
-                    empty-text="Loaded, please later"
-                    node-key="id"
-                    show-checkbox
-                    @check-change="oncheck"
-                    @node-collapse="onNodeCollapse"
-                  >
-                    <template #default="{ node, data }">
-                      <span class="tree-node">
-                        <el-icon v-if="data.type === 'device'" class="tree-icon" color="purple">
-                          <VideoCamera />
-                        </el-icon>
-                        <el-icon v-else class="tree-icon" color="green">
-                          <OfficeBuilding />
-                        </el-icon>
-                        <span>{{ node.label }}</span>
-                        <span v-if="data.type === 'camera'" class="status-indicator"></span>
-                      </span>
-                    </template>
-                  </el-tree> -->
-                </div>
-              </el-form-item>
+          <div class="active-tree-panel" v-if="activeStep === 2">
+            <div class="panel-label">Device Filter</div>
+            <el-input v-model="cameraTreeFilter" placeholder="Filter devices..." clearable size="small" class="cyber-input-mini" />
+          </div>
+        </aside>
 
-              <el-form-item label="Validity" prop="termType">
-                <el-radio-group v-model="formData.termType">
-                  <el-radio v-for="sv in termType" :key="sv.value" :value="sv.value">{{
-                    sv.name
-                  }}</el-radio>
-                </el-radio-group>
-              </el-form-item>
-
-              <el-form-item label="Status" prop="closed">
-                <el-switch
-                  v-model="formData.status"
-                  :active-value="1"
-                  :inactive-value="0"
-                  active-text="Enable"
-                  inactive-text="Disable"
-                  style="--el-switch-on-color: #13ce66; --el-switch-off-color: red"
-                />
-              </el-form-item>
-              <el-form-item
-                label="Surveillance Time"
-                prop="surveillanceTime"
-                v-if="formData.termType == 0"
+        <!-- Main Work Area -->
+        <main class="wizard-main-area">
+          <el-row :gutter="0" style="height: 100%">
+            <!-- 表单区域 -->
+            <el-col :span="12" class="form-col">
+              <el-form
+                ref="formRef"
+                :model="formData"
+                :rules="formRules"
+                label-position="top"
+                class="cyber-form-scroll"
               >
-                <el-date-picker
-                  v-model="formData.validityPeriod"
-                  type="datetimerange"
-                  range-separator="To"
-                  start-placeholder="Start date"
-                  end-placeholder="End date"
-                  value-format="YYYY-MM-DD hh:mm:ss"
-                  size="default"
-                  class="form-input"
-                />
-              </el-form-item>
-            </div>
-          </div>
-        </el-col>
+                <!-- Step 1: Basic -->
+                <div v-show="activeStep == 0">
+                  <el-form-item label="Task Name" prop="strategyName">
+                    <el-input v-model="formData.strategyName" placeholder="Enter vehicle task name..." />
+                  </el-form-item>
+                  
+                  <el-form-item label="Vehicle No. (Target)" prop="carNumber">
+                    <el-input v-model="formData.carNumber" placeholder="E.g. OM-12345" />
+                  </el-form-item>
 
-        <!-- 右侧地图和经纬度 -->
-        <el-col :span="12">
-          <div class="map-container">
-            <div class="map-wrapper">
-              <!-- :cameras="cameras"
-                v-if="showMap" -->
-              <MapComponent :alarmType="4" @select-tree-camera="selectTreeCamera" />
-            </div>
-          </div>
-        </el-col>
-      </el-row>
-    </el-form>
-    <template #footer>
-      <el-button @click="submitForm" type="primary" class="vms-main-button" :disabled="formLoading"
-        >Confirm</el-button
-      >
-      <el-button @click="dialogVisible = false" class="vms-cancel-button" :disabled="formLoading"
-        >Cancel</el-button
-      >
-    </template>
+                  <el-form-item label="Initial Status">
+                    <el-switch
+                      v-model="formData.status"
+                      :active-value="1"
+                      :inactive-value="0"
+                      active-text="Enabled"
+                      inactive-text="Disabled"
+                    />
+                  </el-form-item>
+                </div>
+
+                <!-- Step 2: Schedule -->
+                <div v-show="activeStep == 1">
+                  <el-form-item label="Surveillance Strategy">
+                    <el-radio-group v-model="formData.termType" class="cyber-radio-group full-width">
+                      <el-radio-button v-for="sv in termType" :key="sv.value" :label="sv.value">
+                        {{ sv.name }}
+                      </el-radio-button>
+                    </el-radio-group>
+                  </el-form-item>
+
+                  <el-form-item label="Effective Period" v-if="formData.termType == 0">
+                    <el-date-picker
+                      v-model="formData.validityPeriod"
+                      type="datetimerange"
+                      style="width: 100%"
+                      value-format="YYYY-MM-DD HH:mm:ss"
+                      range-separator="To"
+                    />
+                  </el-form-item>
+
+                  <div class="info-note">
+                    <el-icon><Compass /></el-icon>
+                    <span>Long-term surveillance does not require a fixed end date.</span>
+                  </div>
+                </div>
+
+                <!-- Step 3: Deployment -->
+                <div v-show="activeStep == 2" class="device-tree-area">
+                  <el-form-item label="Select Surveillance Devices">
+                    <div class="tree-wrapper">
+                      <el-tree
+                        ref="deviceTreeRef"
+                        :props="defaultProps"
+                        :load="loadNodes"
+                        node-key="key"
+                        lazy
+                        show-checkbox
+                        @check-change="oncheck"
+                        :filter-node-method="filterNode"
+                        :key="treeKey"
+                      >
+                        <template #default="{ node, data }">
+                          <span class="tree-node">
+                            <el-icon v-if="data.type === 'device'" class="tree-icon" color="#a855f7"><VideoCamera /></el-icon>
+                            <el-icon v-else class="tree-icon" color="#10b981"><OfficeBuilding /></el-icon>
+                            <span>{{ node.label }}</span>
+                          </span>
+                        </template>
+                      </el-tree>
+                    </div>
+                  </el-form-item>
+                </div>
+              </el-form>
+
+              <!-- Footer Navigation -->
+              <footer class="wizard-footer">
+                <button class="btn-secondary" v-show="activeStep > 0" @click="activeStep--">Back</button>
+                <div class="flex-spacer"></div>
+                <button class="btn-primary" v-show="activeStep < 2" @click="activeStep++">Next Phase</button>
+                <button class="btn-primary btn-submit" v-show="activeStep == 2" @click="submitForm">Validate & Deploy</button>
+              </footer>
+            </el-col>
+
+            <!-- Map Area -->
+            <el-col :span="12" class="map-col">
+              <div class="map-container-inner">
+                <MapComponent :alarmType="4" @select-tree-camera="selectTreeCamera" />
+              </div>
+            </el-col>
+          </el-row>
+        </main>
+      </div>
+    </div>
   </Dialog>
 </template>
+
 <script setup lang="ts">
 import { AlarmTaskApi } from '@/api/alarmtask/plate'
 import MapComponent from '../MapComponent3.vue'
 import { getPermissionDeviceTree, loadCameraTree, getParentArea } from '@/api/device'
 import { defaultProps, defaultDataProps, handleTree } from '@/utils/tree'
-import { updateStatus } from '@/api/mall/product/spu'
-import { number } from 'vue-types'
 import { getPermissionDeviceList } from '@/api/device/index'
-import { VideoCamera, OfficeBuilding } from '@element-plus/icons-vue'
+import { VideoCamera, OfficeBuilding, Plus, Close, Check, Compass } from '@element-plus/icons-vue'
 import type { LoadFunction, TreeInstance, FilterNodeMethodFunction } from 'element-plus'
-/** face alarm 表单 */
+
+/** plate alarm 表单 */
 defineOptions({ name: 'AlarmPlateTaskForm' })
 
-const { t } = useI18n() // 国际化
-const message = useMessage() // 消息弹窗
+const { t } = useI18n() 
+const message = useMessage() 
 const cameraTreeFilter = ref('')
 const treeKey = ref(0)
-const deviceOptions = ref<any[]>([]) //设备权限树
-const checkStrictly = ref(true) // 是否严格模式，即父子不关联
 const deviceTreeRef = ref<TreeInstance>()
-const cameras = ref([] as any[])
-const showMap = ref(false)
-const dialogVisible = ref(false) // 弹窗的是否展示
-const dialogTitle = ref('') // 弹窗的标题
-const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
-const formType = ref('') // 表单的类型：create - 新增；update - 修改
+const dialogVisible = ref(false) 
+const dialogTitle = ref('') 
+const activeStep = ref(0)
+const formLoading = ref(false) 
+const formType = ref('') 
 const formData = ref({
-  strategyName: '',
-  carNumber: '',
-  type: 5,
-  deptId: '',
-  status: 1,
-  validityPeriod: [] as string[],
-  cameraIds: [] as string[],
-  minutes: [] as string[],
-  albumList: [] as string[],
-  termType: 0,
-  startTime: '',
-  endTime: '',
-  remark: '',
-  longitude: '58.339263',
-  latitude: '23.598513',
-  threshold: 0,
-  updateType: 1
-})
-const formRules = reactive({
-  strategyName: [{ required: true, message: 'TaskName cannot empty', trigger: 'blur' }],
-  carNumber: [{ required: true, message: 'Vehicle No. cannot empty', trigger: 'blur' }]
+  strategyName: '', carNumber: '', type: 5, deptId: '', status: 1,
+  validityPeriod: [] as string[], cameraIds: [] as string[], minutes: [] as string[],
+  albumList: [] as string[], termType: 0, startTime: '', endTime: '',
+  remark: '', longitude: '58.339263', latitude: '23.598513', threshold: 0, updateType: 1
 })
 
-// 布控时长 1 临时布控 2 长期布控
+const formRules = reactive({
+  strategyName: [{ required: true, message: 'Task Name is required', trigger: 'blur' }],
+  carNumber: [{ required: true, message: 'Vehicle No. is required', trigger: 'blur' }]
+})
+
 const termType = reactive([
-  {
-    name: 'Temporary Surveillance',
-    value: 0
-  },
-  {
-    name: 'Long-term Surveillance',
-    value: 1
-  }
+  { name: 'Temporary', value: 0 },
+  { name: 'Long-term', value: 1 }
 ])
 
-const formRef = ref() // 表单 Ref
+const formRef = ref() 
 
-/** 打开弹窗 */
 const open = async (type: string, id?: number) => {
   resetForm()
+  activeStep.value = 0
   dialogVisible.value = true
-  dialogTitle.value = 'New task'
+  dialogTitle.value = type === 'create' ? 'New Vehicle Task' : 'Modify Vehicle Task'
   formType.value = type
-  deviceOptions.value = await getPermissionDeviceTree({ cameraType: 4 })
-  console.log('deviceOptions.value ===', deviceOptions.value)
-
-  getPermissionDeviceList({ cameraType: 4 }).then((data) => {
-    cameras.value = data.map((a) => {
-      return {
-        longitude: a.longitude,
-        latitude: a.latitude,
-        platformCameraId: a.id
-      }
-    })
-    showMap.value = true
-  })
-
-  // 修改时，设置数据
+  
   if (id) {
     formLoading.value = true
     try {
       formData.value = await AlarmTaskApi.getAlarmTask(id)
-      // deviceTreeRef.value.setCheckedKeys([10], false)
-      // console.log('formData.value ===', formData.value)
-      // const checkedNodes = getTargetDeviceNodes(deviceOptions.value, formData.value.cameraIds)
-      // deviceTreeRef.value.setCheckedNodes(checkedNodes)
-      // console.log('checkedNodes ==== ', checkedNodes)
-
       getParentArea({ cameraIds: formData.value.cameraIds }).then((areaParentIdArr) => {
-        console.log('getParentArea ======== ', areaParentIdArr)
         expandTreeByAare(areaParentIdArr, formData.value.cameraIds)
       })
-
     } finally {
       formLoading.value = false
     }
   }
 }
-defineExpose({ open }) // 提供 open 方法，用于打开弹窗
+defineExpose({ open }) 
 
-function flattenTree(data) {
-  const result = [] as any[]
-  function traverse(nodes) {
-    for (const node of nodes) {
-      result.push(node)
-      if (node.children) {
-        traverse(node.children)
-      }
+const oncheck = () => {
+  const checkDeviceNodes = deviceTreeRef.value!.getCheckedNodes(true)
+  formData.value.cameraIds = checkDeviceNodes.filter((node) => node.type === 'device').map((node) => node.id)
+}
+
+const submitForm = async () => {
+  if (formType.value === 'create') {
+    const checkData = await AlarmTaskApi.getAlarmTaskPage({ carNumber: formData.value.carNumber })
+    if (checkData.total > 0) {
+      message.alertError('Vehicle No. already exists in another task!')
+      return
     }
   }
-  traverse(data)
-  return result
-}
 
-function getTargetDeviceNodes(treeData, includeIds: string[] = []) {
-  const flatNodes = flattenTree(treeData)
-  return flatNodes.filter((node) => node.type === 'device' && includeIds.includes(node.id))
-}
-
-const oncheck = (data, checked, indeterminate) => {
-  const checkDeviceNodes = deviceTreeRef.value!.getCheckedNodes(true)
-  const deviceIds = checkDeviceNodes.filter((node) => node.type === 'device').map((node) => node.id)
-  formData.value.cameraIds = deviceIds
-}
-
-/** 提交表单 */
-const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
-const submitForm = async () => {
-  const data = await AlarmTaskApi.getAlarmTaskPage({ carNumber: formData.value.carNumber })
-  if (data.total > 0) {
-    formData.value.carNumber = ''
-    message.alertError('Already have vehicle No.')
+  await formRef.value.validate()
+  if (formData.value.cameraIds.length == 0) {
+    message.alertWarning('Please select at least one camera!')
     return
   }
 
-  // 校验表单
-  await formRef.value.validate()
-
-  // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value
-    if (data.cameraIds.length == 0) {
-      message.alertWarning('Cameras can not be empty!')
-      return
-    }
-
-    if (formType.value === 'create') {
-      await AlarmTaskApi.createAlarmTask(data)
-      message.success(t('common.createSuccess'))
-    } else {
-      await AlarmTaskApi.updateAlarmTask(data)
-      message.success(t('common.updateSuccess'))
-    }
+    const apiCall = formType.value === 'create' ? AlarmTaskApi.createAlarmTask : AlarmTaskApi.updateAlarmTask
+    await apiCall(formData.value)
+    message.success(t(`common.${formType.value}Success`))
     dialogVisible.value = false
-    // 发送操作成功的事件
     emit('success')
   } finally {
     formLoading.value = false
   }
 }
-/** 重置表单 */
+
 const resetForm = () => {
   formData.value = {
-    strategyName: '',
-    carNumber: '',
-    type: 5,
-    deptId: '',
-    status: 1,
-    validityPeriod: [] as string[],
-    cameraIds: [] as string[],
-    minutes: [] as string[],
-    albumList: [] as string[],
-    termType: 0,
-    startTime: '',
-    endTime: '',
-    remark: '',
-    longitude: '58.339263',
-    latitude: '23.598513',
-    threshold: 0,
-    updateType: 1
+    strategyName: '', carNumber: '', type: 5, deptId: '', status: 1,
+    validityPeriod: [], cameraIds: [], minutes: [], albumList: [], termType: 0,
+    startTime: '', endTime: '', remark: '', longitude: '58.339263', latitude: '23.598513',
+    threshold: 0, updateType: 1
   }
   formRef.value?.resetFields()
 }
 
-const handleTypeChange = () => {}
-
-/** method */
-const onNodeCollapse = (data, node) => {
-  if (data.id == 7) {
-    deviceTreeRef.value.expandeNode(data)
-  }
-}
+const emit = defineEmits(['success'])
 
 const selectTreeCamera = (camera) => {
-  // const checkedNodes = getTargetDeviceNodes(deviceOptions.value, cameraIds)
-  // deviceTreeRef.value.setCheckedNodes(checkedNodes)
-  // formData.value.cameraIds = cameraIds
   treeKey.value++
-  //将之前的cameraTree重置
-  loadCameraTree({ cameraType: 3, areaId: 0 }).then((res) => {
-    // deviceOptions.value = res
-    console.log('camera =======', camera)
+  loadCameraTree({ cameraType: 3, areaId: 0 }).then(() => {
     const seen = new Set()
     const areaParentIdArr = camera.map((x) => x.areaId).filter((n) => !seen.has(n) && seen.add(n))
     const cameraIdArr = camera.map((x) => x.id)
-
-    //获取全部areaID的父级id并展开
-    getParentArea({ areaIds: areaParentIdArr }).then((res) => {
-      console.log('getParentArea ======== ', res)
-      expandTreeByAare(res, cameraIdArr)
-    })
+    getParentArea({ areaIds: areaParentIdArr }).then((res) => expandTreeByAare(res, cameraIdArr))
   })
 }
-
 
 const expandTreeByAare = async (res, cameraIdArr) => {
   const leafAareas = res.filter((s) => s.parentId != null)
   const rootArea = res.find((s) => s.parentId == null)
-
-  //2 b
-  //根节点
   if (!rootArea) return
   const rootNode = deviceTreeRef.value.getNode('region_' + rootArea.id)
   if (!rootNode) return
   await expandNodeAndWait(rootNode)
-
-  console.log('leafAareas ======= ', leafAareas)
-  //叶子节点
   for (const area of leafAareas) {
-    setTimeout(() => 1000)
-    const id = area.id
-
-    let leafNode = deviceTreeRef.value.getNode('region_' + id)
-    console.log(' 当前leafNode ======= ', leafNode)
-    if (!leafNode) continue
-    await expandNodeAndWait(leafNode)
+    let leafNode = deviceTreeRef.value.getNode('region_' + area.id)
+    if (leafNode) await expandNodeAndWait(leafNode)
   }
-
   await nextTick()
-
   for (const id of cameraIdArr) {
     const node = deviceTreeRef.value.getNode('device_' + id)
     if (node) node.setChecked(true, true)
   }
 }
 
-
 async function expandNodeAndWait(node) {
-  if (!node) return
-  if (node.loaded && node.expanded) return
-
-  //展开节点
+  if (!node || (node.loaded && node.expanded)) return
   node.expand()
-
   await new Promise((resolve) => {
-    const checkLoaded = () => {
-      if (node.loaded) resolve(true)
-      else setTimeout(checkLoaded, 100)
-    }
+    const checkLoaded = () => node.loaded ? resolve(true) : setTimeout(checkLoaded, 100)
     checkLoaded()
   })
 }
 
 const loadNodes: LoadFunction = (node, resolve, reject) => {
   if (node.data.type !== 'device') {
-    loadCameraTree({ cameraType: 4, areaId: node.data.id }).then((res) => {
-      console.log('loadCameraTree ========= ', res)
-      return resolve(res)
-    })
-  }
-  return reject([])
+    loadCameraTree({ cameraType: 4, areaId: node.data.id }).then((res) => resolve(res))
+  } else { reject([]) }
 }
 
-watch(cameraTreeFilter, (val) => {
-  deviceTreeRef.value!.filter(val)
-})
-
-const filterNode: FilterNodeMethodFunction = (value: string, data: Tree) => {
-  if (!value) return true
-  return data.name.includes(value)
-}
-
-/** method */
+watch(cameraTreeFilter, (val) => deviceTreeRef.value!.filter(val))
+const filterNode: FilterNodeMethodFunction = (value, data) => value ? data.name.includes(value) : true
 </script>
+
 <style scoped lang="scss">
-.form-section-wrapper {
-  height: 560px; /* 控制左侧滚动区域高度 */
-  overflow-y: auto;
-  padding-right: 12px;
-  .form-input {
-    width: 100%;
+/* Wizard Container & Header */
+.task-add-dialog-custom {
+  :deep(.el-dialog) { 
+    background: transparent !important; box-shadow: none !important; border: none !important; 
+    .el-dialog__header { display: none !important; }
+    .el-dialog__body { padding: 0 !important; background: transparent !important; } 
   }
 }
 
-.task-dialog {
-  .el-dialog__body {
-    padding: 20px;
-    max-height: 600px; /* 根据你的实际需求调整 */
-    overflow: hidden; /* 避免整体滚动 */
-    display: flex;
-    flex-direction: column;
-  }
+.wizard-container {
+  width: 1200px; height: 750px; background: var(--vms-main-bg); border: 1px solid var(--vms-content-border); border-radius: 20px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 0 40px rgba(0, 0, 0, 0.4);
+}
 
-  .task-form {
-    flex: 1;
-    overflow: hidden;
-    .form-section {
-      margin-bottom: 20px;
-      padding: 15px;
-      background-color: #f9f9f9;
-      border-radius: 4px;
+.wizard-header {
+  padding: 20px 30px; background: var(--vms-card-bg); border-bottom: 1px solid var(--vms-content-border); display: flex; justify-content: space-between; align-items: center;
+  .header-main { display: flex; gap: 20px; align-items: center; .header-icon-box { width: 48px; height: 48px; background: var(--vms-primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 24px; box-shadow: 0 0 15px var(--vms-primary); } h3 { margin: 0; color: var(--vms-content-text); font-size: 20px; } p { margin: 4px 0 0; font-size: 13px; color: var(--vms-content-muted); } }
+  .header-ext { display: flex; align-items: center; gap: 30px; .step-count { font-size: 14px; color: var(--vms-content-muted); span { color: var(--vms-primary); font-weight: bold; font-size: 20px; } } .close-wizard { background: rgba(148, 163, 184, 0.1); border: none; color: var(--vms-content-muted); padding: 8px; border-radius: 8px; cursor: pointer; &:hover { color: var(--vms-primary); background: rgba(148, 163, 184, 0.2); } } }
+}
 
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
+.wizard-content { flex: 1; display: flex; overflow: hidden; }
 
-    .form-tip {
-      font-size: 12px;
-      color: #999;
-      margin-top: 5px;
-      line-height: 1.5;
-    }
-
-    .storage-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-
-      .storage-ttl {
-        display: flex;
-        align-items: center;
-
-        span {
-          font-size: 12px;
-          color: #666;
-          margin-right: 8px;
-        }
-
-        .el-select {
-          width: 90px;
-        }
-      }
-    }
-
-    .low-quality {
-      margin-top: 10px;
-    }
-  }
-
-  .map-container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-
-    .coordinates {
-      margin-bottom: 10px;
-      .coordinates-inputs {
-        display: flex;
-        gap: 10px;
-
-        .coordinate-input {
-          flex: 1;
-        }
-      }
-    }
-
-    .map-wrapper {
-      height: 100%;
-      width: 100%;
-      border: 1px solid #e6e6e6;
-      border-radius: 4px;
-      overflow: hidden;
-    }
-
-    .map-tip {
-      margin-top: 8px;
-      font-size: 12px;
-      color: #999;
-      display: flex;
-      align-items: center;
-
-      .el-icon {
-        margin-right: 5px;
-        font-size: 14px;
-      }
-    }
-  }
-
-  .dialog-footer {
-    text-align: right;
-    padding: 10px 20px;
-    border-top: 1px solid #e6e6e6;
+/* Timeline Sidebar */
+.timeline-sidebar {
+  width: 300px; background: rgba(15, 23, 42, 0.05); border-right: 1px solid var(--vms-content-border); padding: 40px 0; display: flex; flex-direction: column;
+  .timeline-item {
+    padding: 0 30px; display: flex; gap: 20px; position: relative; margin-bottom: 50px;
+    .dot { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--vms-content-border); background: var(--vms-card-bg); color: var(--vms-content-muted); font-weight: bold; display: flex; align-items: center; justify-content: center; font-size: 15px; z-index: 2; transition: 0.3s; }
+    .text { h4 { margin: 0; color: var(--vms-content-muted); font-size: 15px; } p { margin: 4px 0 0; font-size: 12px; color: var(--vms-content-muted); opacity: 0.6; } }
+    .line { position: absolute; left: 47px; top: 36px; width: 2px; height: 50px; background: var(--vms-content-border); z-index: 1; }
+    
+    &.active { .dot { border-color: var(--vms-primary); color: var(--vms-primary); box-shadow: 0 0 12px var(--vms-primary); } .text h4 { color: var(--vms-content-text); } .text p { color: var(--vms-primary); opacity: 1; } }
+    &.done { .dot { border-color: #10b981; background: #10b981; color: #fff; } .line { background: #10b981; } }
   }
 }
-::v-deep .el-form-item__content {
-  background: #fff;
+
+.active-tree-panel { margin-top: auto; padding: 25px; background: rgba(56, 189, 248, 0.03); border: 1px solid var(--vms-content-border); margin: 0 15px 15px; border-radius: 15px; .panel-label { font-size: 12px; color: var(--vms-primary); font-weight: bold; margin-bottom: 15px; text-transform: uppercase; } }
+
+/* Main Area */
+.wizard-main-area { flex: 1; display: flex; flex-direction: column; background: var(--vms-main-bg); overflow: hidden; }
+.form-col { height: 100%; display: flex; flex-direction: column; padding: 30px; border-right: 1px solid var(--vms-content-border); }
+.cyber-form-scroll { flex: 1; overflow-y: auto; padding-right: 15px; }
+
+:deep(.el-form-item) {
+  .el-form-item__label { color: var(--vms-content-muted) !important; font-weight: 600; font-size: 13px; padding-bottom: 10px !important; }
+  .el-input__wrapper, .el-select .el-input__wrapper { background: rgba(15, 23, 42, 0.05) !important; border: 1px solid var(--vms-content-border) !important; box-shadow: none !important; border-radius: 10px; color: var(--vms-content-text); &:hover { border-color: var(--vms-primary) !important; } }
+  .el-input__inner { color: var(--vms-content-text) !important; }
 }
+
+.info-note { display: flex; align-items: center; gap: 10px; background: rgba(14, 165, 233, 0.1); border: 1px solid rgba(14, 165, 233, 0.2); padding: 12px; border-radius: 8px; color: var(--vms-primary); font-size: 12px; margin-top: 20px; }
+
+.wizard-footer {
+  margin-top: 30px; padding-top: 25px; border-top: 1px solid var(--vms-content-border); display: flex; align-items: center;
+  .btn-secondary { background: transparent; border: 1px solid var(--vms-content-border); color: var(--vms-content-muted); padding: 12px 30px; border-radius: 10px; cursor: pointer; font-weight: bold; &:hover { color: var(--vms-content-text); border-color: var(--vms-content-text); } }
+  .btn-primary { background: var(--vms-primary); color: #fff; border: none; padding: 12px 30px; border-radius: 10px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3); transition: 0.3s; &:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(56, 189, 248, 0.5); } }
+  .btn-submit { background: #10b981; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+  .flex-spacer { flex: 1; }
+}
+
+.map-col { height: 100%; background: #000; }
+.map-container-inner { height: 100%; width: 100%; }
+
+.tree-wrapper {
+  background: rgba(15, 23, 42, 0.05); border: 1px solid var(--vms-content-border); border-radius: 12px; padding: 15px; height: 350px; overflow-y: auto;
+  :deep(.el-tree) { background: transparent; color: var(--vms-content-text); .el-tree-node__content:hover { background: rgba(56, 189, 248, 0.1); } }
+}
+.tree-node { display: flex; align-items: center; gap: 10px; }
 </style>
