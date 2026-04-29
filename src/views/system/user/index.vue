@@ -401,66 +401,71 @@ onMounted(() => {
   }
 }
 
-:deep(.el-form) {
-  .el-form-item__label {
-    color: #94a3b8 !important;
-    font-weight: 500 !important;
+html.dark {
+  :deep(.el-form) {
+    .el-form-item__label {
+      color: #94a3b8 !important;
+      font-weight: 500 !important;
+    }
+
+    .el-input__wrapper, .el-select__wrapper, .el-range-editor.el-input__wrapper {
+      background-color: rgba(15, 23, 42, 0.4) !important;
+      border: 1px solid rgba(56, 189, 248, 0.15) !important;
+      box-shadow: none !important;
+      border-radius: 8px !important;
+      
+      &:hover, &.is-active, &.is-focus {
+        border-color: rgba(56, 189, 248, 0.5) !important;
+        background-color: rgba(15, 23, 42, 0.6) !important;
+      }
+
+      .el-input__inner, .el-range-input {
+        color: #e2e8f0 !important;
+      }
+      
+      .el-range-separator {
+        color: #64748b !important;
+      }
+    }
   }
 
-  .el-input__wrapper, .el-select__wrapper, .el-range-editor.el-input__wrapper {
-    background-color: rgba(15, 23, 42, 0.4) !important;
-    border: 1px solid rgba(56, 189, 248, 0.15) !important;
-    box-shadow: none !important;
-    border-radius: 8px !important;
-    
-    &:hover, &.is-active, &.is-focus {
-      border-color: rgba(56, 189, 248, 0.5) !important;
-      background-color: rgba(15, 23, 42, 0.6) !important;
-    }
+  :deep(.v-content-wrap),
+  :deep(.el-card) {
+    background: rgba(15, 23, 42, 0.5) !important;
+    backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(148, 163, 184, 0.1) !important;
+    border-radius: 12px !important;
+    margin-bottom: 16px !important;
+    color: #e2e8f0 !important;
 
-    .el-input__inner, .el-range-input {
-      color: #e2e8f0 !important;
-    }
-    
-    .el-range-separator {
-      color: #64748b !important;
+    .el-card__header {
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1) !important;
+      color: #38bdf8 !important;
+      font-weight: 600 !important;
     }
   }
-}
 
-:deep(.v-content-wrap),
-:deep(.el-card) {
-  background: rgba(15, 23, 42, 0.5) !important;
-  backdrop-filter: blur(12px) !important;
-  border: 1px solid rgba(148, 163, 184, 0.1) !important;
-  border-radius: 12px !important;
-  margin-bottom: 16px !important;
-  color: #e2e8f0 !important;
-
-  .el-card__header {
-    border-bottom: 1px solid rgba(148, 163, 184, 0.1) !important;
-    color: #38bdf8 !important;
-    font-weight: 600 !important;
+  :deep(.el-pagination) {
+    --el-pagination-bg-color: transparent !important;
+    --el-pagination-button-bg-color: rgba(255, 255, 255, 0.05) !important;
+    --el-pagination-hover-color: #38bdf8 !important;
+    
+    .el-pager li {
+      background-color: rgba(255, 255, 255, 0.05) !important;
+      color: #94a3b8 !important;
+      border-radius: 4px !important;
+      margin: 0 3px !important;
+      
+      &.is-active {
+        background-color: #0ea5e9 !important;
+        color: #fff !important;
+      }
+    }
   }
 }
 
 :deep(.el-pagination) {
-  --el-pagination-bg-color: transparent !important;
-  --el-pagination-button-bg-color: rgba(255, 255, 255, 0.05) !important;
-  --el-pagination-hover-color: #38bdf8 !important;
   margin-top: 20px !important;
   justify-content: flex-end !important;
-  
-  .el-pager li {
-    background-color: rgba(255, 255, 255, 0.05) !important;
-    color: #94a3b8 !important;
-    border-radius: 4px !important;
-    margin: 0 3px !important;
-    
-    &.is-active {
-      background-color: #0ea5e9 !important;
-      color: #fff !important;
-    }
-  }
 }
 </style>

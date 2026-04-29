@@ -1,3 +1,37 @@
+/* ====================================================
+   VMS 主题核心令牌 (Hybrid Theme)
+   ==================================================== */
+:root {
+  /* 侧边栏与顶栏固定色 (恢复极夜蓝质感) */
+  --vms-sidebar-bg: #020617;
+  --vms-sidebar-text: #94a3b8;
+  --vms-sidebar-active: #38bdf8;
+  /* Element Plus 变量同步 - 确保所有背景和浮层跟随 VMS 主题 */
+  --el-bg-color: var(--vms-card-bg);
+  --el-bg-color-overlay: var(--vms-card-bg);
+  --el-fill-color-blank: var(--vms-card-bg);
+  --el-text-color-primary: var(--vms-content-text);
+  --el-border-color: var(--vms-content-border);
+  --vms-topbar-bg: #020617;        /* 顶栏固定背景 */
+  --vms-topbar-text: #f8fafc;      /* 顶栏固定文字 */
+  
+  /* 内容区动态色 (日间模式默认) */
+  --vms-main-bg: #f0f2f5;          /* 主背景：淡灰蓝 */
+  --vms-card-bg: #ffffff;          /* 卡片背景：纯白 */
+  --vms-content-text: #1e293b;     /* 主文字：深蓝黑 */
+  --vms-content-muted: #64748b;    /* 辅助文字：中灰 */
+  --vms-content-border: #e2e8f0;   /* 边框色：浅灰 */
+}
+
+html.dark {
+  /* 内容区动态色 (暗黑模式切换 - 恢复经典深蓝渐变) */
+  --vms-main-bg: linear-gradient(135deg, #0f172a 0%, #020617 100%); 
+  --vms-card-bg: rgba(15, 23, 42, 0.6); /* 恢复半透明卡片感 */
+  --vms-content-text: #f1f5f9;     
+  --vms-content-muted: #94a3b8;    
+  --vms-content-border: rgba(56, 189, 248, 0.15); 
+}
+
 :root {
     --login-bg-color: #0f172a;
 
@@ -43,18 +77,19 @@
     --default-btn-bg-active: rgba(14, 165, 233, 0.15);
     --default-btn-bg-active-font-color: #38bdf8;
 
-    /* 顶部栏渐变优化 - 采用更深邃的深蓝渐变 */
-    --top-bar-bg: linear-gradient(90deg, #020617 0%, #0f172a 50%, #020617 100%);
+    /* 顶部栏与标签页适配 */
+    --top-bar-bg: var(--vms-topbar-bg);
     --top-bar-hight: 48px;
     --top-bar-font-size: 13px;
     
-    --defulat-vtags-bg: rgba(15, 23, 42, 0.3);
-    --default-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-    --default-card-box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --defulat-vtags-bg: var(--vms-topbar-bg);
+    --top-header-text-color: var(--vms-topbar-text);
+    --default-box-shadow: var(--vms-content-border);
+    --default-card-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     
-    --defaulat-cuz-color: #38bdf8;
-    --default-event-main-color: linear-gradient(90deg, #0ea5e9 0%, #38bdf8 100%) !important;
-    --default-main-bg2: rgba(15, 23, 42, 0.4);
+    --defaulat-cuz-color: var(--vms-primary);
+    --default-event-main-color: var(--vms-primary) !important;
+    --default-main-bg2: var(--vms-main-bg);
     
     --btn-tarck-color: #b08557;
     --btn-tarck-color-height: #dea772;
@@ -85,19 +120,17 @@
 }
 
 .dark {
-    --el-bg-color: rgba(2, 6, 23, 0.98) !important;
-    --el-bg-color-overlay: rgba(15, 23, 42, 0.95) !important;
-    --el-text-color-primary: #f8fafc !important;
-    --el-text-color-regular: #cbd5e1 !important;
-    --el-text-color-placeholder: #64748b !important;
-    --el-border-color: rgba(148, 163, 184, 0.1) !important;
+    --el-bg-color: var(--vms-card-bg) !important;
+    --el-bg-color-overlay: var(--vms-card-bg) !important;
+    --el-text-color-primary: var(--vms-content-text) !important;
+    --el-border-color: var(--vms-content-border) !important;
     
     --app-content-bg-color: transparent;
     --default-main-bg2: transparent;
     
     /* 继承并增强全局主色 */
     --el-color-primary: var(--default-main-color) !important;
-    --top-bar-bg: linear-gradient(90deg, #020617 0%, #0f172a 50%, #020617 100%) !important;
+    --top-bar-bg: #0f172a !important;
 }
 
 html,
@@ -105,8 +138,8 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background: #020617;
-    color: #f8fafc;
+    background: var(--vms-main-bg);
+    color: var(--vms-content-text);
 }
 
 *,

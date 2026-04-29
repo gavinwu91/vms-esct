@@ -496,7 +496,8 @@ $prefix-cls: #{$namespace}-tags-view;
 
 /* 隐藏 tab 内标签图标（保持简洁） */
 .#{$prefix-cls} {
-  .#{$elNamespace}-scrollbar .v-tags-view__item--label .el-icon {
+  /* 仅隐藏 tab 前置图标（通过类名精准定位） */
+  .#{$elNamespace}-scrollbar .v-tags-view__item--label .v-icon:not(.v-tags-view__item--close) {
     display: none;
   }
 
@@ -509,7 +510,7 @@ $prefix-cls: #{$namespace}-tags-view;
     display: none !important;
   }
 
-  /* 右侧工具按钮 (刷新、更多等) */
+  /* 右侧工具按钮 (刷新、更多等 - 锁定深色质感) */
   &__tool {
     position: relative;
     display: flex !important;
@@ -518,33 +519,32 @@ $prefix-cls: #{$namespace}-tags-view;
     height: 32px !important;
     width: 32px !important;
     margin: 0 4px !important;
-    border-radius: 50% !important; /* 改为圆型按钮更精致 */
+    border-radius: 50% !important; 
     cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    color: #94a3b8;
+    transition: all 0.25s;
+    color: #94a3b8; /* 固定灰蓝 */
     background: rgba(255, 255, 255, 0.03);
 
     &:hover {
       background: rgba(56, 189, 248, 0.15);
       color: #38bdf8;
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
     }
   }
 
-  /* ========== Tab 标签项 ========== */
+  /* ========== Tab 标签项 (锁定深色质感，不受日间模式影响) ========== */
   &__item {
     position: relative;
-    height: 30px;
-    line-height: 30px;
-    padding-right: 25px; /* 预留给关闭按钮 */
+    height: 28px;
+    line-height: 28px;
+    padding: 0 25px 0 15px; 
     margin-left: 8px;
-    font-size: 13px;
+    font-size: 12px;
     cursor: pointer;
-    border: 1px solid rgba(148, 163, 184, 0.1);
-    border-radius: 15px; /* 全圆角胶囊风格 */
+    border: 1px solid rgba(148, 163, 184, 0.1); /* 固定浅色边框 */
+    border-radius: 14px; 
     box-sizing: border-box;
-    background: rgba(30, 41, 59, 0.3);
-    color: #94a3b8;
+    background: rgba(15, 23, 42, 0.5); /* 固定深蓝背景 */
+    color: #94a3b8; /* 固定灰蓝文字 */
     transition: all 0.3s;
 
     &--close {
@@ -558,19 +558,17 @@ $prefix-cls: #{$namespace}-tags-view;
     }
 
     &:hover {
-      background: rgba(var(--vms-primary-rgb), 0.08);
-      color: #e2e8f0;
-      border-color: rgba(var(--vms-primary-rgb), 0.2);
-      transition: var(--vms-transition);
+      background: rgba(var(--vms-primary-rgb), 0.15);
+      color: #f8fafc;
+      border-color: rgba(var(--vms-primary-rgb), 0.3);
       
       .#{$prefix-cls}__item--close { display: block; }
     }
 
     &.is-active {
-      background: rgba(var(--vms-primary-rgb), 0.15);
-      color: var(--vms-primary);
-      border-color: rgba(var(--vms-primary-rgb), 0.4);
-      box-shadow: var(--vms-glow);
+      background: rgba(var(--vms-primary-rgb), 0.2) !important;
+      color: var(--vms-primary) !important;
+      border-color: rgba(var(--vms-primary-rgb), 0.5) !important;
       font-weight: 600;
 
       .#{$prefix-cls}__item--close {
@@ -645,13 +643,13 @@ $prefix-cls: #{$namespace}-tags-view;
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
-  min-height: 44px;
-  max-height: 44px;
-  background: rgba(15, 23, 42, 0.3);
-  backdrop-filter: blur(10px);
-  border-radius: 22px;
-  border: 1px solid rgba(148, 163, 184, 0.1);
-  margin-bottom: 8px;
+  min-height: 48px;
+  max-height: 48px;
+  background: var(--vms-topbar-bg);
+  color: var(--vms-topbar-text);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+  z-index: 10;
 }
 
 .tabs-wrapper {

@@ -67,66 +67,68 @@ onMounted(async () => {
   margin-bottom: 15px;
 }
 
-:deep(.el-input) {
-  .el-input__wrapper {
-    background-color: rgba(15, 23, 42, 0.4) !important;
-    border: 1px solid rgba(56, 189, 248, 0.2) !important;
-    box-shadow: none !important;
-    border-radius: 8px !important;
-    transition: all 0.3s;
+html.dark {
+  :deep(.el-input) {
+    .el-input__wrapper {
+      background-color: rgba(15, 23, 42, 0.4) !important;
+      border: 1px solid rgba(56, 189, 248, 0.2) !important;
+      box-shadow: none !important;
+      border-radius: 8px !important;
+      transition: all 0.3s;
 
-    &:hover, &.is-focus {
-      border-color: rgba(56, 189, 248, 0.5) !important;
-      background-color: rgba(15, 23, 42, 0.6) !important;
+      &:hover, &.is-focus {
+        border-color: rgba(56, 189, 248, 0.5) !important;
+        background-color: rgba(15, 23, 42, 0.6) !important;
+      }
+      
+      .el-input__inner {
+        color: #e2e8f0 !important;
+        &::placeholder {
+          color: rgba(148, 163, 184, 0.5) !important;
+        }
+      }
+      
+      .el-input__prefix {
+        color: #38bdf8 !important;
+      }
     }
-    
-    .el-input__inner {
-      color: #e2e8f0 !important;
-      &::placeholder {
-        color: rgba(148, 163, 184, 0.5) !important;
+  }
+
+  :deep(.el-tree) {
+    background: transparent !important;
+    color: #94a3b8 !important;
+
+    .el-tree-node {
+      &:focus > .el-tree-node__content {
+        background-color: rgba(56, 189, 248, 0.1) !important;
+      }
+      
+      &.is-current > .el-tree-node__content {
+        background: linear-gradient(90deg, rgba(56, 189, 248, 0.15) 0%, transparent 100%) !important;
+        color: #38bdf8 !important;
+        font-weight: 600;
+        border-left: 2px solid #38bdf8;
+      }
+    }
+
+    .el-tree-node__content {
+      height: 36px !important;
+      padding: 0 8px !important;
+      border-radius: 4px;
+      margin: 2px 0;
+      transition: all 0.2s;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        color: #e2e8f0 !important;
       }
     }
     
-    .el-input__prefix {
-      color: #38bdf8 !important;
-    }
-  }
-}
-
-:deep(.el-tree) {
-  background: transparent !important;
-  color: #94a3b8 !important;
-
-  .el-tree-node {
-    &:focus > .el-tree-node__content {
-      background-color: rgba(56, 189, 248, 0.1) !important;
-    }
-    
-    &.is-current > .el-tree-node__content {
-      background: linear-gradient(90deg, rgba(56, 189, 248, 0.15) 0%, transparent 100%) !important;
-      color: #38bdf8 !important;
-      font-weight: 600;
-      border-left: 2px solid #38bdf8;
-    }
-  }
-
-  .el-tree-node__content {
-    height: 36px !important;
-    padding: 0 8px !important;
-    border-radius: 4px;
-    margin: 2px 0;
-    transition: all 0.2s;
-
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.05) !important;
-      color: #e2e8f0 !important;
-    }
-  }
-  
-  .el-tree-node__expand-icon {
-    color: #64748b !important;
-    &.is-leaf {
-      color: transparent !important;
+    .el-tree-node__expand-icon {
+      color: #64748b !important;
+      &.is-leaf {
+        color: transparent !important;
+      }
     }
   }
 }

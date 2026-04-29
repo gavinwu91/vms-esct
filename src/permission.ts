@@ -72,7 +72,7 @@ router.beforeEach(async (to, from, next) => {
       if (!dictStore.getIsSetDict) {
         await dictStore.setDictMap()
       }
-      if (!userStore.getIsSetUser) {
+      if (!userStore.getIsSetUser || permissionStore.getRouters.length <= 1) {
         isRelogin.show = true
         await userStore.setUserInfoAction()
         isRelogin.show = false
