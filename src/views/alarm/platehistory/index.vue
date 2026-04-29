@@ -1,753 +1,323 @@
 <template>
-  <div v-loading="exportLoading">
-    <div class="h-90vh flex justify-start">
-      <div class="w-18%">
-        <div class="condition">
-          <div class="title-box">
-            <div class="">
-              <div class="">
-                <el-button class="vms-reset-button" @click="reload">Reset</el-button>
-                <el-button
-                  class="vms-track-button"
-                  size="default"
-                  style="margin-left: 10px"
-                  @click="handleExport"
-                  >Export
-                </el-button>
-                <el-button
-                  class="vms-main-button"
-                  size="default"
-                  style="margin-left: 10px"
-                  @click="changePage(1)"
-                  >Search
-                </el-button>
+  <div class="vehicle-history-layout" v-loading="exportLoading">
+    <!-- Sidebar: Alarm Filters -->
+    <aside class="alarm-filters-sidebar">
+      <div class="sidebar-header">
+        <el-icon><Search /></el-icon>
+        <span>Alarm Filters</span>
+      </div>
+      
+      <el-scrollbar class="filter-scroll">
+        <el-form label-position="top" :model="pageQuery">
+          <div class="filter-item">
+            <label class="cyber-label">Task Name</label>
+            <el-select v-model="pageQuery.taskApiIds" multiple collapse-tags clearable filterable class="cyber-select-custom">
+              <el-option v-for="(item, index) in taskOptions" :key="index" :label="item.label" :value="item.value" />
+            </el-select>
+          </div>
+
+          <div class="filter-item">
+            <label class="cyber-label">Vehicle Number</label>
+            <el-input v-model="pageQuery.carNumber" placeholder="E.g. OM-1234" clearable class="cyber-input-custom" />
+          </div>
+
+          <div class="filter-item">
+            <label class="cyber-label">Handling Status</label>
+            <el-select v-model="pageQuery.status" clearable class="cyber-select-custom">
+              <el-option v-for="item in handleStatusOptions" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+          </div>
+
+          <div class="filter-item">
+            <label class="cyber-label">Time Range</label>
+            <el-date-picker
+              v-model="pageQuery.times"
+              type="datetimerange"
+              value-format="YYYY-MM-DD HH:mm:ss"
+              range-separator="-"
+              class="cyber-date-picker-custom"
+            />
+          </div>
+
+          <div class="filter-item">
+            <label class="cyber-label">Device</label>
+            <el-input v-model="deviceText" readonly @click="treeShow = true" class="cyber-input-custom" placeholder="Select camera..." />
+          </div>
+        </el-form>
+      </el-scrollbar>
+
+      <div class="sidebar-actions">
+        <button class="btn-search" @click="changePage(1)"><el-icon><Search /></el-icon> Search</button>
+        <button class="btn-reset" @click="reload"><el-icon><Refresh /></el-icon></button>
+        <button class="btn-export" @click="handleExport"><el-icon><Download /></el-icon></button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="alarm-content-main">
+      <header class="main-header">
+        <div class="header-info">
+          <h1 class="title">Vehicle Alarm History</h1>
+          <p class="subtitle">Found <span class="count">{{ result.total }}</span> alarm records in system</p>
+        </div>
+        <div class="header-btns">
+          <button class="btn-header-ghost"><el-icon><Location /></el-icon> Map View</button>
+        </div>
+      </header>
+
+      <div class="alarm-cards-list">
+        <el-empty v-if="result.data.length === 0" description="No vehicle history found" />
+        
+        <article class="alarm-card" v-for="(o, key) in result.data" :key="key">
+          <!-- Card Image Section -->
+          <div class="card-image-wrap">
+            <el-image :src="imageShow(o.fullUrl)" fit="cover" lazy>
+              <template #error><el-icon class="img-error"><icon-picture /></el-icon></template>
+            </el-image>
+            <div class="plate-badge">{{ o.carNumber }}</div>
+            <div class="status-badges-overlay">
+              <StatusTag :status="o.status" />
+            </div>
+          </div>
+
+          <!-- Card Info Section -->
+          <div class="card-info-content">
+            <div class="info-top">
+              <h3 class="alarm-title">{{ o.strategyName }}</h3>
+              <div class="meta-row">
+                <span class="meta-item"><el-icon><Clock /></el-icon> {{ formatDate(new Date(o.captureTime)) }}</span>
+                <span class="meta-item ml-4"><el-icon><VideoCamera /></el-icon> {{ o.cameraName }}</span>
+              </div>
+            </div>
+
+            <div class="info-grid">
+              <div class="grid-cell">
+                <div class="label">Vehicle Type</div>
+                <div class="value">{{ getVehicleType(o.fullUrl) }}</div>
+              </div>
+              <div class="grid-cell">
+                <div class="label">Speed (Detected)</div>
+                <div class="value">{{ o.speed ? o.speed + ' km/h' : '---' }}</div>
+              </div>
+              <div class="grid-cell">
+                <div class="label">Alarm Location</div>
+                <div class="value">{{ o.location || 'Surveillance Area' }}</div>
               </div>
             </div>
           </div>
-          <el-divider />
-          <el-form
-            label-position="top"
-            v-model="pageQuery"
-            style="max-width: 320px; margin: 5px 5px 5px 4%"
-          >
-            <el-form-item label="Task Name">
-              <el-select
-                v-model="pageQuery.taskApiIds"
-                multiple
-                clearable
-                placeholder="Task name"
-                :collapse-tags="true"
-              >
-                <el-option
-                  v-for="(item, index) in taskOptions"
-                  :key="index"
-                  :label="item.label"
-                  :value="item.value"
-                />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="Vehicle No.">
-              <el-input
-                type="text"
-                v-model="pageQuery.carNumber"
-                clearable
-                placeholder="Vehicle No."
-                class="!w-320px"
-              />
-            </el-form-item>
-            <el-form-item label="Status">
-              <el-select class="!w-320px" v-model="pageQuery.status" clearable>
-                <el-option
-                  v-for="item in handleStatusOptions"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                />
-              </el-select>
-            </el-form-item>
 
-            <el-form-item label="Time Range">
-              <el-date-picker
-                range-separator="To"
-                value-format="YYYY-MM-DD HH:mm:ss"
-                start-placeholder="Begin date"
-                end-placeholder="End date"
-                :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"
-                v-model="pageQuery.times"
-                style="width: 320px; margin: auto; font-size: 12px"
-                type="datetimerange"
-                :clearable="false"
-              />
-            </el-form-item>
-            <el-form-item label="Device">
-              <el-input
-                class="!w-320px"
-                v-model="deviceText"
-                placeholder="Select device"
-                readonly
-                @click="treeShow = true"
-              />
-            </el-form-item>
-          </el-form>
-        </div>
+          <!-- Card Actions Section -->
+          <div class="card-actions-rail">
+            <button class="btn-action-outline" @click="showCaptureDetail(o, 'vehicle')">
+              <el-icon><View /></el-icon> Detail
+            </button>
+            <button class="btn-action-outline ghost" @click="codeSearch(o.carNumber)">
+              <el-icon><Aim /></el-icon> Filter
+            </button>
+          </div>
+        </article>
       </div>
-      <div class="w-82%">
-        <div>
-          <el-card class="container-card">
-            <div class="page-info">
-              <div
-                class="alert-grid"
-                id="alert-container"
-                v-if="result.data && result.data.length > 0"
-              >
-                <!-- 告警卡片将通过JavaScript动态生成 -->
-                <div
-                  class="alert-card cursor-pointer"
-                  v-for="(o, key) in result.data"
-                  :key="key"
-                  @click="showCaptureDetail(o, 'vehicle')"
-                >
-                  <el-image class="capture-image" :src="imageShow(o.fullUrl)" lazy>
-                    <template #error>
-                      <el-icon>
-                        <icon-picture />
-                      </el-icon>
-                    </template>
-                  </el-image>
 
-                  <div class="alert-content">
-                    <div class="alert-header">
-                      <div class="plate-number">{{ o.carNumber }}</div>
-                      <div class="alert-time">
-                        <el-link :icon="Clock" type="primary" :underline="false" />
-                        {{ formatDate(new Date(o.captureTime)) }}
-                      </div>
-                    </div>
-                    <div class="camera-name"
-                      ><el-link :icon="VideoCamera" type="primary" :underline="false" />
-                      {{ o.cameraName }}
-                    </div>
-                    <div class="alert-details">
-                      <div class="detail-item">
-                        <span class="detail-label">Task Name</span>
-                        <span class="detail-value">{{ o.strategyName }}</span>
-                      </div>
-                      <div class="detail-item">
-                        <span class="detail-label">Vehicle Type</span>
-                        <span class="detail-value">{{ getVehicleType(o.fullUrl) }}</span>
-                      </div>
-                      <div class="detail-item">
-                        <span class="detail-label">Status</span>
-                        <div>
-                          <StatusTag :status="o.status" :size="'default'" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <el-empty
-              image-size="300"
-              style="height: 78vh"
-              v-else
-            />
-            </div>
-            <el-pagination
-              style="float: right; margin: 10px"
-              background
-              layout="sizes,prev,pager,next"
-              :size="pageQuery.pageSize"
-              v-model:current-page="pageQuery.page"
-              v-model:page-size="pageQuery.pageSize"
-              @current-change="handleCurrentChange"
-              @size-change="handleSizeChange"
-              :total="result.total"
-            />
-          </el-card>
-        </div>
+      <!-- Pagination -->
+      <div class="cyber-pagination">
+        <el-pagination
+          background
+          layout="total, sizes, prev, pager, next, jumper"
+          v-model:current-page="pageQuery.page"
+          v-model:page-size="pageQuery.pageSize"
+          :total="result.total"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        />
       </div>
-    </div>
-    <el-dialog
-      :key="tools.key"
-      v-model="tools.captureDetail"
-      draggable
-      style="margin-top: 5px"
-      width="90%"
-      @close="tools.captureDetail = false"
+    </main>
+
+    <!-- Dialogs -->
+    <el-dialog 
+      v-model="tools.captureDetail" 
+      width="1100px" 
+      top="4vh" 
+      class="cyber-dialog-premium"
+      destroy-on-close
       title="Vehicle Alarm Information"
     >
-      <!-- <VehicleCaptureDetail :content="tools.content" v-if="tools.captureDetail" /> -->
-
       <VehicleAlarmDetail :content="content" :allContent="tools.content" />
     </el-dialog>
 
-    <el-dialog v-model="treeShow" width="450px" title="Device" draggable>
-      <device-tree-template
-        camera-type="4"
-        @cancel-select="cancelSelect"
-        @submit-select="checkNode"
-      />
+    <el-dialog v-model="treeShow" width="450px" title="Select Device" class="cyber-dialog-dark">
+      <device-tree-template camera-type="4" @cancel-select="cancelSelect" @submit-select="checkNode" />
     </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { VideoCamera, Camera, Clock } from '@element-plus/icons-vue'
+import { VideoCamera, Clock, Search, Refresh, Calendar, Download, Location, View, Aim, Picture as IconPicture } from '@element-plus/icons-vue'
 import StatusTag from '../StatusTag.vue'
 import { AlarmPlateMsgApi, imageShow, getDay } from '@/api/alarmmsg/plate'
 import DeviceTreeTemplate from '../DeviceTreePop.vue'
 import { AlarmTaskApi } from '@/api/alarmtask/plate'
 import download from '@/utils/download'
 import { formatDate } from '@/utils/formatTime'
-import { getPermissionDeviceTree } from '@/api/device'
-import VehicleCaptureDetail from '@/views/vehicle/components/detail.vue'
 import VehicleAlarmDetail from './VehicleAlarmDetail.vue'
-import { status } from 'nprogress'
-const deviceOptions = ref<any[]>([]) //设备权限树
-const checkStrictly = ref(true) // 是否严格模式，即父子不关联
-const deviceTreeRef = ref()
-const message = useMessage() // 消息弹窗
+
+defineOptions({ name: 'AlarmPlateMsg' })
+const message = useMessage()
 const reload = inject<any>('reload')
-const showTrack = ref(false)
 const route = useRoute()
 const routeParam = route.query.apiTaskId
 const exportLoading = ref(false)
+const deviceText = ref('')
+const treeShow = ref(false)
+const taskOptions = ref<{value: string, label: string}[]>([])
+
 const pageQuery = reactive({
-  page: 1,
-  pageSize: 50,
-  taskApiIds: [] as string[],
-  cameraIds: [] as string[],
+  page: 1, pageSize: 20, taskApiIds: [] as string[], cameraIds: [] as string[],
   times: [getDay(-0) + ' 00:00:00', getDay(-0) + ' 23:59:59'],
-  sort: 2,
-  carNumber: '',
-  matchType: '20',
-  color: [],
-  brand: [],
-  startTime: '',
-  endTime: '',
-  status: undefined
+  sort: 2, carNumber: '', matchType: '20', color: [], brand: [],
+  startTime: '', endTime: '', status: undefined
 })
 
 const result = ref({
   total: 0,
-  data: [
-    {
-      carNumber: '',
-      strategyName: '',
-      linkMethod: 1,
-      fullUrl: '',
-      location: '',
-      cameraName: '',
-      captureTime: 0,
-      speed: 0,
-      status: 1,
-      cropUrl: ''
-    }
-  ],
-  dataTotal: 0
+  data: [] as any[]
 })
-
-const deviceCascaderProps = ref({
-  expandTrigger: 'hover',
-  multiple: true,
-  checkStrictly: false,
-  value: 'platformCameraId',
-  label: 'name'
-})
-
-const taskOptions = ref([{ value: '', label: '' }])
-
-const initTaskOptions = async () => {
-  const result = await AlarmTaskApi.getLarmTaskOptions()
-  taskOptions.value = result
-  if (routeParam != undefined) {
-    pageQuery.taskApiIds.push(routeParam as string)
-  } else {
-    pageQuery.taskApiIds = taskOptions.value.map((a) => a.value)
-  }
-}
 
 const content = reactive({ rid: '', channel: 'Alarm' })
+const tools = reactive({ key: 0, captureDetail: false, content: null as any })
 
-//翻页
-const changePage = async (page) => {
-  const loadingInstance = ElLoading.service()
-  showTrack.value = false
-  pageQuery.page = parseInt(page)
-  try {
-    if (pageQuery.times != null && pageQuery.times.length > 0) {
-      pageQuery.startTime = pageQuery.times[0]
-      pageQuery.endTime = pageQuery.times[1]
-    }
-    let res = await AlarmPlateMsgApi.getAlarmPlateMsgPage(pageQuery)
-    result.value.data = res.list || []
-    result.value.total = res.total
-  } catch (e) {}
-  console.log(result)
-  loadingInstance.close()
+const handleStatusOptions = [
+  { id: 1, name: 'Awaiting confirmation' }, { id: 2, name: 'Awaiting receipt' },
+  { id: 3, name: 'Awaiting feedback' }, { id: 4, name: 'Closed' }
+]
+
+const getList = async () => {
+  if (pageQuery.times && pageQuery.times.length > 0) {
+    pageQuery.startTime = pageQuery.times[0]
+    pageQuery.endTime = pageQuery.times[1]
+  }
+  const res = await AlarmPlateMsgApi.getAlarmPlateMsgPage(pageQuery)
+  result.value.data = res.list || []
+  result.value.total = res.total
 }
 
-/** 导出按钮操作 */
+const changePage = async (page) => {
+  pageQuery.page = parseInt(page)
+  await getList()
+}
+
+const handleCurrentChange = (val: number) => changePage(val)
+const handleSizeChange = (val: number) => { pageQuery.pageSize = val; changePage(1) }
+
+const initTaskOptions = async () => {
+  const options = await AlarmTaskApi.getLarmTaskOptions()
+  taskOptions.value = options
+  if (routeParam) pageQuery.taskApiIds = [routeParam as string]
+}
+
+const showCaptureDetail = (o, panel) => {
+  const param = { rId: o.rId, apiTaskId: o.apiTaskId, alarmNo: o.alarmNo }
+  AlarmPlateMsgApi.getAlarmPlateDetail(param).then((res) => {
+    tools.content = res; tools.captureDetail = true
+  })
+}
+
 const handleExport = async () => {
   try {
-    // 导出的二次确认
     await message.exportConfirm()
-    // 发起导出
     exportLoading.value = true
     const data = await AlarmPlateMsgApi.exportAlarmPlateMsg(pageQuery)
     download.excel(data, 'Vehicle plate alarm.xls')
-  } catch {
-  } finally {
-    exportLoading.value = false
-  }
+  } finally { exportLoading.value = false }
 }
 
-// 添加车牌号并查询
-const codeSearch = (code) => {
-  pageQuery.carNumber = code
-  changePage(1)
-}
+const codeSearch = (code) => { pageQuery.carNumber = code; changePage(1) }
 
-const getDetail = async (o: any) => {
-  return await AlarmPlateMsgApi.getCapturePlateDetail(o.value)
-}
-
-// 查看抓拍详情
-const showCaptureDetail = (o, panel) => {
-  console.log('o ==== ', o)
-  const param = {
-    rId: o.rId,
-    apiTaskId: o.apiTaskId,
-    alarmNo: o.alarmNo
-  }
-  AlarmPlateMsgApi.getAlarmPlateDetail(param).then((res) => {
-    console.log('getAlarmPlateDetail ============== ', res)
-    tools.key++
-    tools.content = res
-    tools.captureDetail = true
-  })
-
-  // content.rid = o.rId
-  // content.channel = "Alarm"
-  // tools.key++;
-  // tools.captureDetail = true
-}
-
-const handleCurrentChange = (val: number) => {
-  result.value.data = []
-  changePage(val)
-}
-
-const handleSizeChange = (val: number) => {
-  pageQuery.pageSize = val
-  result.value.data = []
-  changePage(1)
-}
-
-const initDeviceOptions = async () => {
-  deviceOptions.value = await getPermissionDeviceTree({ cameraType: 4 })
-}
-const init = async () => {
-  await initDeviceOptions()
-  await initTaskOptions()
-  if (props.apiTaskId) {
-    pageQuery.taskApiIds = [props.apiTaskId]
-  }
-  changePage(1)
-}
-
-const chooseNotNull = (value) => {
-  pageQuery.cameraIds = value.flat(Infinity).filter((item) => item != undefined && item != null)
-  console.log('pageQuery.cameraIds ==== ', pageQuery.cameraIds)
-}
-
-const handleStatusOptions = ref([
-  { id: 1, name: 'Awaiting confirmation' },
-  { id: 2, name: 'Awaiting receipt' },
-  { id: 3, name: 'Awaiting feedback' },
-  { id: 4, name: 'Closed' }
-])
-
-const treeShow = ref(false)
-const deviceText = ref('')
 const checkNode = (data) => {
   pageQuery.cameraIds = data.map((x) => x.value)
   deviceText.value = data.map((x) => x.name).join(',')
   treeShow.value = false
 }
+const cancelSelect = () => { treeShow.value = false }
 
-const cancelSelect = () => {
-  treeShow.value = false
-}
+const getVehicleType = (url) => url ? url.split('_')[4] : 'Unknown'
 
-onMounted(() => {
-  init()
+const props = defineProps({ apiTaskId: String })
+
+onMounted(async () => {
+  await initTaskOptions()
+  if (props.apiTaskId) pageQuery.taskApiIds = [props.apiTaskId]
+  getList()
 })
-
-const props = defineProps({
-  apiTaskId: String
-})
-
-const tools = reactive({
-  key: 0,
-  captureDetail: false,
-  content: null as any
-})
-
-const getVehicleType = (url) => {
-  const paramArr = url.split('_')
-  return paramArr[4]
-}
 </script>
-<style scoped>
-.condition {
-  overflow-y: auto;
-  /* box-shadow: var(--el-box-shadow-lighter); */
-}
 
-.result {
-  width: 82%;
-  margin-left: 10px;
-}
-
-.title-box {
-  margin: 0 10px;
-  display: flex;
-  justify-content: flex-end;
-  line-height: 40px;
-  /* border-bottom: 2px dodgerblue solid; */
-}
-
-:deep(.el-card__body) {
-  padding: 10px;
-}
-
-:deep(.el-card__header) {
-  padding: 10px;
-}
-
-.card-container {
-  overflow: auto;
-  height: 82vh;
-  display: grid;
-
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
-  /* flex-wrap: wrap;
-  align-content: flex-start;
-  background: linear-gradient(135deg, #f0f0f0, #e0e0e0); */
-}
-.card-container::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-  margin-right: 0;
-}
-.card-container::-webkit-scrollbar-track {
-  background: transparent;
-}
-.card-container::-webkit-scrollbar-thumb {
-  background: rgba(12, 10, 10, 0.71);
-  border-radius: 4px;
-  backdrop-filter: blur(4px);
-}
-
-.card-container::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
-}
-
-.container-card {
-  overflow-y: auto;
-  padding-top: 10px;
-  max-width: 100%;
-  height: 89vh;
-  /* background: linear-gradient(135deg, #f0f0f0, #e0e0e0); */
-}
-
-:deep(.el-splitter-bar__dragger) {
-  background: orangered !important;
-}
-
-.result-card {
-  /* background: rgba(255, 255, 255, 0.76); */
-  -webkit-backdrop-filter: blur(12px);
-  overflow: hidden;
-  backdrop-filter: blur(10px);
-  /* border: 2px solid rgba(255, 255, 255, 0.3);
-  border: 1px solid #ebeef5; */
-  box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.12),
-    0 0 6px rgba(0, 0, 0, 0.04);
-  cursor: pointer;
-  border-radius: 12px;
-  height: 350px;
-  min-height: 350px;
-}
-
-.result-card:hover {
-  transition: 0.8s;
-  transform: translateY(-8px);
-  border: solid #ff4040 1px;
-}
-
-.capture-image {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 4px;
-}
-
-.compare-box {
-  position: relative;
-}
-
-.condition-title {
-  font-weight: bold;
-  color: #2672ff;
-}
-
-.card-item {
-  width: 100%;
-  padding: 3px;
-  margin-top: 5px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.item-box {
-  display: flex;
-  flex-direction: column;
-}
-
-:deep(.el-date-editor .el-range-input) {
-  font-size: 12px;
-}
-
-:deep(.el-form-item--label-top .el-form-item__label) {
-  font-weight: bold;
-  font-size: 15px;
-}
-:deep(.el-date-editor .el-range-separator) {
-  font-size: 10px;
-}
-:deep(.el-divider--horizontal) {
-  margin: 10px 0;
-}
-.result-count-title {
-  line-height: 20px;
-  font-weight: bold;
-  font-size: 20px;
-  color: var(--el-text-color-regular);
-}
-:deep(.el-card__footer) {
-  padding: 10px;
-}
-</style>
 <style scoped lang="scss">
-* {
-  box-sizing: border-box;
+.vehicle-history-layout {
+  display: flex; height: 100%; background: transparent; color: var(--vms-content-text); padding: 10px; gap: 12px; overflow: hidden;
 }
 
-/* 告警列表标题 */
-.list-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
+/* Sidebar */
+.alarm-filters-sidebar {
+  width: 280px; background: var(--vms-card-bg); backdrop-filter: blur(12px); border-radius: 20px;
+  border: 1px solid var(--vms-content-border); padding: 20px; display: flex; flex-direction: column;
+  .sidebar-header { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: bold; color: var(--vms-primary); margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--vms-content-border); }
+  .filter-scroll { flex: 1; margin-bottom: 20px; }
 }
 
-.page-info {
-  width: 100%;
-  height: 82vh;
-  overflow-y: auto;
-  --primary: #4361ee;
-  --primary-dark: #3a56d4;
-  --secondary: #7209b7;
-  --success: #4cc9f0;
-  --warning: #f72585;
-  --dark: #1d3557;
-  --light: #f8f9fa;
-  --gray: #6c757d;
-  --light-gray: #e9ecef;
-  --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  --card-hover-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
-  --border-radius: 16px;
-  --transition: all 0.3s ease;
+.filter-item { margin-bottom: 15px; .cyber-label { display: block; font-size: 12px; color: var(--vms-content-muted); margin-bottom: 6px; font-weight: 600; } }
+
+:deep(.cyber-select-custom), :deep(.cyber-input-custom), :deep(.cyber-date-picker-custom) {
+  width: 100% !important;
+  .el-input__wrapper { background: rgba(15, 23, 42, 0.05) !important; border: 1px solid var(--vms-content-border) !important; box-shadow: none !important; border-radius: 8px; }
+  .el-input__inner { font-size: 13px; color: var(--vms-content-text); }
 }
 
-/* 告警卡片网格 */
-.alert-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(36vh, 1fr));
-  gap: 16px;
-  margin-bottom: 30px;
+.sidebar-actions {
+  display: flex; gap: 8px;
+  .btn-search { flex: 1; background: var(--vms-primary); color: #fff; border: none; border-radius: 8px; padding: 10px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn-reset, .btn-export { width: 44px; background: rgba(148, 163, 184, 0.1); border: 1px solid var(--vms-content-border); color: var(--vms-content-text); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 }
 
-.alert-card {
-  width: 38vh;
-  background: white;
-  border-radius: var(--border-radius);
-  overflow: hidden;
-  box-shadow: var(--card-shadow);
-  transition: var(--transition);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+/* Main Content */
+.alarm-content-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.main-header { margin-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end; .title { font-size: 22px; font-weight: bold; margin: 0; } .subtitle { font-size: 13px; color: var(--vms-content-muted); } .count { color: #f87171; font-weight: bold; } }
+
+.btn-header-ghost { background: rgba(30, 41, 59, 0.4); border: 1px solid var(--vms-content-border); color: var(--vms-content-muted); padding: 8px 16px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; &:hover { border-color: var(--vms-primary); color: var(--vms-primary); } }
+
+.alarm-cards-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-right: 6px; }
+
+.alarm-card {
+  display: flex; background: var(--vms-card-bg); border: 1px solid var(--vms-content-border); border-radius: 20px; overflow: hidden; transition: all 0.25s;
+  &:hover { border-color: var(--vms-primary); transform: translateX(4px); box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
 }
 
-.alert-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--card-hover-shadow);
+.card-image-wrap {
+  width: 280px; position: relative; background: #000;
+  :deep(.el-image) { width: 100%; height: 100%; }
+  .plate-badge { position: absolute; top: 12px; left: 12px; background: rgba(14, 165, 233, 0.9); color: #fff; padding: 4px 12px; border-radius: 6px; font-weight: bold; font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+  .status-badges-overlay { position: absolute; top: 12px; right: 12px; }
 }
 
-.alert-card {
-  border-left: 4px solid var(--warning);
+.card-info-content { flex: 1; padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
+.alarm-title { font-size: 16px; font-weight: bold; margin: 0; color: var(--vms-primary); }
+.meta-row { display: flex; align-items: center; font-size: 12px; color: var(--vms-content-muted); .meta-item { display: flex; align-items: center; gap: 6px; } .ml-4 { margin-left: 20px; } }
+
+.info-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 10px;
+  .grid-cell { .label { font-size: 10px; color: var(--vms-content-muted); text-transform: uppercase; margin-bottom: 2px; } .value { font-size: 13px; font-weight: 600; color: var(--vms-content-text); } }
 }
 
-.vehicle-img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  display: block;
+.card-actions-rail { width: 140px; border-left: 1px solid var(--vms-content-border); padding: 15px; display: flex; flex-direction: column; gap: 10px; justify-content: center; }
+.btn-action-outline {
+  width: 100%; background: transparent; border: 1px solid var(--vms-content-border); color: var(--vms-content-text); border-radius: 8px; padding: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s;
+  &:hover { border-color: var(--vms-primary); color: var(--vms-primary); background: rgba(56, 189, 248, 0.05); }
 }
 
-.alert-content {
-  padding: 20px;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-}
+.cyber-pagination { margin-top: 15px; display: flex; justify-content: flex-end; }
 
-.alert-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--light-gray);
-}
-
-.plate-number {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--primary);
-  background: linear-gradient(to right, var(--primary), var(--secondary));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  padding: 4px 12px;
-  border-radius: 8px;
-  background-color: rgba(67, 97, 238, 0.1);
-  border: 1px solid rgba(67, 97, 238, 0.2);
-}
-
-.alert-time {
-  color: var(--gray);
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.camera-name {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--dark);
-}
-
-.camera-name i {
-  color: var(--primary);
-}
-
-.alert-details {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 16px;
-  flex-grow: 1;
-}
-
-.detail-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.detail-label {
-  color: var(--gray);
-  font-weight: 500;
-  min-width: 100px;
-}
-
-.detail-value {
-  font-weight: 600;
-  color: var(--dark);
-  text-align: right;
-  flex-grow: 1;
-}
-
-/* 分页 */
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  margin-top: 30px;
-}
-
-.page-btn {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  background: white;
-  border: 2px solid var(--light-gray);
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.page-btn.active {
-  background: var(--primary);
-  color: white;
-  border-color: var(--primary);
-}
-
-.page-btn:hover:not(.active) {
-  border-color: var(--primary);
-}
-
-.page-info-text {
-  margin: 0 20px;
-  color: var(--gray);
-}
-
-/* 响应式设计 */
-@media (max-width: 100vh) {
-  .alert-grid {
-    grid-template-columns: repeat(auto-fill, minmax(36vh, 1fr));
-  }
-}
-
-@media (max-width: 480px) {
-  .search-box input {
-    width: 180px;
-  }
-
-  .alert-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .plate-number {
-    font-size: 20px;
-  }
+/* Dialog Fixes */
+:deep(.cyber-dialog-premium) {
+  background: var(--vms-main-bg) !important; border-radius: 20px; border: 1px solid var(--vms-content-border);
+  .el-dialog__header { padding: 20px 24px 0; }
+  .el-dialog__body { padding: 20px; }
 }
 </style>

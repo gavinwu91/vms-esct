@@ -181,6 +181,7 @@ declare module 'vue' {
     ProcessViewer: typeof import('./../components/bpmnProcessDesigner/package/designer/ProcessViewer.vue')['default']
     PropertiesPanel: typeof import('./../components/bpmnProcessDesigner/package/penal/PropertiesPanel.vue')['default']
     Qrcode: typeof import('./../components/Qrcode/src/Qrcode.vue')['default']
+    Realtime: typeof import('./../views/alarm/surveillance/realtime/Realtime.vue')['default']
     ReceiveTask: typeof import('./../components/bpmnProcessDesigner/package/penal/task/task-components/ReceiveTask.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterNode: typeof import('./../components/SimpleProcessDesignerV2/src/nodes/RouterNode.vue')['default']
