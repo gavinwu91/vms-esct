@@ -220,6 +220,7 @@ declare module 'vue' {
     VerticalButtonGroup: typeof import('./../components/VerticalButtonGroup/index.vue')['default']
     VideoPlayerDialog: typeof import('./../components/Device/VideoPlayerDialog.vue')['default']
     VideoPreviewDialog: typeof import('./../components/Device/VideoPreviewDialog.vue')['default']
+    VMS_Hybrid_Theme_Master_Guide: typeof import('./../../public/VMS_Hybrid_Theme_Master_Guide.md')['default']
     XButton: typeof import('./../components/XButton/src/XButton.vue')['default']
     XTextButton: typeof import('./../components/XButton/src/XTextButton.vue')['default']
   }
